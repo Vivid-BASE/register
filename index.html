@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>物販管理アプリ プロトタイプ</title>
+    <!-- Update: Trigger deployment for iPhone -->
     <style>
         :root {
             --primary-color: #007AFF;
@@ -47,22 +49,27 @@
             background-color: var(--card-bg);
             display: flex;
             flex-direction: column;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.05);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
         }
 
         /* Header */
         header {
             background-color: var(--card-bg);
             padding: var(--spacing-unit);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
-        h1 { margin: 0; font-size: 1.2rem; }
+
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
 
         /* Responsive Grid for Products */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Responsive wrapping */
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            /* Responsive wrapping */
             gap: var(--spacing-unit);
         }
 
@@ -73,33 +80,41 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.1s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .product-card:active {
             transform: scale(0.98);
         }
+
         .product-icon {
             font-size: 3rem;
             margin-bottom: 8px;
             display: block;
         }
+
         .product-name {
             font-weight: bold;
             font-size: 1rem;
             margin-bottom: 4px;
         }
+
         .product-price {
             color: var(--primary-color);
             font-weight: 500;
         }
 
         /* Cart Styles */
-        .cart-title { margin-top: 0; }
+        .cart-title {
+            margin-top: 0;
+        }
+
         .cart-items {
             flex: 1;
             overflow-y: auto;
             margin-bottom: var(--spacing-unit);
         }
+
         .cart-item {
             display: flex;
             justify-content: space-between;
@@ -107,10 +122,25 @@
             padding: 8px 0;
             border-bottom: 1px solid #eee;
         }
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-weight: bold; font-size: 0.9rem; }
-        .cart-item-variant { font-size: 0.8rem; color: #666; }
-        .cart-item-price { font-weight: 500; }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-variant {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .cart-item-price {
+            font-weight: 500;
+        }
+
         .cart-total {
             font-size: 1.5rem;
             font-weight: bold;
@@ -118,6 +148,7 @@
             padding-top: var(--spacing-unit);
             border-top: 2px solid #ddd;
         }
+
         .btn-checkout {
             background-color: var(--primary-color);
             color: #fff;
@@ -134,29 +165,37 @@
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 100;
         }
-        .modal-overlay.active { display: flex; }
-        
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
         .modal-content {
             background: var(--card-bg);
             border-radius: var(--border-radius);
             width: 90%;
             max-width: 500px;
             padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
+
         .close-btn {
             background: none;
             border: none;
@@ -165,7 +204,10 @@
         }
 
         /* Hybrid UI Elements */
-        .variant-section { margin-bottom: 20px; }
+        .variant-section {
+            margin-bottom: 20px;
+        }
+
         .variant-label {
             display: block;
             margin-bottom: 10px;
@@ -180,6 +222,7 @@
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 10px;
         }
+
         .variant-btn {
             background-color: #f0f0f0;
             border: 1px solid #ddd;
@@ -189,8 +232,15 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .variant-btn:hover { background-color: #e0e0e0; }
-        .variant-btn:active { background-color: var(--primary-color); color: #fff; }
+
+        .variant-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .variant-btn:active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
 
         /* Dropdown for other variants */
         .variant-select {
@@ -201,11 +251,12 @@
             border: 1px solid #ddd;
             background-color: #fff;
         }
-        
+
         .add-to-cart-wrapper {
             margin-top: 10px;
             text-align: right;
         }
+
         .btn-add-list {
             background-color: var(--primary-color);
             color: white;
@@ -221,291 +272,301 @@
             .container {
                 flex-direction: column;
             }
+
             .product-area {
-                flex: 1; /* Take up remaining space */
+                flex: 1;
+                /* Take up remaining space */
                 border-right: none;
                 border-bottom: 1px solid #ddd;
             }
+
             .cart-area {
-                flex: 0 0 200px; /* Fixed height for cart at bottom on mobile? Or maybe just smaller */
+                flex: 0 0 200px;
+                /* Fixed height for cart at bottom on mobile? Or maybe just smaller */
                 border-top: 1px solid #ccc;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             }
+
             .product-grid {
-                grid-template-columns: repeat(3, 1fr); /* Force 3 cols on mobile if possible, or auto-fill */
+                grid-template-columns: repeat(3, 1fr);
+                /* Force 3 cols on mobile if possible, or auto-fill */
             }
         }
+
         @media (max-width: 480px) {
             .product-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 cols on very small screens */
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 cols on very small screens */
             }
+
             .cart-area {
-                flex: 0 0 160px; /* Smaller cart area */
+                flex: 0 0 160px;
+                /* Smaller cart area */
             }
         }
-
     </style>
 </head>
+
 <body>
 
-<header>
-    <h1>物販レジ (プロトタイプ)</h1>
-</header>
+    <header>
+        <h1>物販レジ (プロトタイプ)</h1>
+    </header>
 
-<div class="container">
-    <!-- Product Grid Section -->
-    <main class="product-area">
-        <div id="productGrid" class="product-grid">
-            <!-- Items injected by JS -->
-        </div>
-    </main>
-
-    <!-- Cart Section -->
-    <aside class="cart-area">
-        <h2 class="cart-title">カート</h2>
-        <div id="cartItems" class="cart-items">
-            <div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>
-        </div>
-        <div class="cart-total">合計: ¥<span id="cartTotal">0</span></div>
-        <button class="btn-checkout" onclick="alert('会計機能は未実装です')">会計する</button>
-    </aside>
-</div>
-
-<!-- Modal for Hybrid Variant Selection -->
-<div id="variantModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="modalProductName">商品名</h2>
-            <button class="close-btn" onclick="closeModal()">×</button>
-        </div>
-        
-        <!-- Quick Buttons Area -->
-        <div id="quickButtonsArea" class="variant-section">
-            <span class="variant-label">よく使う項目 (クイック)</span>
-            <div id="quickButtonsGrid" class="quick-buttons"></div>
-        </div>
-
-        <!-- List/Select Area -->
-        <div id="listArea" class="variant-section">
-            <span class="variant-label">その他の項目 (リスト)</span>
-            <div style="display: flex; gap: 10px;">
-                <select id="variantSelect" class="variant-select">
-                    <option value="">選択してください</option>
-                </select>
-                <button class="btn-add-list" onclick="addFromSelect()">追加</button>
+    <div class="container">
+        <!-- Product Grid Section -->
+        <main class="product-area">
+            <div id="productGrid" class="product-grid">
+                <!-- Items injected by JS -->
             </div>
-        </div>
+        </main>
 
+        <!-- Cart Section -->
+        <aside class="cart-area">
+            <h2 class="cart-title">カート</h2>
+            <div id="cartItems" class="cart-items">
+                <div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>
+            </div>
+            <div class="cart-total">合計: ¥<span id="cartTotal">0</span></div>
+            <button class="btn-checkout" onclick="alert('会計機能は未実装です')">会計する</button>
+        </aside>
     </div>
-</div>
 
-<script>
-    // --- Mock Data ---
-    // isQuickButton: true -> Button, false -> Dropdown list
-    const products = [
-        {
-            id: 1,
-            name: "オリジナルTシャツ",
-            icon: "👕",
-            basePrice: 2500,
-            variants: [
-                { name: "S", price: 2500, isQuickButton: true },
-                { name: "M", price: 2500, isQuickButton: true },
-                { name: "L", price: 2500, isQuickButton: true },
-                { name: "XL", price: 2800, isQuickButton: true },
-                { name: "XS (レア)", price: 2500, isQuickButton: false },
-                { name: "XXL (レア)", price: 3000, isQuickButton: false },
-                { name: "3XL (受注生産)", price: 3500, isQuickButton: false }
-            ]
-        },
-        {
-            id: 2,
-            name: "ロゴタオル",
-            icon: "🧣",
-            basePrice: 1500,
-            variants: [
-                { name: "赤", price: 1500, isQuickButton: true },
-                { name: "青", price: 1500, isQuickButton: true },
-                { name: "限定ゴールド", price: 2000, isQuickButton: false },
-                { name: "復刻ブラック", price: 1800, isQuickButton: false }
-            ]
-        },
-        {
-            id: 3,
-            name: "ラバーバンド",
-            icon: "⭕",
-            basePrice: 500,
-            variants: [
-                { name: "フリーサイズ", price: 500, isQuickButton: true }
-            ]
-        },
-        {
-            id: 4,
-            name: "トートバッグ",
-            icon: "👜",
-            basePrice: 2000,
-            variants: [
-                { name: "ナチュラル", price: 2000, isQuickButton: true },
-                { name: "ブラック", price: 2200, isQuickButton: true },
-                { name: "ネイビー (在庫少)", price: 2200, isQuickButton: false }
-            ]
-        },
-        {
-            id: 5,
-            name: "ステッカーセット",
-            icon: "🏷️",
-            basePrice: 800,
-            variants: [
-                { name: "Aセット", price: 800, isQuickButton: true },
-                { name: "Bセット", price: 800, isQuickButton: true }
-            ]
-        },
-        {
-            id: 6,
-            name: "キーホルダー",
-            icon: "🔑",
-            basePrice: 1000,
-            variants: [
-                { name: "アクリル", price: 1000, isQuickButton: true },
-                { name: "メタル", price: 1500, isQuickButton: false }
-            ]
+    <!-- Modal for Hybrid Variant Selection -->
+    <div id="variantModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalProductName">商品名</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <!-- Quick Buttons Area -->
+            <div id="quickButtonsArea" class="variant-section">
+                <span class="variant-label">よく使う項目 (クイック)</span>
+                <div id="quickButtonsGrid" class="quick-buttons"></div>
+            </div>
+
+            <!-- List/Select Area -->
+            <div id="listArea" class="variant-section">
+                <span class="variant-label">その他の項目 (リスト)</span>
+                <div style="display: flex; gap: 10px;">
+                    <select id="variantSelect" class="variant-select">
+                        <option value="">選択してください</option>
+                    </select>
+                    <button class="btn-add-list" onclick="addFromSelect()">追加</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- Mock Data ---
+        // isQuickButton: true -> Button, false -> Dropdown list
+        const products = [
+            {
+                id: 1,
+                name: "オリジナルTシャツ",
+                icon: "👕",
+                basePrice: 2500,
+                variants: [
+                    { name: "S", price: 2500, isQuickButton: true },
+                    { name: "M", price: 2500, isQuickButton: true },
+                    { name: "L", price: 2500, isQuickButton: true },
+                    { name: "XL", price: 2800, isQuickButton: true },
+                    { name: "XS (レア)", price: 2500, isQuickButton: false },
+                    { name: "XXL (レア)", price: 3000, isQuickButton: false },
+                    { name: "3XL (受注生産)", price: 3500, isQuickButton: false }
+                ]
+            },
+            {
+                id: 2,
+                name: "ロゴタオル",
+                icon: "🧣",
+                basePrice: 1500,
+                variants: [
+                    { name: "赤", price: 1500, isQuickButton: true },
+                    { name: "青", price: 1500, isQuickButton: true },
+                    { name: "限定ゴールド", price: 2000, isQuickButton: false },
+                    { name: "復刻ブラック", price: 1800, isQuickButton: false }
+                ]
+            },
+            {
+                id: 3,
+                name: "ラバーバンド",
+                icon: "⭕",
+                basePrice: 500,
+                variants: [
+                    { name: "フリーサイズ", price: 500, isQuickButton: true }
+                ]
+            },
+            {
+                id: 4,
+                name: "トートバッグ",
+                icon: "👜",
+                basePrice: 2000,
+                variants: [
+                    { name: "ナチュラル", price: 2000, isQuickButton: true },
+                    { name: "ブラック", price: 2200, isQuickButton: true },
+                    { name: "ネイビー (在庫少)", price: 2200, isQuickButton: false }
+                ]
+            },
+            {
+                id: 5,
+                name: "ステッカーセット",
+                icon: "🏷️",
+                basePrice: 800,
+                variants: [
+                    { name: "Aセット", price: 800, isQuickButton: true },
+                    { name: "Bセット", price: 800, isQuickButton: true }
+                ]
+            },
+            {
+                id: 6,
+                name: "キーホルダー",
+                icon: "🔑",
+                basePrice: 1000,
+                variants: [
+                    { name: "アクリル", price: 1000, isQuickButton: true },
+                    { name: "メタル", price: 1500, isQuickButton: false }
+                ]
+            }
+        ];
+
+        // --- State ---
+        let cart = [];
+        let currentSelectedProduct = null;
+
+        // --- DOM Elements ---
+        const productGrid = document.getElementById('productGrid');
+        const cartItemsContainer = document.getElementById('cartItems');
+        const cartTotalEl = document.getElementById('cartTotal');
+        const modal = document.getElementById('variantModal');
+        const modalProductName = document.getElementById('modalProductName');
+        const quickButtonsGrid = document.getElementById('quickButtonsGrid');
+        const variantSelect = document.getElementById('variantSelect');
+        const quickButtonsArea = document.getElementById('quickButtonsArea');
+        const listArea = document.getElementById('listArea');
+
+        // --- Initialization ---
+        function init() {
+            renderProducts();
+            updateCartUI();
         }
-    ];
 
-    // --- State ---
-    let cart = [];
-    let currentSelectedProduct = null;
+        // --- Logic: Render Products ---
+        function renderProducts() {
+            productGrid.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openVariantModal(product);
 
-    // --- DOM Elements ---
-    const productGrid = document.getElementById('productGrid');
-    const cartItemsContainer = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const modal = document.getElementById('variantModal');
-    const modalProductName = document.getElementById('modalProductName');
-    const quickButtonsGrid = document.getElementById('quickButtonsGrid');
-    const variantSelect = document.getElementById('variantSelect');
-    const quickButtonsArea = document.getElementById('quickButtonsArea');
-    const listArea = document.getElementById('listArea');
+                // Display base price or range
+                const minPrice = Math.min(...product.variants.map(v => v.price));
 
-    // --- Initialization ---
-    function init() {
-        renderProducts();
-        updateCartUI();
-    }
-
-    // --- Logic: Render Products ---
-    function renderProducts() {
-        productGrid.innerHTML = '';
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.onclick = () => openVariantModal(product);
-            
-            // Display base price or range
-            const minPrice = Math.min(...product.variants.map(v => v.price));
-
-            card.innerHTML = `
+                card.innerHTML = `
                 <span class="product-icon">${product.icon}</span>
                 <div class="product-name">${product.name}</div>
                 <div class="product-price">¥${minPrice.toLocaleString()}~</div>
             `;
-            productGrid.appendChild(card);
-        });
-    }
-
-    // --- Logic: Hybrid UI (Modal) ---
-    function openVariantModal(product) {
-        currentSelectedProduct = product;
-        modalProductName.textContent = product.name;
-        
-        // Clear previous
-        quickButtonsGrid.innerHTML = '';
-        variantSelect.innerHTML = '<option value="">選択してください</option>';
-
-        const quickVariants = product.variants.filter(v => v.isQuickButton);
-        const listVariants = product.variants.filter(v => !v.isQuickButton);
-
-        // Render Quick Buttons
-        if (quickVariants.length > 0) {
-            quickButtonsArea.style.display = 'block';
-            quickVariants.forEach((variant, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'variant-btn';
-                btn.innerHTML = `${variant.name}<br><small>¥${variant.price.toLocaleString()}</small>`;
-                btn.onclick = () => {
-                    addToCart(product, variant);
-                    closeModal(); // Quick add closes modal immediately for speed
-                };
-                quickButtonsGrid.appendChild(btn);
+                productGrid.appendChild(card);
             });
-        } else {
-            quickButtonsArea.style.display = 'none';
         }
 
-        // Render Dropdown List
-        if (listVariants.length > 0) {
-            listArea.style.display = 'block';
-            listVariants.forEach((variant, index) => {
-                // We need to track the original index or object. 
-                // Using JSON string as value for simplicity in prototype
-                const option = document.createElement('option');
-                option.value = JSON.stringify(variant); 
-                option.textContent = `${variant.name} - ¥${variant.price.toLocaleString()}`;
-                variantSelect.appendChild(option);
-            });
-        } else {
-            listArea.style.display = 'none';
+        // --- Logic: Hybrid UI (Modal) ---
+        function openVariantModal(product) {
+            currentSelectedProduct = product;
+            modalProductName.textContent = product.name;
+
+            // Clear previous
+            quickButtonsGrid.innerHTML = '';
+            variantSelect.innerHTML = '<option value="">選択してください</option>';
+
+            const quickVariants = product.variants.filter(v => v.isQuickButton);
+            const listVariants = product.variants.filter(v => !v.isQuickButton);
+
+            // Render Quick Buttons
+            if (quickVariants.length > 0) {
+                quickButtonsArea.style.display = 'block';
+                quickVariants.forEach((variant, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'variant-btn';
+                    btn.innerHTML = `${variant.name}<br><small>¥${variant.price.toLocaleString()}</small>`;
+                    btn.onclick = () => {
+                        addToCart(product, variant);
+                        closeModal(); // Quick add closes modal immediately for speed
+                    };
+                    quickButtonsGrid.appendChild(btn);
+                });
+            } else {
+                quickButtonsArea.style.display = 'none';
+            }
+
+            // Render Dropdown List
+            if (listVariants.length > 0) {
+                listArea.style.display = 'block';
+                listVariants.forEach((variant, index) => {
+                    // We need to track the original index or object. 
+                    // Using JSON string as value for simplicity in prototype
+                    const option = document.createElement('option');
+                    option.value = JSON.stringify(variant);
+                    option.textContent = `${variant.name} - ¥${variant.price.toLocaleString()}`;
+                    variantSelect.appendChild(option);
+                });
+            } else {
+                listArea.style.display = 'none';
+            }
+
+            // If simple product (1 variant and it is quick), maybe auto-add? 
+            // For now, consistent modal behavior is safer.
+
+            modal.classList.add('active');
         }
 
-        // If simple product (1 variant and it is quick), maybe auto-add? 
-        // For now, consistent modal behavior is safer.
+        function closeModal() {
+            modal.classList.remove('active');
+            currentSelectedProduct = null;
+        }
 
-        modal.classList.add('active');
-    }
+        function addFromSelect() {
+            const value = variantSelect.value;
+            if (!value) return;
+            const variant = JSON.parse(value);
+            addToCart(currentSelectedProduct, variant);
+            closeModal();
+        }
 
-    function closeModal() {
-        modal.classList.remove('active');
-        currentSelectedProduct = null;
-    }
+        // --- Logic: Cart ---
+        function addToCart(product, variant) {
+            const cartItem = {
+                productId: product.id,
+                productName: product.name,
+                variantName: variant.name,
+                price: variant.price,
+                id: Date.now() // Simple unique ID for list key
+            };
+            cart.push(cartItem);
+            updateCartUI();
+        }
 
-    function addFromSelect() {
-        const value = variantSelect.value;
-        if (!value) return;
-        const variant = JSON.parse(value);
-        addToCart(currentSelectedProduct, variant);
-        closeModal();
-    }
+        function removeFromCart(cartItemId) {
+            cart = cart.filter(item => item.id !== cartItemId);
+            updateCartUI();
+        }
 
-    // --- Logic: Cart ---
-    function addToCart(product, variant) {
-        const cartItem = {
-            productId: product.id,
-            productName: product.name,
-            variantName: variant.name,
-            price: variant.price,
-            id: Date.now() // Simple unique ID for list key
-        };
-        cart.push(cartItem);
-        updateCartUI();
-    }
+        function updateCartUI() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
 
-    function removeFromCart(cartItemId) {
-        cart = cart.filter(item => item.id !== cartItemId);
-        updateCartUI();
-    }
-
-    function updateCartUI() {
-        cartItemsContainer.innerHTML = '';
-        let total = 0;
-
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>';
-        } else {
-            cart.forEach(item => {
-                total += item.price;
-                const el = document.createElement('div');
-                el.className = 'cart-item';
-                el.innerHTML = `
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>';
+            } else {
+                cart.forEach(item => {
+                    total += item.price;
+                    const el = document.createElement('div');
+                    el.className = 'cart-item';
+                    el.innerHTML = `
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.productName}</div>
                         <div class="cart-item-variant">${item.variantName}</div>
@@ -513,21 +574,22 @@
                     <div class="cart-item-price">¥${item.price.toLocaleString()}</div>
                     <button style="margin-left:10px; color:#ff3b30; border:none; background:none; cursor:pointer;" onclick="removeFromCart(${item.id})">🗑️</button>
                 `;
-                cartItemsContainer.appendChild(el);
-            });
+                    cartItemsContainer.appendChild(el);
+                });
+            }
+
+            cartTotalEl.textContent = total.toLocaleString();
         }
 
-        cartTotalEl.textContent = total.toLocaleString();
-    }
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
 
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
+        // Run
+        init();
 
-    // Run
-    init();
-
-</script>
+    </script>
 </body>
+
 </html>
