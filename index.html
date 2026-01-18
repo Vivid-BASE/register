@@ -592,7 +592,8 @@
 
         .variant-row {
             display: grid;
-            grid-template-columns: 2fr 1.5fr 1.5fr 40px;
+            grid-template-columns: 1.2fr 1.8fr 1fr 40px;
+            /* Reduced Name, Increased Price */
             /* Name Price Stock Delete */
             gap: 8px;
             margin-bottom: 10px;
@@ -1334,7 +1335,27 @@
                         <h3>商品を登録する</h3>
                         <div class="form-group">
                             <label>商品名</label>
-                            <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ">
+                            <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ" list="commonProductNames">
+                            <datalist id="commonProductNames">
+                                <option value="Tシャツ">
+                                <option value="タオル">
+                                <option value="マフラータオル">
+                                <option value="パーカー">
+                                <option value="ロンT">
+                                <option value="トートバッグ">
+                                <option value="アクリルスタンド">
+                                <option value="キーホルダー">
+                                <option value="ステッカー">
+                                <option value="ポストカード">
+                                <option value="パンフレット">
+                                <option value="CD">
+                                <option value="DVD">
+                                <option value="Blu-ray">
+                                <option value="カレンダー">
+                                <option value="写真集">
+                                <option value="ペンライト">
+                                <option value="リストバンド">
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label>バリエーション (サイズ/色)</label>
