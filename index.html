@@ -1304,6 +1304,37 @@
             });
         }
 
+        // --- Edit Logic ---
+        let editingProductIndex = -1;
+
+        function editProduct(index) {
+            editingProductIndex = index;
+            const p = products[index];
+            
+            // Populate form
+            document.getElementById('newProdName').value = p.name;
+            const vContainer = document.getElementById('newProdVariants');
+            vContainer.innerHTML = '';
+            
+            if (p.variants && p.variants.length > 0) {
+                p.variants.forEach(v => addVariantRow('newProdVariants', v));
+            } else {
+                addVariantRow('newProdVariants'); 
+            }
+            
+            // Scroll to top
+            document.querySelector('.settings-container').scrollIntoView({behavior: 'smooth'});
+            
+            // Change Button State
+            const saveBtn = document.querySelector('.btn-save-product');
+            saveBtn.textContent = '更新する (上書き)';
+            saveBtn.onclick = saveUpdatedProduct;
+            saveBtn.style.background = 'var(--accent-color)';
+            
+            // Change Title
+            document.querySelector('.settings-card h3').textContent = '商品を編集する';
+        }
+
         function saveNewProduct() {
             const name = document.getElementById('newProdName').value;
             if (!name) { alert('商品名を入力してください'); return; }
