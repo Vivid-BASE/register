@@ -1543,17 +1543,19 @@
             const timestamp = Date.now();
 
             cart.forEach(item => {
+                const count = item.count || 1; // Fix: Default to 1 if undefined
+
                 // Deduct Stock
                 const product = products.find(p => p.id === item.productId);
                 if (product) {
                     const variant = product.variants.find(v => v.name === item.variantName);
                     if (variant) {
-                        variant.stock = (parseInt(variant.stock) || 0) - item.count;
+                        variant.stock = (parseInt(variant.stock) || 0) - count;
                     }
                 }
 
                 // Add to Log (One entry per unit)
-                for (let i = 0; i < item.count; i++) {
+                for (let i = 0; i < count; i++) {
                     salesLog.push({
                         timestamp: timestamp,
                         productId: item.productId,
