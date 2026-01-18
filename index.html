@@ -1584,6 +1584,8 @@
         function renderSummary() {
             summaryTableBody.innerHTML = '';
             let total = 0;
+            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
+
             // Filter for SESSION only (since last reset)
             const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
 
@@ -1601,6 +1603,11 @@
                 }
                 aggregation[key].count++;
                 total += log.price;
+
+                // Payment Method Total
+                if (log.paymentMethod === 'paypay') paymentTotals.paypay += log.price;
+                else if (log.paymentMethod === 'credit') paymentTotals.credit += log.price;
+                else paymentTotals.cash += log.price;
             });
 
             Object.values(aggregation).forEach(item => {
@@ -1623,7 +1630,13 @@
                 summaryTableBody.appendChild(tr);
             });
 
-            summaryTotalAmount.textContent = total.toLocaleString();
+            // Display Total with Payment Breakdown
+            summaryTotalAmount.innerHTML = `
+                ${total.toLocaleString()}
+                <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
+                    (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
+                </div>
+            `;
         }
 
         function resetSession() {
