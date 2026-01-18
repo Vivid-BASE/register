@@ -2061,18 +2061,24 @@
                         </div>
                         <div class="form-group">
                             <label>バリエーション (サイズ/色)</label>
-                            <div style="margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px;">
-                                <label style="font-size:0.9rem; color:#555; display:block; margin-bottom:5px;">ひな形から入力 (名前と種類を自動設定)</label>
-                                <label style="font-size:0.9rem; color:#555; display:block; margin-bottom:5px;">ひな形から入力 (名前と種類を自動設定)</label>
-                                <div class="template-buttons" style="display:flex; flex-wrap:wrap; gap:5px;">
-                                    <button class="variant-preset-btn" onclick="applyProductTemplate('tshirt')">Tシャツ</button>
-                                    <button class="variant-preset-btn" onclick="applyProductTemplate('longT')">ロンT</button>
-                                    <button class="variant-preset-btn" onclick="applyProductTemplate('towel')">タオル</button>
-                                    <button class="variant-preset-btn" onclick="applyProductTemplate('muffler')">マフラー</button>
-                                    <button class="variant-preset-btn" onclick="applyProductTemplate('cheki')">📸 チェキ</button>
-                                </div>
-                            </div>
-                            </div>
+                            <datalist id="commonVariantNames">
+                                <option value="S">
+                                <option value="M">
+                                <option value="L">
+                                <option value="XL">
+                                <option value="XS">
+                                <option value="XXL">
+                                <option value="Free">
+                                <option value="赤">
+                                <option value="青">
+                                <option value="黄">
+                                <option value="緑">
+                                <option value="白">
+                                <option value="黒">
+                                <option value="通常">
+                                <option value="サイン入り">
+                                <option value="セット">
+                            </datalist>
                             <div id="newProdVariants"></div>
                             <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
                         </div>
@@ -2104,7 +2110,7 @@
             // Layout: Name | Price | Stock | Del
             // Use placeholders effectively
             div.innerHTML = `
-                <input type="text" placeholder="種類名 (S, 赤など)" class="form-control" value="${nameVal}" style="grid-column: span 1">
+                <input type="text" placeholder="種類名 (S, 赤など)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
                 <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
