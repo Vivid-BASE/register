@@ -1101,12 +1101,20 @@
             },
             {
                 id: 2,
-                name: "ロゴタオル",
+                name: "マフラータオル",
                 icon: "🧣",
                 variants: [
-                    { name: "赤", price: 1500, stock: 30, isQuickButton: true },
-                    { name: "青", price: 1500, stock: 30, isQuickButton: true },
-                    { name: "限定ゴールド", price: 2000, stock: 5, isQuickButton: false }
+                    { name: "赤", price: 2000, stock: 30, isQuickButton: true },
+                    { name: "青", price: 2000, stock: 30, isQuickButton: true }
+                ]
+            },
+            {
+                id: 3,
+                name: "チェキ",
+                icon: "📸",
+                variants: [
+                    { name: "Normal", price: 1000, stock: 100, isQuickButton: true },
+                    { name: "Sign", price: 2000, stock: 50, isQuickButton: true }
                 ]
             }
         ];
@@ -1449,7 +1457,8 @@
             currentPaymentMethod = 'cash';
             updatePaymentUI();
 
-            const total = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
+            // Fix: Handle flat cart items (count optional, default 1)
+            const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
 
             document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
@@ -2039,11 +2048,16 @@
                         </div>
                         <div class="form-group">
                             <label>バリエーション (サイズ/色)</label>
-                            <div style="margin-bottom: 10px;">
-                                <span style="font-size:0.8rem; color:#666; margin-right:5px;">定型追加:</span>
-                                <button class="variant-preset-btn" onclick="applyVariantPreset('adult')">大人サイズ (S-XL)</button>
-                                <button class="variant-preset-btn" onclick="applyVariantPreset('ladies')">レディース (XS-L)</button>
-                                <button class="variant-preset-btn" onclick="applyVariantPreset('kids')">キッズ (100-150)</button>
+                            <div style="margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                                <label style="font-size:0.9rem; color:#555; display:block; margin-bottom:5px;">ひな形から入力 (名前と種類を自動設定)</label>
+                                <select id="productTemplateSelect" class="form-control" onchange="applyProductTemplate(this.value)">
+                                    <option value="">-- ひな形を選択 --</option>
+                                    <option value="tshirt">Tシャツ (S-XL)</option>
+                                    <option value="longT">ロンT (S-XL)</option>
+                                    <option value="towel">タオル (種類なし)</option>
+                                    <option value="muffler">マフラータオル (赤/青)</option>
+                                    <option value="cheki">チェキ (Normal/Sign)</option>
+                                </select>
                             </div>
                             <div id="newProdVariants"></div>
                             <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
@@ -2084,22 +2098,48 @@
             container.appendChild(div);
         }
 
-        function applyVariantPreset(type) {
+        function applyProductTemplate(type) {
+            if (!type) return;
+
+            const nameInput = document.getElementById('newProdName');
             const container = document.getElementById('newProdVariants');
             container.innerHTML = ''; // Clear existing
 
+            // Auto-set Icon if possible (optional refinement)
+            // nameInput.value could be set too
+
             let variants = [];
-            if (type === 'adult') {
+
+            if (type === 'tshirt') {
+                nameInput.value = 'Tシャツ';
                 variants = ['S', 'M', 'L', 'XL'];
-            } else if (type === 'ladies') {
-                variants = ['XS', 'S', 'M', 'L'];
-            } else if (type === 'kids') {
-                variants = ['100', '110', '120', '130', '140', '150'];
+            } else if (type === 'longT') {
+                nameInput.value = 'ロンT';
+                variants = ['S', 'M', 'L', 'XL'];
+            } else if (type === 'towel') {
+                nameInput.value = 'フェイスタオル';
+                // Single generic variant or color
+                addVariantRow('newProdVariants', { name: 'Free', price: '', stock: '' });
+                return;
+            } else if (type === 'muffler') {
+                nameInput.value = 'マフラータオル';
+                variants = ['赤', '青'];
+            } else if (type === 'cheki') {
+                nameInput.value = 'チェキ';
+                addVariantRow('newProdVariants', { name: 'Normal', price: '1000', stock: '' });
+                addVariantRow('newProdVariants', { name: 'Sign', price: '2000', stock: '' });
+                return;
+            } else if (type === 'adult') {
+                // Keep backward compatibility for presets logic if needed, but UI replaced
+                variants = ['S', 'M', 'L', 'XL'];
             }
 
             variants.forEach(v => {
                 addVariantRow('newProdVariants', { name: v, price: '', stock: '' });
             });
+
+            // Reset select?
+            // document.getElementById('productTemplateSelect').value = ''; 
         }
 
         function renderExistingProducts() {
