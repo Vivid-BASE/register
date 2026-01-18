@@ -42,7 +42,25 @@
         }
 
         /* Mobile Optimization */
+        /* Mobile Optimization */
         @media (max-width: 767px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .product-area {
+                flex: 1.5;
+                /* Give more space to products */
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .cart-area {
+                flex: 1;
+                /* Cart at bottom */
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            }
+
             .modal-content {
                 width: 95%;
                 max-height: 90vh;
