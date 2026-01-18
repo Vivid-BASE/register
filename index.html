@@ -650,6 +650,48 @@
             flex-direction: row;
         }
 
+
+
+        /* Payment Method Tabs */
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-method-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-method-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Variant Presets */
+        .variant-preset-btn {
+            background: #e9ecef;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .variant-preset-btn:hover {
+            background: #dde2e6;
+        }
+
         /* Settings View Improvements */
         .settings-container {
             padding: 10px;
@@ -995,24 +1037,39 @@
                 <div id="paymentTotal" style="font-size: 2.5rem; font-weight: bold; color: #333;">¥0</div>
             </div>
 
-            <div class="form-group">
-                <label>お預かり</label>
-                <input type="number" id="amountReceived" class="form-control"
-                    style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
-                    oninput="updateChange()">
-                <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
-                    <button onclick="setReceivedAmount(1000)"
-                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
-                    <button onclick="setReceivedAmount(5000)"
-                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
-                    <button onclick="setReceivedAmount(10000)"
-                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
-                </div>
+            <div class="payment-methods">
+                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">💵 現金</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱
+                    PayPay</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">💳 クレカ</button>
             </div>
 
-            <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                <div style="font-size: 1rem; color: #555;">お釣り</div>
-                <div id="paymentChange" style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">¥0
+            <!-- Cash Input Area (Hidden for cashless) -->
+            <div id="cashInputArea">
+                <div class="form-group">
+                    <label>お預かり</label>
+                    <div
+                        style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 10px;">
+                        <input type="number" id="amountReceived" class="form-control"
+                            style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
+                            oninput="updateChange()">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="setReceivedAmount(1000)"
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
+                        <button onclick="setReceivedAmount(5000)"
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
+                        <button onclick="setReceivedAmount(10000)"
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
+                    </div>
+                </div>
+
+                <div
+                    style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 1rem; color: #555;">お釣り</div>
+                    <div id="paymentChange" style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">¥0
+                    </div>
                 </div>
             </div>
 
@@ -1379,148 +1436,317 @@
             cartTotalEl.textContent = total.toLocaleString();
         }
 
-        // --- Checkout Logic (Cash Register) ---
-        const paymentModal = document.getElementById('paymentModal');
-        let currentTotal = 0;
+        // Global Payment State
+        let currentPaymentMethod = 'cash'; // cash, paypay, credit
 
         function checkout() {
             if (cart.length === 0) {
                 alert('カートは空です');
                 return;
             }
-            // Proceed to Payment Modal
-            openPaymentModal();
+
+            // Reset Payment Modal State
+            currentPaymentMethod = 'cash';
+            updatePaymentUI();
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
+
+            document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
+            document.getElementById('amountReceived').value = '';
+            document.getElementById('paymentChange').textContent = '¥0';
+
+            const btn = document.getElementById('btnCompletePayment');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            document.getElementById('paymentModal').classList.add('active');
         }
 
-        function openPaymentModal() {
-            // Calculate Total
-            currentTotal = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('paymentTotal').textContent = `¥${currentTotal.toLocaleString()}`;
+        function setPaymentMethod(method) {
+            currentPaymentMethod = method;
+            updatePaymentUI();
+            updateChange(); // Recalculate based on new method
+        }
 
-            // Reset Inputs
-            const input = document.getElementById('amountReceived');
-            input.value = '';
-            document.getElementById('paymentChange').textContent = '¥0';
-            document.getElementById('btnCompletePayment').disabled = true;
-            document.getElementById('btnCompletePayment').style.opacity = '0.5';
+        function updatePaymentUI() {
+            // Update Buttons
+            document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`pm-${currentPaymentMethod}`).classList.add('active');
 
-            paymentModal.classList.add('active');
-            input.focus();
+            // Show/Hide Cash Input
+            const cashArea = document.getElementById('cashInputArea');
+            if (currentPaymentMethod === 'cash') {
+                cashArea.style.display = 'block';
+                document.getElementById('amountReceived').focus();
+            } else {
+                cashArea.style.display = 'none';
+                // Auto-fill amount received for cashless
+                const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
+                document.getElementById('amountReceived').value = totalText;
+            }
         }
 
         function closePaymentModal() {
-            paymentModal.classList.remove('active');
+            document.getElementById('paymentModal').classList.remove('active');
         }
 
         function setReceivedAmount(amount) {
-            const input = document.getElementById('amountReceived');
-            input.value = amount;
-            updateChange(); // Trigger calculation
+            const currentVal = parseInt(document.getElementById('amountReceived').value) || 0;
+            document.getElementById('amountReceived').value = currentVal + amount;
+            updateChange();
         }
 
         function updateChange() {
-            const receivedStr = document.getElementById('amountReceived').value;
-            const received = parseInt(receivedStr) || 0;
-            const change = received - currentTotal;
-
-            const changeEl = document.getElementById('paymentChange');
+            const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
+            const received = parseInt(document.getElementById('amountReceived').value);
             const btn = document.getElementById('btnCompletePayment');
 
-            if (receivedStr === '') {
-                changeEl.textContent = '¥0';
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-                return;
-            }
+            // Logic for Cashless: received is auto-filled to equal total, so change is 0.
 
-            if (change >= 0) {
-                changeEl.textContent = `¥${change.toLocaleString()}`;
-                changeEl.style.color = 'var(--primary-color)';
+            if (!isNaN(received) && received >= total) {
+                const change = received - total;
+                document.getElementById('paymentChange').textContent = `¥${change.toLocaleString()}`;
+                document.getElementById('paymentChange').style.color = 'var(--primary-color)';
                 btn.disabled = false;
                 btn.style.opacity = '1';
             } else {
-                changeEl.textContent = `不足 ¥${Math.abs(change).toLocaleString()}`;
-                changeEl.style.color = 'red';
+                document.getElementById('paymentChange').textContent = '¥0';
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
             }
         }
 
         function finalizeCheckout() {
-            // Process items
+            const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const timestamp = Date.now();
+
             cart.forEach(item => {
-                // Updated stock
-                const prod = products.find(p => p.id === item.productId);
-                if (prod) {
-                    const variant = prod.variants.find(v => v.name === item.variantName);
+                // Deduct Stock
+                const product = products.find(p => p.id === item.productId);
+                if (product) {
+                    const variant = product.variants.find(v => v.name === item.variantName);
                     if (variant) {
-                        variant.stock = (parseInt(variant.stock) || 0) - 1;
+                        variant.stock = (parseInt(variant.stock) || 0) - item.count;
                     }
                 }
 
-                // Record Log
-                salesLog.push({
-                    timestamp: timestamp,
-                    productId: item.productId,
-                    productName: item.productName,
-                    variantName: item.variantName,
-                    price: item.price
-                });
+                // Add to Log (One entry per unit)
+                for (let i = 0; i < item.count; i++) {
+                    salesLog.push({
+                        timestamp: timestamp,
+                        productId: item.productId,
+                        productName: item.productName,
+                        variantName: item.variantName,
+                        price: item.price,
+                        paymentMethod: currentPaymentMethod // Record method
+                    });
+                }
             });
 
-            // Save
-            saveProducts(); // Updates stock
-            saveSales();    // Updates log
+            saveSales();
+            saveProducts(); // Save updated stock
 
-            // Reset
+            // Clear Cart
             cart = [];
             updateCartUI();
-            renderProducts(); // Refresh stock badges
-
             closePaymentModal();
-            // alert('会計が完了しました'); // Removed per request, but UI feedback happens via modal close
+
+            showToast('お会計が完了しました');
+
+            // Re-render shop to show updated stock
+            renderProductGrid();
         }
+
 
         // --- Summary Logic ---
         function renderSummary() {
-            // Filter sales for "Today" (Japan Time rough check)
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const todaySales = salesLog.filter(log => log.timestamp >= today.getTime());
-
-            const total = todaySales.reduce((sum, log) => sum + log.price, 0);
-            summaryTotalAmount.textContent = total.toLocaleString();
-
-            // Build Table
             summaryTableBody.innerHTML = '';
+            let total = 0;
+            // Filter for SESSION only (since last reset)
+            const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
 
-            // Flatten all current variants to show list
-            products.forEach(p => {
-                p.variants.forEach(v => {
-                    const soldCount = todaySales.filter(log => log.productId === p.id && log.variantName === v.name).length;
+            // Aggregate by Variant for Session
+            const aggregation = {};
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    <td>${p.name} <span style="color:#666; font-size:0.9rem;">(${v.name})</span></td>
-                    <td>¥${v.price.toLocaleString()}</td>
-                    <td style="font-weight:bold;">${soldCount}</td>
-                    <td>${v.stock}</td>
-                `;
-                    summaryTableBody.appendChild(tr);
-                });
+            sessionLogs.forEach(log => {
+                const key = `${log.productName} - ${log.variantName}`;
+                if (!aggregation[key]) {
+                    aggregation[key] = {
+                        name: key,
+                        price: log.price,
+                        count: 0
+                    };
+                }
+                aggregation[key].count++;
+                total += log.price;
             });
+
+            Object.values(aggregation).forEach(item => {
+                const tr = document.createElement('tr');
+
+                // Find current stock
+                let stock = '-';
+                const p = products.find(prod => prod.name === item.name.split(' - ')[0]);
+                if (p) {
+                    const v = p.variants.find(va => va.name === item.name.split(' - ')[1]);
+                    if (v) stock = v.stock;
+                }
+
+                tr.innerHTML = `
+                <td>${item.name}</td>
+                <td>¥${item.price.toLocaleString()}</td>
+                <td>${item.count}</td>
+                <td>${stock}</td>
+            `;
+                summaryTableBody.appendChild(tr);
+            });
+
+            summaryTotalAmount.textContent = total.toLocaleString();
         }
 
-        function resetDailySales() {
-            if (confirm('本日の売上データをクリアしてよろしいですか？（在庫数は戻りません）')) {
-                // Ideally we'd archive it, but for now just clearing logs or just filtering.
-                // Requirement was vague "集計的な". Let's just clear logs for simple prototype.
-                salesLog = [];
-                saveSales();
-                renderSummary();
-                alert('売上データをリセットしました');
+        function resetSession() {
+            // One-Tap Reset (No confirm)
+            sessionStartTime = Date.now();
+            saveSession();
+            renderSummary();
+            showToast('本日の売上を履歴に保存しました');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = "toast show";
+            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // --- Calendar Logic ---
+        function openCalendar() {
+            const calendarModal = document.getElementById('calendarModal');
+            if (calendarModal) {
+                calendarModal.classList.add('active');
+                showCalendarGrid(); // Ensure grid is shown first
+                renderCalendar();
             }
+        }
+
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+        }
+
+        function showCalendarGrid() {
+            document.getElementById('calendarGridView').style.display = 'block';
+            document.getElementById('calendarDetailView').style.display = 'none';
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Headers
+            const days = ['日', '月', '火', '水', '木', '金', '土'];
+            days.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-header';
+                div.textContent = d;
+                grid.appendChild(div);
+            });
+
+            // Days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+
+            // Padding for start
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Dates
+            for (let d = 1; d <= lastDay.getDate(); d++) {
+                const dateObj = new Date(year, month, d);
+                const dateStr = dateObj.toLocaleDateString('ja-JP');
+
+                // Check data
+                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
+
+                const cell = document.createElement('div');
+                cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
+                cell.textContent = d;
+                cell.onclick = () => showDailyDetail(dateStr);
+                grid.appendChild(cell);
+            }
+        }
+
+        function showDailyDetail(dateStr) {
+            const gridView = document.getElementById('calendarGridView');
+            const detailView = document.getElementById('calendarDetailView');
+            const content = document.getElementById('calendarDetailContent');
+            const title = document.getElementById('calendarDetailTitle');
+
+            // Switch views
+            gridView.style.display = 'none';
+            detailView.style.display = 'flex';
+
+            title.textContent = `${dateStr} の売上詳細`;
+            content.innerHTML = '';
+
+            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+
+            if (logs.length === 0) {
+                content.innerHTML = '<div style="color:#999; text-align:center; margin-top:50px;">データはありません</div>';
+                return;
+            }
+
+            let total = 0;
+            const agg = {};
+            logs.forEach(l => {
+                const k = `${l.productName} ${l.variantName}`;
+                if (!agg[k]) agg[k] = { name: k, price: l.price, count: 0 };
+                agg[k].count++;
+                total += l.price;
+            });
+
+            // Total Header
+            const totalDiv = document.createElement('div');
+            totalDiv.style.fontWeight = 'bold';
+            totalDiv.style.fontSize = '1.8rem';
+            totalDiv.style.color = '#333';
+            totalDiv.style.marginBottom = '20px';
+            totalDiv.style.textAlign = 'center';
+            totalDiv.style.padding = '10px';
+            totalDiv.style.background = '#f9f9f9';
+            totalDiv.style.borderRadius = '8px';
+            totalDiv.textContent = `合計: ¥${total.toLocaleString()}`;
+            content.appendChild(totalDiv);
+
+            // List
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.fontSize = '1rem';
+            // table styling
+            table.style.borderCollapse = 'collapse';
+
+            Object.values(agg).forEach(item => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #eee';
+                tr.innerHTML = `
+                    <td style="padding:10px 5px;">${item.name}</td>
+                    <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
+                    <td style="text-align:right; font-weight:bold; width:80px;">¥${(item.price * item.count).toLocaleString()}</td>
+                    <td style="text-align:right; font-size:0.8rem; color:#666; white-space:nowrap; padding-left:10px;">${item.price.toLocaleString()}</td>
+                `;
+                table.appendChild(tr);
+            });
+            content.appendChild(table);
         }
 
         // (Removed duplicate sync downloadSalesCSV function)
@@ -1532,13 +1758,15 @@
             }
 
             // CSV Header
-            let csvContent = "日時,商品名,種類,価格\n";
+            let csvContent = "日時,商品名,種類,価格,支払い方法\n";
 
             // CSV Rows
             salesLog.forEach(log => {
                 const date = new Date(log.timestamp);
                 const dateStr = date.toLocaleString('ja-JP');
-                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price}\n`;
+                const method = log.paymentMethod === 'paypay' ? 'PayPay' :
+                    log.paymentMethod === 'credit' ? 'クレカ' : '現金';
+                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price},"${method}"\n`;
             });
 
             // Add BOM for Excel compatibility
@@ -1811,6 +2039,12 @@
                         </div>
                         <div class="form-group">
                             <label>バリエーション (サイズ/色)</label>
+                            <div style="margin-bottom: 10px;">
+                                <span style="font-size:0.8rem; color:#666; margin-right:5px;">定型追加:</span>
+                                <button class="variant-preset-btn" onclick="applyVariantPreset('adult')">大人サイズ (S-XL)</button>
+                                <button class="variant-preset-btn" onclick="applyVariantPreset('ladies')">レディース (XS-L)</button>
+                                <button class="variant-preset-btn" onclick="applyVariantPreset('kids')">キッズ (100-150)</button>
+                            </div>
                             <div id="newProdVariants"></div>
                             <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
                         </div>
@@ -1848,6 +2082,24 @@
                 <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
             `;
             container.appendChild(div);
+        }
+
+        function applyVariantPreset(type) {
+            const container = document.getElementById('newProdVariants');
+            container.innerHTML = ''; // Clear existing
+
+            let variants = [];
+            if (type === 'adult') {
+                variants = ['S', 'M', 'L', 'XL'];
+            } else if (type === 'ladies') {
+                variants = ['XS', 'S', 'M', 'L'];
+            } else if (type === 'kids') {
+                variants = ['100', '110', '120', '130', '140', '150'];
+            }
+
+            variants.forEach(v => {
+                addVariantRow('newProdVariants', { name: v, price: '', stock: '' });
+            });
         }
 
         function renderExistingProducts() {
