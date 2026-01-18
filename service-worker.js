@@ -1,4 +1,4 @@
-const CACHE_NAME = 'register-app-v1';
+const CACHE_NAME = 'register-app-v2';
 const ASSETS = [
   './',
   './index.html',
