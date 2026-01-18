@@ -605,15 +605,15 @@
 
         /* Mobile adjustment for variant row */
         /* Mobile adjustment for variant row */
-        @media (max-width: 450px) {
+        @media (max-width: 600px) {
             .variant-row {
-                grid-template-columns: 1.5fr 1fr 40px;
+                grid-template-columns: 1.5fr 1fr 40px !important;
                 /* Price | Stock | Delete */
                 row-gap: 8px;
             }
 
             .variant-row input:nth-child(1) {
-                grid-column: 1 / -1;
+                grid-column: 1 / -1 !important;
                 /* Name takes full width (Row 1) */
             }
         }
