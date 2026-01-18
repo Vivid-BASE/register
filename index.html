@@ -87,6 +87,20 @@
             .variant-label {
                 font-size: 0.9rem;
             }
+
+            /* Compact Header for Mobile */
+            h1 {
+                font-size: 1rem;
+            }
+
+            .header-buttons {
+                gap: 5px;
+            }
+
+            .header-btn {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
         }
 
         html {
@@ -149,13 +163,15 @@
         /* Header */
         header {
             background-color: #ffffff;
-            /* Explicit white */
-            padding: var(--spacing-unit);
+            padding: 10px;
+            /* Reduced padding */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: nowrap;
+            /* Prevent wrapping */
         }
 
         h1 {
@@ -950,17 +966,12 @@
 <body>
 
     <header>
-        <h1 style="display:flex; align-items:center;">
-            物販レジ
-            <button onclick="window.location.reload(true)"
-                style="margin-left:10px; font-size:0.7rem; padding:4px 8px; background:#eee; border:1px solid #ccc; border-radius:4px;">
-                🔄 更新
-            </button>
-        </h1>
+        <h1 style="margin: 0;">物販レジ</h1>
         <div class="header-buttons">
+            <button class="header-btn" onclick="window.location.reload(true)" style="background:#f0f0f0;">🔄</button>
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
-            <button class="header-btn" onclick="switchView('settings')">⚙️ 設定</button>
+            <button class="header-btn" onclick="switchView('settings')">⚙ 設定</button>
         </div>
     </header>
 
