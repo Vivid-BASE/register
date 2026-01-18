@@ -269,6 +269,41 @@
             position: relative;
         }
 
+        .variant-btn-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .qty-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 100%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:active {
+            opacity: 0.8;
+        }
+
+        .qty-display {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
         .variant-btn:hover {
             background-color: #e0e0e0;
         }
@@ -700,25 +735,45 @@
                     const stock = parseInt(variant.stock) || 0;
                     const remaining = stock - countInCart; // Visual remaining in this session logic?
 
-                    const btn = document.createElement('button');
-                    btn.className = 'variant-btn';
-                    if (remaining <= 0) {
-                        btn.classList.add('variant-stock-out');
-                        // Optional: btn.disabled = true; if strict
-                    } else if (remaining < 3) {
-                        btn.classList.add('variant-stock-low');
+                    const btn = document.createElement('div');
+
+                    if (countInCart > 0) {
+                        // Render Control Group [-] Count [+]
+                        btn.className = 'variant-btn-group';
+                        btn.innerHTML = `
+                            <button class="qty-btn" onclick="decreaseQTY(${currentSelectedProduct.id}, '${variant.name}')">－</button>
+                            <div class="qty-display">${countInCart}</div>
+                            <button class="qty-btn" onclick="increaseQTY(${currentSelectedProduct.id}, '${variant.name}')">＋</button>
+                        `;
+                    } else {
+                        // Render Standard Button
+                        const innerBtn = document.createElement('button');
+                        innerBtn.className = 'variant-btn';
+                        innerBtn.style.width = '100%';
+                        innerBtn.style.height = '100%';
+                        innerBtn.style.border = 'none';
+
+                        if (remaining <= 0) {
+                            innerBtn.classList.add('variant-stock-out');
+                        } else if (remaining < 3) {
+                            innerBtn.classList.add('variant-stock-low');
+                        }
+
+                        innerBtn.innerHTML = `${variant.name}<br><small>¥${variant.price.toLocaleString()}</small><br><small style="font-size:0.7rem; color:#666;">残: ${stock}</small>`;
+                        innerBtn.onclick = () => {
+                            if (remaining > 0) {
+                                addToCart(currentSelectedProduct, variant);
+                                refreshModalContent();
+                            }
+                        };
+                        btn.appendChild(innerBtn);
+                        btn.style.width = '100%';
+                        btn.style.height = '100%';
                     }
-
-                    const badge = countInCart > 0 ? `<div style="position:absolute; top:-5px; right:-5px; background:var(--accent-color); color:white; width:20px; height:20px; border-radius:50%; font-size:12px; display:flex; align-items:center; justify-content:center;">${countInCart}</div>` : '';
-
-                    btn.innerHTML = `${badge}${variant.name}<br><small>¥${variant.price.toLocaleString()}</small><br><small style="font-size:0.7rem; color:#666;">残: ${stock}</small>`;
-                    btn.onclick = () => {
-                        addToCart(currentSelectedProduct, variant);
-                        refreshModalContent();
-                    };
                     quickButtonsGrid.appendChild(btn);
                 });
             } else {
+
                 document.getElementById('quickButtonsArea').style.display = 'none';
             }
 
@@ -748,6 +803,32 @@
             addToCart(currentSelectedProduct, variant);
             variantSelect.selectedIndex = 0;
             alert(`${variant.name} をカートに追加しました`);
+        }
+
+        function increaseQTY(prodId, varName) {
+            const product = products.find(p => p.id === prodId);
+            const variant = product.variants.find(v => v.name === varName);
+
+            // Check stock
+            const countInCart = cart.filter(item => item.productId === prodId && item.variantName === varName).length;
+            const stock = parseInt(variant.stock) || 0;
+
+            if (countInCart < stock) {
+                addToCart(product, variant);
+                refreshModalContent();
+            } else {
+                alert('在庫が足りません');
+            }
+        }
+
+        function decreaseQTY(prodId, varName) {
+            // Find last instance to remove (LIFOish)
+            const index = cart.findLastIndex(item => item.productId === prodId && item.variantName === varName);
+            if (index !== -1) {
+                cart.splice(index, 1);
+                updateCartUI();
+                refreshModalContent();
+            }
         }
 
         // --- Shop Logic: Cart & Checkout ---
