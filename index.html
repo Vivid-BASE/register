@@ -1070,7 +1070,7 @@
                 }
             });
             closeModal();
-            alert('カートに追加しました');
+            // alert('カートに追加しました'); // Removed per user request
         }
 
         function closeModal() {
@@ -1157,9 +1157,10 @@
                 return;
             }
 
-            if (!confirm(`合計 ¥${document.getElementById('cartTotal').textContent} で会計しますか？`)) {
-                return;
-            }
+            // Removed confirm per user request
+            // if (!confirm(`合計 ¥${document.getElementById('cartTotal').textContent} で会計しますか？`)) {
+            //     return;
+            // }
 
             // Process items
             const timestamp = Date.now();
@@ -1191,7 +1192,8 @@
             cart = [];
             updateCartUI();
             renderProducts(); // Refresh stock badges
-            alert('会計が完了しました');
+            renderProducts(); // Refresh stock badges
+            // alert('会計が完了しました'); // Removed per user request
         }
 
         // --- Summary Logic ---
