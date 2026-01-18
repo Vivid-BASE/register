@@ -604,16 +604,17 @@
         }
 
         /* Mobile adjustment for variant row */
-        @media (max-width: 400px) {
+        /* Mobile adjustment for variant row */
+        @media (max-width: 450px) {
             .variant-row {
-                grid-template-columns: 1fr 1fr;
-                /* 2 cols */
-                gap: 10px;
+                grid-template-columns: 1.5fr 1fr 40px;
+                /* Price | Stock | Delete */
+                row-gap: 8px;
             }
 
-            .variant-row input:first-child {
+            .variant-row input:nth-child(1) {
                 grid-column: 1 / -1;
-                /* Name takes full width */
+                /* Name takes full width (Row 1) */
             }
         }
 
