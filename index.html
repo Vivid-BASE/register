@@ -386,7 +386,67 @@
             align-items: center;
             margin-bottom: 10px;
             font-weight: bold;
+            width: 100%;
+            border-radius: 8px;
             font-size: 1.1rem;
+        }
+
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar-day-header {
+            font-weight: bold;
+            color: #777;
+            font-size: 0.8rem;
+            padding-bottom: 5px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .calendar-day.has-data {
+            background-color: #e3f2fd;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .calendar-day.has-data::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 4px;
+        }
+
+        .calendar-day.today {
+            border: 1px solid var(--primary-color);
+        }
+
+        .calendar-day:hover {
+            background-color: #f0f0f0;
         }
 
         .btn-batch-add {
@@ -793,16 +853,27 @@
                 <tbody id="summaryTableBody"></tbody>
             </table>
 
-            <div style="margin-top: 40px; text-align: center;">
-                <button onclick="downloadSalesCSV()"
-                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 15px;">📊
-                    売上CSV保存</button>
+            <div style="margin-top: 40px; text-align: center; display:flex; flex-direction:column; gap:15px;">
+                <div style="display:flex; justify-content:center; gap:10px;">
+                    <button onclick="downloadSalesCSV()"
+                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        📊 CSV保存
+                    </button>
+                    <button onclick="openCalendar()"
+                        style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        📅 過去の売上
+                    </button>
+                </div>
+
+                <button onclick="resetSession()"
+                    style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    本日の売上をリセット (保存してクリア)
+                </button>
             </div>
 
-            <!-- History Section -->
-            <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
-                <h3 style="color: #555;">過去の売上履歴</h3>
-                <div id="historyList" style="margin-top: 15px;"></div>
+            <!-- Removed History List from here as it's now in Calendar -->
+            <div style="margin-top:20px; color:#777; font-size:0.9rem; text-align:center;">
+                ※リセットしても過去のデータは「📅 過去の売上」から確認できます。
             </div>
         </div>
 
@@ -826,6 +897,27 @@
             </div>
         </div>
     </div>
+    <div class="modal-content" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h2>売上カレンダー</h2>
+            <button class="close-btn" onclick="closeCalendar()">×</button>
+        </div>
+        <div class="calendar-header">
+            <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:1.2rem;">◀</button>
+            <h3 id="calendarTitle" style="margin:0;">2026年 1月</h3>
+            <button onclick="changeMonth(1)" style="background:none; border:none; font-size:1.2rem;">▶</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Days injected here -->
+        </div>
+        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px; display:none;"
+            id="calendarDetailArea">
+            <h4 id="calendarDetailTitle">1月18日の売上</h4>
+            <div id="calendarDetailContent"></div>
+        </div>
+    </div>
+    </div>
+
     <!-- Payment Modal (Moved to root) -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content" style="max-width: 400px;">
@@ -904,11 +996,15 @@
         let currentSelectedProduct = null;
         let currentBatchSelections = {}; // To track batch quantities { variantName: quantity }
 
+        let sessionStartTime = 0; // For "Reset" functionality
+        let currentCalendarDate = new Date(); // For calendar view
+
         // --- DOM Elements ---
         const productGrid = document.getElementById('productGrid');
         const cartItemsContainer = document.getElementById('cartItems');
         const cartTotalEl = document.getElementById('cartTotal');
         const modal = document.getElementById('variantModal');
+        const calendarModal = document.getElementById('calendarModal'); // Will add ID to the modal above
         const quickButtonsGrid = document.getElementById('quickButtonsGrid');
         const variantSelect = document.getElementById('variantSelect');
         const settingsProductList = document.getElementById('settingsProductList'); // This will be removed or repurposed
@@ -937,6 +1033,17 @@
             if (savedSales) {
                 salesLog = JSON.parse(savedSales);
             }
+
+            const savedSession = localStorage.getItem('pos_session_start');
+            if (savedSession) {
+                sessionStartTime = parseInt(savedSession);
+            } else {
+                // Default to beginning of today if no session set
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                sessionStartTime = now.getTime();
+                saveSession();
+            }
         }
 
         function saveProducts() {
@@ -945,6 +1052,10 @@
 
         function saveSales() {
             localStorage.setItem('pos_sales_log', JSON.stringify(salesLog));
+        }
+
+        function saveSession() {
+            localStorage.setItem('pos_session_start', sessionStartTime.toString());
         }
 
         function resetToDefaultData() {
@@ -1347,36 +1458,7 @@
             }
         }
 
-        function downloadSalesCSV() {
-            if (salesLog.length === 0) {
-                alert('データがありません');
-                return;
-            }
-
-            // CSV Header
-            let csvContent = "日時,商品名,種類,価格\n";
-
-            // CSV Rows
-            salesLog.forEach(log => {
-                const date = new Date(log.timestamp);
-                const dateStr = date.toLocaleString('ja-JP');
-                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price}\n`;
-            });
-
-            // Add BOM for Excel compatibility
-            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-            const blob = new Blob([bom, csvContent], { type: "text/csv" });
-            const url = URL.createObjectURL(blob);
-
-            // Create download link
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        // (Removed duplicate sync downloadSalesCSV function)
 
         async function downloadSalesCSV() {
             if (salesLog.length === 0) {
@@ -1439,18 +1521,14 @@
         function renderSummary() {
             summaryTableBody.innerHTML = '';
             let total = 0;
-            const todayStr = new Date().toLocaleDateString('ja-JP');
 
-            // Filter for TODAY only
-            const todayLogs = salesLog.filter(log => {
-                const logDate = new Date(log.timestamp).toLocaleDateString('ja-JP');
-                return logDate === todayStr;
-            });
+            // Filter for SESSION only (since last reset)
+            const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
 
-            // Aggregate by Variant for Today
+            // Aggregate by Variant for Session
             const aggregation = {};
 
-            todayLogs.forEach(log => {
+            sessionLogs.forEach(log => {
                 const key = `${log.productName} - ${log.variantName}`;
                 if (!aggregation[key]) {
                     aggregation[key] = {
@@ -1485,42 +1563,128 @@
 
             summaryTotalAmount.textContent = total.toLocaleString();
 
-            renderHistoryList();
+            // renderHistoryList(); // Replaced by Calendar
         }
 
-        function renderHistoryList() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
+        function resetSession() {
+            if (confirm('現在の売上表示をリセットしますか？\n（データは履歴に保存されたまま、表示だけ0になります）')) {
+                sessionStartTime = Date.now();
+                saveSession();
+                renderSummary();
+                alert('表示をリセットしました。\n過去のデータは「📅 過去の売上」から確認できます。');
+            }
+        }
 
-            // Group by Date
-            const history = {};
-            salesLog.forEach(log => {
-                const date = new Date(log.timestamp).toLocaleDateString('ja-JP');
-                if (!history[date]) history[date] = 0;
-                history[date] += log.price;
+        // --- Calendar Logic ---
+        function openCalendar() {
+            const calendarModal = document.getElementById('calendarModal');
+            if (calendarModal) {
+                calendarModal.classList.add('active');
+                renderCalendar();
+            }
+        }
+
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+            document.getElementById('calendarDetailArea').style.display = 'none';
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Headers
+            const days = ['日', '月', '火', '水', '木', '金', '土'];
+            days.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-header';
+                div.textContent = d;
+                grid.appendChild(div);
             });
 
-            // Sort dates descending
-            const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
+            // Days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
 
-            if (sortedDates.length === 0) {
-                historyList.innerHTML = '<div style="color:#999; text-align:center;">履歴はありません</div>';
+            // Padding for start
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Dates
+            for (let d = 1; d <= lastDay.getDate(); d++) {
+                const dateObj = new Date(year, month, d);
+                const dateStr = dateObj.toLocaleDateString('ja-JP');
+
+                // Check data
+                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
+
+                const cell = document.createElement('div');
+                cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
+                cell.textContent = d;
+                cell.onclick = () => showDailyDetail(dateStr);
+                grid.appendChild(cell);
+            }
+        }
+
+        function showDailyDetail(dateStr) {
+            const detailArea = document.getElementById('calendarDetailArea');
+            const content = document.getElementById('calendarDetailContent');
+            const title = document.getElementById('calendarDetailTitle');
+
+            detailArea.style.display = 'block';
+            title.textContent = `${dateStr} の売上詳細`;
+            content.innerHTML = '';
+
+            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+
+            if (logs.length === 0) {
+                content.innerHTML = '<div style="color:#999; text-align:center;">データはありません</div>';
                 return;
             }
 
-            sortedDates.forEach(date => {
-                const isToday = date === new Date().toLocaleDateString('ja-JP');
-                const label = isToday ? `${date} (本日)` : date;
-                const style = isToday ? 'font-weight:bold; color:var(--primary-color);' : 'color:#333;';
-
-                const div = document.createElement('div');
-                div.style.cssText = 'padding: 15px; background: white; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;';
-                div.innerHTML = `
-                    <div style="${style}">${label}</div>
-                    <div style="font-weight: bold;">¥${history[date].toLocaleString()}</div>
-                `;
-                historyList.appendChild(div);
+            let total = 0;
+            const agg = {};
+            logs.forEach(l => {
+                const k = `${l.productName} ${l.variantName}`;
+                if (!agg[k]) agg[k] = { name: k, price: l.price, count: 0 };
+                agg[k].count++;
+                total += l.price;
             });
+
+            // Total Header
+            const totalDiv = document.createElement('div');
+            totalDiv.style.fontWeight = 'bold';
+            totalDiv.style.fontSize = '1.2rem';
+            totalDiv.style.marginBottom = '10px';
+            totalDiv.style.textAlign = 'center';
+            totalDiv.textContent = `合計: ¥${total.toLocaleString()}`;
+            content.appendChild(totalDiv);
+
+            // List
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.fontSize = '0.9rem';
+            Object.values(agg).forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:4px;">${item.name}</td>
+                    <td style="text-align:right;">x${item.count}</td>
+                    <td style="text-align:right;">¥${(item.price * item.count).toLocaleString()}</td>
+                `;
+                table.appendChild(tr);
+            });
+            content.appendChild(table);
         }
 
         // resetDailySales Removed
