@@ -403,8 +403,8 @@
 
         .variant-row {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 60px 30px;
-            /* Added stock col */
+            grid-template-columns: 2fr 1fr 1fr 30px;
+            /* Removed checkbox col */
             gap: 5px;
             margin-bottom: 5px;
             align-items: center;
@@ -533,7 +533,7 @@
 
                 <h4 style="margin-bottom: 10px; display:flex; justify-content:space-between;">
                     バリエーション設定
-                    <span style="font-size:0.8rem; color:#666; font-weight:normal;">(名前 / 価格 / 在庫 / ボタン)</span>
+                    <span style="font-size:0.8rem; color:#666; font-weight:normal;">(名前 / 価格 / 在庫)</span>
                 </h4>
                 <div id="newVariantsContainer"></div>
                 <button onclick="addNewVariantRow()"
@@ -585,16 +585,6 @@
             <div id="quickButtonsArea" class="variant-section">
                 <span class="variant-label">よく使う項目 (タップで追加)</span>
                 <div id="quickButtonsGrid" class="quick-buttons"></div>
-            </div>
-
-            <div id="listArea" class="variant-section">
-                <span class="variant-label">その他の項目 (リスト)</span>
-                <div style="display: flex; gap: 10px;">
-                    <select id="variantSelect" class="variant-select">
-                        <option value="">選択してください</option>
-                    </select>
-                    <button class="btn-add-list" onclick="addFromSelect()">追加</button>
-                </div>
             </div>
 
             <div style="text-align: right; margin-top: auto;">
@@ -752,16 +742,16 @@
             quickButtonsGrid.innerHTML = '';
             variantSelect.innerHTML = '<option value="">選択してください</option>';
 
-            const quickVariants = currentSelectedProduct.variants.filter(v => v.isQuickButton);
-            const listVariants = currentSelectedProduct.variants.filter(v => !v.isQuickButton);
+            document.getElementById('quickButtonsArea').style.display = 'block';
 
-            // Quick Buttons
-            if (quickVariants.length > 0) {
-                document.getElementById('quickButtonsArea').style.display = 'block';
-                quickVariants.forEach((variant) => {
+            // Render ALL variants as buttons
+            const allVariants = currentSelectedProduct.variants;
+
+            if (allVariants.length > 0) {
+                allVariants.forEach((variant) => {
                     const countInCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
                     const stock = parseInt(variant.stock) || 0;
-                    const remaining = stock - countInCart; // Visual remaining in this session logic?
+                    const remaining = stock - countInCart;
 
                     const btn = document.createElement('div');
 
@@ -791,7 +781,11 @@
                             innerBtn.classList.add('variant-stock-low');
                         }
 
-                        innerBtn.innerHTML = `${variant.name}<br><small>¥${variant.price.toLocaleString()}</small><br><small style="font-size:0.7rem; color:#666;">残: ${stock}</small>`;
+                        innerBtn.innerHTML = `
+                            <div class="var-name-row">${variant.name}</div>
+                            <div style="font-size:0.8rem; margin-top:5px;">¥${variant.price.toLocaleString()}</div>
+                            <div style="font-size:0.7rem; color:#666;">残: ${stock}</div>
+                        `;
                         innerBtn.onclick = () => {
                             if (remaining > 0) {
                                 addToCart(currentSelectedProduct, variant);
@@ -804,23 +798,10 @@
                     }
                     quickButtonsGrid.appendChild(btn);
                 });
-            } else {
-
-                document.getElementById('quickButtonsArea').style.display = 'none';
             }
 
-            // List
-            if (listVariants.length > 0) {
-                document.getElementById('listArea').style.display = 'block';
-                listVariants.forEach((variant) => {
-                    const option = document.createElement('option');
-                    option.value = JSON.stringify(variant);
-                    option.textContent = `${variant.name} (¥${variant.price}) - 残: ${variant.stock}`;
-                    variantSelect.appendChild(option);
-                });
-            } else {
-                document.getElementById('listArea').style.display = 'none';
-            }
+            // Remove List Area logic since we use buttons for all
+            document.getElementById('listArea').style.display = 'none';
         }
 
         function closeModal() {
@@ -1016,9 +997,6 @@
             <input type="text" placeholder="名前 (S...)" class="var-name-input" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
             <input type="number" placeholder="価格" class="var-price-input" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
             <input type="number" placeholder="在庫" class="var-stock-input" value="10" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
-            <label style="font-size:0.8rem; display:flex; align-items:center;">
-                <input type="checkbox" class="var-quick-input" checked> ボタン
-            </label>
             <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; cursor:pointer; font-size:1.2rem;">×</button>
         `;
             newVariantsContainer.appendChild(row);
@@ -1036,14 +1014,13 @@
                 const vName = row.querySelector('.var-name-input').value;
                 const vPrice = row.querySelector('.var-price-input').value;
                 const vStock = row.querySelector('.var-stock-input').value;
-                const isQuick = row.querySelector('.var-quick-input').checked;
 
                 if (vName && vPrice) {
                     variants.push({
                         name: vName,
                         price: parseInt(vPrice),
                         stock: parseInt(vStock) || 0,
-                        isQuickButton: isQuick
+                        isQuickButton: true // Default to true now
                     });
                 }
             });
