@@ -1751,12 +1751,18 @@
             }
 
             let total = 0;
+            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
             const agg = {};
             logs.forEach(l => {
                 const k = `${l.productName} ${l.variantName}`;
                 if (!agg[k]) agg[k] = { name: k, price: l.price, count: 0 };
                 agg[k].count++;
                 total += l.price;
+
+                // Payment Method Total
+                if (l.paymentMethod === 'paypay') paymentTotals.paypay += l.price;
+                else if (l.paymentMethod === 'credit') paymentTotals.credit += l.price;
+                else paymentTotals.cash += l.price;
             });
 
             // Total Header
@@ -1769,7 +1775,13 @@
             totalDiv.style.padding = '10px';
             totalDiv.style.background = '#f9f9f9';
             totalDiv.style.borderRadius = '8px';
-            totalDiv.textContent = `合計: ¥${total.toLocaleString()}`;
+
+            totalDiv.innerHTML = `
+                合計: ¥${total.toLocaleString()}
+                <div style="font-size:0.9rem; margin-top:5px; color:#555; font-weight:normal;">
+                    (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
+                </div>
+            `;
             content.appendChild(totalDiv);
 
             // List
@@ -1938,67 +1950,7 @@
             }
         }
 
-        function showDailyDetail(dateStr) {
-            const gridView = document.getElementById('calendarGridView');
-            const detailView = document.getElementById('calendarDetailView');
-            const content = document.getElementById('calendarDetailContent');
-            const title = document.getElementById('calendarDetailTitle');
 
-            // Switch views
-            gridView.style.display = 'none';
-            detailView.style.display = 'flex';
-
-            title.textContent = `${dateStr} の売上詳細`;
-            content.innerHTML = '';
-
-            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
-
-            if (logs.length === 0) {
-                content.innerHTML = '<div style="color:#999; text-align:center; margin-top:50px;">データはありません</div>';
-                return;
-            }
-
-            let total = 0;
-            const agg = {};
-            logs.forEach(l => {
-                const k = `${l.productName} ${l.variantName}`;
-                if (!agg[k]) agg[k] = { name: k, price: l.price, count: 0 };
-                agg[k].count++;
-                total += l.price;
-            });
-
-            // Total Header
-            const totalDiv = document.createElement('div');
-            totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '1.8rem';
-            totalDiv.style.color = '#333';
-            totalDiv.style.marginBottom = '20px';
-            totalDiv.style.textAlign = 'center';
-            totalDiv.style.padding = '10px';
-            totalDiv.style.background = '#f9f9f9';
-            totalDiv.style.borderRadius = '8px';
-            totalDiv.textContent = `合計: ¥${total.toLocaleString()}`;
-            content.appendChild(totalDiv);
-
-            // List
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.fontSize = '1rem';
-            // table styling
-            table.style.borderCollapse = 'collapse';
-
-            Object.values(agg).forEach(item => {
-                const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid #eee';
-                tr.innerHTML = `
-                    <td style="padding:10px 5px;">${item.name}</td>
-                    <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
-                    <td style="text-align:right; font-weight:bold; width:80px;">¥${(item.price * item.count).toLocaleString()}</td>
-                `;
-                table.appendChild(tr);
-            });
-            content.appendChild(table);
-        }
 
         // resetDailySales Removed
 
