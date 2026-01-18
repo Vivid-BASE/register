@@ -1374,7 +1374,7 @@
             URL.revokeObjectURL(url);
         }
 
-        function downloadSalesCSV() {
+        async function downloadSalesCSV() {
             if (salesLog.length === 0) {
                 alert('データがありません');
                 return;
@@ -1393,12 +1393,38 @@
             // Add BOM for Excel compatibility
             const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
             const blob = new Blob([bom, csvContent], { type: "text/csv" });
-            const url = URL.createObjectURL(blob);
+            const fileName = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
 
-            // Create download link
+            // Web Share API (Phone/Tablet support)
+            if (navigator.share && navigator.canShare) {
+                const file = new File([blob], fileName, { type: "text/csv" });
+                const shareData = {
+                    files: [file],
+                    title: '売上データ',
+                    text: '本日の売上CSVデータです。'
+                };
+
+                if (navigator.canShare(shareData)) {
+                    try {
+                        await navigator.share(shareData);
+                        return; // Shared successfully
+                    } catch (err) {
+                        console.log('Share API skipped or cancelled:', err);
+                        if (err.name !== 'AbortError') {
+                            // If error is not "User Cancelled", try fallback. 
+                            // formatting error in console log, but proceed to download
+                        } else {
+                            return; // User cancelled
+                        }
+                    }
+                }
+            }
+
+            // Fallback: Download link (PC)
+            const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.download = fileName;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
