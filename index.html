@@ -942,6 +942,7 @@
                         <th>価格</th>
                         <th>本日売れた数</th>
                         <th>残り在庫</th>
+                        <th>決済</th>
                     </tr>
                 </thead>
                 <tbody id="summaryTableBody"></tbody>
@@ -1591,24 +1592,27 @@
             // Filter for SESSION only (since last reset)
             const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
 
-            // Aggregate by Variant for Session
+            // Aggregate by Variant AND Payment Method
             const aggregation = {};
 
             sessionLogs.forEach(log => {
-                const key = `${log.productName} - ${log.variantName}`;
+                const method = log.paymentMethod || 'cash'; // Default safe
+                const key = `${log.productName} - ${log.variantName} - ${method}`;
+
                 if (!aggregation[key]) {
                     aggregation[key] = {
-                        name: key,
+                        name: `${log.productName} - ${log.variantName}`,
                         price: log.price,
-                        count: 0
+                        count: 0,
+                        method: method
                     };
                 }
                 aggregation[key].count++;
                 total += log.price;
 
                 // Payment Method Total
-                if (log.paymentMethod === 'paypay') paymentTotals.paypay += log.price;
-                else if (log.paymentMethod === 'credit') paymentTotals.credit += log.price;
+                if (method === 'paypay') paymentTotals.paypay += log.price;
+                else if (method === 'credit') paymentTotals.credit += log.price;
                 else paymentTotals.cash += log.price;
             });
 
@@ -1623,22 +1627,25 @@
                     if (v) stock = v.stock;
                 }
 
+                const methodIcon = item.method === 'paypay' ? '📱' : (item.method === 'credit' ? '💳' : '💵');
+
                 tr.innerHTML = `
-                <td>${item.name}</td>
-                <td>¥${item.price.toLocaleString()}</td>
-                <td>${item.count}</td>
-                <td>${stock}</td>
-            `;
+        <td>${item.name}</td>
+        <td>¥${item.price.toLocaleString()}</td>
+        <td>${item.count}</td>
+        <td>${stock}</td>
+        <td style="text-align:center; font-size:1.2rem;">${methodIcon}</td>
+    `;
                 summaryTableBody.appendChild(tr);
             });
 
             // Display Total with Payment Breakdown
             summaryTotalAmount.innerHTML = `
-                ${total.toLocaleString()}
-                <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
-                    (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
-                </div>
-            `;
+        ${total.toLocaleString()}
+        <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
+            (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
+        </div>
+    `;
         }
 
         function resetSession() {
@@ -2224,7 +2231,7 @@
             products.push(newProduct);
             saveProducts();
 
-            alert('商品を登録しました');
+            showToast('商品を登録しました');
             renderSettingsList(); // Reset form
         }
 
@@ -2251,9 +2258,13 @@
             const variants = [];
             for (let row of variantRows) {
                 const inputs = row.querySelectorAll('input');
-                if (inputs[0].value) {
+                // Allow empty name
+                const vName = inputs[0].value.trim() || '通常';
+                const vPrice = parseInt(inputs[1].value);
+
+                if (vPrice >= 0 || inputs[2].value) {
                     variants.push({
-                        name: inputs[0].value,
+                        name: vName,
                         price: parseInt(inputs[1].value) || 0,
                         stock: parseInt(inputs[2].value) || 0,
                     });
@@ -2267,7 +2278,7 @@
             products[editingProductIndex].variants = variants;
 
             saveProducts();
-            alert('商品を更新しました');
+            showToast('商品を更新しました');
 
             // Reset UI
             editingProductIndex = -1;
