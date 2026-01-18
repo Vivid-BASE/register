@@ -12,6 +12,11 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Update: Inventory & Sales Management -->
     <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         :root {
             --primary-color: #007bff;
             --accent-color: #ff3b30;
@@ -100,8 +105,8 @@
         .cart-area {
             flex: 1;
             padding: var(--spacing-unit);
-            /* Handle safe area for tablets */
-            padding-bottom: calc(var(--spacing-unit) + env(safe-area-inset-bottom, 20px));
+            /* Handle safe area for tablets + extra breathing room */
+            padding-bottom: calc(var(--spacing-unit) + env(safe-area-inset-bottom, 20px) + 20px);
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
