@@ -797,8 +797,12 @@
                 <button onclick="downloadSalesCSV()"
                     style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 15px;">📊
                     売上CSV保存</button>
-                <button onclick="resetDailySales()"
-                    style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">本日の売上をリセット</button>
+            </div>
+
+            <!-- History Section -->
+            <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
+                <h3 style="color: #555;">過去の売上履歴</h3>
+                <div id="historyList" style="margin-top: 15px;"></div>
             </div>
         </div>
 
@@ -1430,6 +1434,96 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+
+        // --- Summary Logic ---
+        function renderSummary() {
+            summaryTableBody.innerHTML = '';
+            let total = 0;
+            const todayStr = new Date().toLocaleDateString('ja-JP');
+
+            // Filter for TODAY only
+            const todayLogs = salesLog.filter(log => {
+                const logDate = new Date(log.timestamp).toLocaleDateString('ja-JP');
+                return logDate === todayStr;
+            });
+
+            // Aggregate by Variant for Today
+            const aggregation = {};
+
+            todayLogs.forEach(log => {
+                const key = `${log.productName} - ${log.variantName}`;
+                if (!aggregation[key]) {
+                    aggregation[key] = {
+                        name: key,
+                        price: log.price,
+                        count: 0
+                    };
+                }
+                aggregation[key].count++;
+                total += log.price;
+            });
+
+            Object.values(aggregation).forEach(item => {
+                const tr = document.createElement('tr');
+
+                // Find current stock
+                let stock = '-';
+                const p = products.find(prod => prod.name === item.name.split(' - ')[0]);
+                if (p) {
+                    const v = p.variants.find(va => va.name === item.name.split(' - ')[1]);
+                    if (v) stock = v.stock;
+                }
+
+                tr.innerHTML = `
+                <td>${item.name}</td>
+                <td>¥${item.price.toLocaleString()}</td>
+                <td>${item.count}</td>
+                <td>${stock}</td>
+            `;
+                summaryTableBody.appendChild(tr);
+            });
+
+            summaryTotalAmount.textContent = total.toLocaleString();
+
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            // Group by Date
+            const history = {};
+            salesLog.forEach(log => {
+                const date = new Date(log.timestamp).toLocaleDateString('ja-JP');
+                if (!history[date]) history[date] = 0;
+                history[date] += log.price;
+            });
+
+            // Sort dates descending
+            const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
+
+            if (sortedDates.length === 0) {
+                historyList.innerHTML = '<div style="color:#999; text-align:center;">履歴はありません</div>';
+                return;
+            }
+
+            sortedDates.forEach(date => {
+                const isToday = date === new Date().toLocaleDateString('ja-JP');
+                const label = isToday ? `${date} (本日)` : date;
+                const style = isToday ? 'font-weight:bold; color:var(--primary-color);' : 'color:#333;';
+
+                const div = document.createElement('div');
+                div.style.cssText = 'padding: 15px; background: white; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;';
+                div.innerHTML = `
+                    <div style="${style}">${label}</div>
+                    <div style="font-weight: bold;">¥${history[date].toLocaleString()}</div>
+                `;
+                historyList.appendChild(div);
+            });
+        }
+
+        // resetDailySales Removed
 
         // --- Settings Logic ---
         function renderSettingsList() {
