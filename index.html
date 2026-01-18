@@ -794,6 +794,9 @@
             </table>
 
             <div style="margin-top: 40px; text-align: center;">
+                <button onclick="downloadSalesCSV()"
+                    style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; margin-right: 15px;">📊
+                    売上CSV保存</button>
                 <button onclick="resetDailySales()"
                     style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">本日の売上をリセット</button>
             </div>
@@ -1338,6 +1341,68 @@
                 renderSummary();
                 alert('売上データをリセットしました');
             }
+        }
+
+        function downloadSalesCSV() {
+            if (salesLog.length === 0) {
+                alert('データがありません');
+                return;
+            }
+
+            // CSV Header
+            let csvContent = "日時,商品名,種類,価格\n";
+
+            // CSV Rows
+            salesLog.forEach(log => {
+                const date = new Date(log.timestamp);
+                const dateStr = date.toLocaleString('ja-JP');
+                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price}\n`;
+            });
+
+            // Add BOM for Excel compatibility
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, csvContent], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+
+            // Create download link
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadSalesCSV() {
+            if (salesLog.length === 0) {
+                alert('データがありません');
+                return;
+            }
+
+            // CSV Header
+            let csvContent = "日時,商品名,種類,価格\n";
+
+            // CSV Rows
+            salesLog.forEach(log => {
+                const date = new Date(log.timestamp);
+                const dateStr = date.toLocaleString('ja-JP');
+                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price}\n`;
+            });
+
+            // Add BOM for Excel compatibility
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, csvContent], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+
+            // Create download link
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         // --- Settings Logic ---
