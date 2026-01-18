@@ -2245,7 +2245,7 @@
             const newProduct = {
                 id: Date.now(),
                 name: name,
-                icon: "📦",
+                icon: getIconForName(name),
                 variants: variants
             };
 
@@ -2254,6 +2254,18 @@
 
             alert('商品を登録しました');
             renderSettingsList(); // Reset form
+        }
+
+        function getIconForName(name) {
+            if (name.includes('Tシャツ') || name.includes('ロンT') || name.includes('パーカー')) return '👕';
+            if (name.includes('タオル') || name.includes('マフラー')) return '🧣';
+            if (name.includes('チェキ')) return '📸';
+            if (name.includes('バッグ')) return '👜';
+            if (name.includes('キーホルダー') || name.includes('アクリルスタンド') || name.includes('ステッカー')) return '🧸';
+            if (name.includes('ペンライト') || name.includes('リストバンド')) return '💡';
+            if (name.includes('CD') || name.includes('DVD') || name.includes('Blu-ray')) return '💿';
+            if (name.includes('本') || name.includes('写真集') || name.includes('パンフレット') || name.includes('カレンダー')) return '📚';
+            return '📦';
         }
 
 
