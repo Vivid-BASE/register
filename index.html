@@ -287,9 +287,8 @@
 
         /* Quick Buttons Grid */
         .quick-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
+            /* Table layout replaces grid */
+            display: block;
         }
 
         .variant-btn {
@@ -301,6 +300,98 @@
             cursor: pointer;
             transition: background 0.2s;
             position: relative;
+        }
+
+        /* Bulk Selection Table Styles */
+        .variant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .variant-table th {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 2px solid #eee;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .variant-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .variant-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .batch-qty-control {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .batch-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: all 0.2s;
+        }
+
+        .batch-btn:active {
+            background-color: #f0f0f0;
+            transform: scale(0.95);
+        }
+
+        .batch-val {
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Modal Footer for Batch Add */
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .batch-total-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .btn-batch-add {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-batch-add:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
         /* Force single screen feel - Minimize scrolling */
@@ -669,6 +760,7 @@
         let cart = [];
         let salesLog = []; // { date: timestamp, productId, variantName, count, price }
         let currentSelectedProduct = null;
+        let currentBatchSelections = {}; // To track batch quantities { variantName: quantity }
 
         // --- DOM Elements ---
         const productGrid = document.getElementById('productGrid');
@@ -758,7 +850,7 @@
                 card.onclick = () => openVariantModal(product);
 
                 // Calc total stock for info
-                const totalStock = product.variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
+                const totalStock = product.variants.reduce((sum, v => sum + (parseInt(v.stock) || 0)), 0);
                 const minPrice = product.variants.length > 0 ? Math.min(...product.variants.map(v => v.price)) : 0;
 
                 card.innerHTML = `
@@ -774,6 +866,7 @@
         // --- Shop Logic: Modal ---
         function openVariantModal(product) {
             currentSelectedProduct = product;
+            currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
             refreshModalContent();
             modal.classList.add('active');
@@ -781,69 +874,113 @@
 
         function refreshModalContent() {
             if (!currentSelectedProduct) return;
-            quickButtonsGrid.innerHTML = '';
-            // variantSelect.innerHTML = '<option value="">選択してください</option>'; // Removed
+            const container = document.getElementById('quickButtonsGrid');
+            container.innerHTML = '';
 
-            document.getElementById('quickButtonsArea').style.display = 'block';
+            // Layout: Table of Variants
+            const table = document.createElement('table');
+            table.className = 'variant-table';
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>バリエーション</th>
+                        <th style="text-align:right">在庫</th>
+                        <th style="text-align:right">数量</th>
+                    </tr>
+                </thead>
+                <tbody id="variantTableBody"></tbody>
+            `;
+            container.appendChild(table);
+            const tbody = table.querySelector('tbody');
 
-            // Render ALL variants as buttons
-            const allVariants = currentSelectedProduct.variants;
+            let totalQty = 0;
+            let totalAmount = 0;
 
-            if (allVariants.length > 0) {
-                allVariants.forEach((variant) => {
-                    const countInCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
-                    const stock = parseInt(variant.stock) || 0;
-                    const remaining = stock - countInCart;
+            currentSelectedProduct.variants.forEach(variant => {
+                const stock = parseInt(variant.stock) || 0;
+                // Currently in cart for this specific product/variant
+                const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
 
-                    const btn = document.createElement('div');
+                // Current batch selection
+                const batchQty = currentBatchSelections[variant.name] || 0;
 
-                    if (countInCart > 0) {
-                        // Render Control Group [-] Count [+]
-                        btn.className = 'variant-btn-group';
-                        btn.innerHTML = `
-                            <div class="var-name-row">${variant.name}</div>
-                            <div class="qty-row">
-                                <button class="qty-btn" onclick="decreaseQTY(${currentSelectedProduct.id}, '${variant.name}')">－</button>
-                                <div class="qty-display">${countInCart}</div>
-                                <button class="qty-btn" onclick="increaseQTY(${currentSelectedProduct.id}, '${variant.name}')">＋</button>
-                            </div>
-                            <div class="var-info-row">¥${variant.price.toLocaleString()} / 残:${stock}</div>
-                        `;
-                    } else {
-                        // Render Standard Button
-                        const innerBtn = document.createElement('button');
-                        innerBtn.className = 'variant-btn';
-                        innerBtn.style.width = '100%';
-                        innerBtn.style.height = '100%';
-                        innerBtn.style.border = 'none';
+                // Max addable is stock
+                const remainingStock = stock - inCart - batchQty;
 
-                        if (remaining <= 0) {
-                            innerBtn.classList.add('variant-stock-out');
-                        } else if (remaining < 3) {
-                            innerBtn.classList.add('variant-stock-low');
-                        }
+                totalQty += batchQty;
+                totalAmount += batchQty * variant.price;
 
-                        innerBtn.innerHTML = `
-                            <div class="var-name-row">${variant.name}</div>
-                            <div style="font-size:0.8rem; margin-top:5px;">¥${variant.price.toLocaleString()}</div>
-                            <div style="font-size:0.7rem; color:#666;">残: ${stock}</div>
-                        `;
-                        innerBtn.onclick = () => {
-                            if (remaining > 0) {
-                                addToCart(currentSelectedProduct, variant);
-                                refreshModalContent();
-                            }
-                        };
-                        btn.appendChild(innerBtn);
-                        btn.style.width = '100%';
-                        btn.style.height = '100%';
-                    }
-                    quickButtonsGrid.appendChild(btn);
-                });
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight:bold;">${variant.name}</div>
+                        <div style="font-size:0.8rem; color:#666;">¥${variant.price.toLocaleString()}</div>
+                    </td>
+                    <td style="text-align:right; font-family:monospace;">${stock}</td>
+                    <td>
+                        <div class="batch-qty-control">
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
+                            <span class="batch-val">${batchQty}</span>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${remainingStock <= 0 ? 'disabled style="opacity:0.5"' : ''}>＋</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Footer (Total & Add Button)
+            // Check if footer exists, if not create it, if yes update it
+            let footer = document.getElementById('modalFooter');
+            if (!footer) {
+                footer = document.createElement('div');
+                footer.id = 'modalFooter';
+                footer.className = 'modal-footer';
+                document.getElementById('quickButtonsArea').appendChild(footer);
             }
 
-            // Remove List Area logic since we use buttons for all
-            // document.getElementById('listArea').style.display = 'none'; // Element removed from DOM
+            footer.innerHTML = `
+                <div class="batch-total-info">
+                    <span>選択合計: ${totalQty}点</span>
+                    <span>¥${totalAmount.toLocaleString()}</span>
+                </div>
+                <button class="btn-batch-add" onclick="commitBatchToCart()" ${totalQty === 0 ? 'disabled' : ''}>
+                    カートに入れる
+                </button>
+            `;
+        }
+
+        function updateBatch(variantName, change) {
+            const currentQty = currentBatchSelections[variantName] || 0;
+            const newQty = currentQty + change;
+
+            if (newQty < 0) return;
+
+            // Check stock limit
+            const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
+            const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variantName).length;
+            const stock = parseInt(variant.stock) || 0;
+
+            if (newQty + inCart > stock) {
+                // Prevent going over stock
+                return;
+            }
+
+            currentBatchSelections[variantName] = newQty;
+            refreshModalContent();
+        }
+
+        function commitBatchToCart() {
+            Object.keys(currentBatchSelections).forEach(variantName => {
+                const qty = currentBatchSelections[variantName];
+                if (qty > 0) {
+                    const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
+                    for (let i = 0; i < qty; i++) {
+                        addToCart(currentSelectedProduct, variant);
+                    }
+                }
+            });
+            closeModal();
+            alert('カートに追加しました');
         }
 
         function closeModal() {
