@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>物販レジ</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/svg+xml" href="./icon.svg">
@@ -56,8 +57,10 @@
         }
 
         html {
+            height: 100%;
+            overflow: hidden;
+            /* Prevent page scroll */
             background-color: #ffffff;
-            /* Explicit base white */
         }
 
         body {
@@ -66,10 +69,13 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            height: 100vh;
-            /* Fallback */
-            height: 100dvh;
-            /* Mobile viewport fix */
+            /* Strict positioning to fill viewport */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
@@ -197,6 +203,8 @@
             flex: 1;
             overflow-y: auto;
             margin-bottom: var(--spacing-unit);
+            min-height: 0;
+            /* Critical for flex scrolling */
         }
 
         .cart-item {
