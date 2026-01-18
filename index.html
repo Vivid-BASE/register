@@ -836,6 +836,14 @@
                 <input type="number" id="amountReceived" class="form-control"
                     style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
                     oninput="updateChange()">
+                <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
+                    <button onclick="setReceivedAmount(1000)"
+                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
+                    <button onclick="setReceivedAmount(5000)"
+                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
+                    <button onclick="setReceivedAmount(10000)"
+                        style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
+                </div>
             </div>
 
             <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
@@ -1219,6 +1227,12 @@
 
         function closePaymentModal() {
             paymentModal.classList.remove('active');
+        }
+
+        function setReceivedAmount(amount) {
+            const input = document.getElementById('amountReceived');
+            input.value = amount;
+            updateChange(); // Trigger calculation
         }
 
         function updateChange() {
