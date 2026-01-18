@@ -1845,64 +1845,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // --- Summary Logic ---
-        function renderSummary() {
-            summaryTableBody.innerHTML = '';
-            let total = 0;
-            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
 
-            // Filter for SESSION only (since last reset)
-            const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
-
-            // Aggregate by Variant for Session
-            const aggregation = {};
-
-            sessionLogs.forEach(log => {
-                const key = `${log.productName} - ${log.variantName}`;
-                if (!aggregation[key]) {
-                    aggregation[key] = {
-                        name: key,
-                        price: log.price,
-                        count: 0
-                    };
-                }
-                aggregation[key].count++;
-                total += log.price;
-
-                // Payment Method Total
-                if (log.paymentMethod === 'paypay') paymentTotals.paypay += log.price;
-                else if (log.paymentMethod === 'credit') paymentTotals.credit += log.price;
-                else paymentTotals.cash += log.price;
-            });
-
-            Object.values(aggregation).forEach(item => {
-                const tr = document.createElement('tr');
-
-                // Find current stock
-                let stock = '-';
-                const p = products.find(prod => prod.name === item.name.split(' - ')[0]);
-                if (p) {
-                    const v = p.variants.find(va => va.name === item.name.split(' - ')[1]);
-                    if (v) stock = v.stock;
-                }
-
-                tr.innerHTML = `
-                <td>${item.name}</td>
-                <td>¥${item.price.toLocaleString()}</td>
-                <td>${item.count}</td>
-                <td>${stock}</td>
-            `;
-                summaryTableBody.appendChild(tr);
-            });
-
-            // Display Total with Payment Breakdown
-            summaryTotalAmount.innerHTML = `
-                ${total.toLocaleString()}
-                <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
-                    (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
-                </div>
-            `;
-        }
 
         function resetSession() {
             // One-Tap Reset (No confirm)
