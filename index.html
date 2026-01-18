@@ -526,24 +526,126 @@
             flex-direction: row;
         }
 
-        .settings-input {
-            width: 100%;
+        /* Settings View Improvements */
+        .settings-container {
             padding: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-card h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            /* Larger padding */
+            font-size: 16px;
+            /* Prevent iOS zoom */
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
+            background: #f9f9f9;
+        }
+
+        .form-control:focus {
+            background: white;
+            border-color: var(--primary-color);
+            outline: none;
         }
 
         .variant-row {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 30px;
-            /* Removed checkbox col */
-            gap: 5px;
-            margin-bottom: 5px;
+            grid-template-columns: 2fr 1.5fr 1.5fr 40px;
+            /* Name Price Stock Delete */
+            gap: 8px;
+            margin-bottom: 10px;
             align-items: center;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
         }
 
-        /* Summary Table */
+        /* Mobile adjustment for variant row */
+        @media (max-width: 400px) {
+            .variant-row {
+                grid-template-columns: 1fr 1fr;
+                /* 2 cols */
+                gap: 10px;
+            }
+
+            .variant-row input:first-child {
+                grid-column: 1 / -1;
+                /* Name takes full width */
+            }
+        }
+
+        .btn-add-variant {
+            background: #e9ecef;
+            color: #495057;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .btn-save-product {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+        }
+
+        .product-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: white;
+        }
+
+        .product-list-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .product-list-item:last-child {
+            border-bottom: none;
+        }
+
         .summary-table {
             width: 100%;
             border-collapse: collapse;
@@ -655,31 +757,7 @@
                 <button onclick="resetToDefaultData()"
                     style="padding: 8px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer;">データ初期化</button>
             </div>
-
-            <div
-                style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <h3>新規商品追加</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="newProdName" placeholder="商品名 (例: Tシャツ)" class="settings-input">
-                    <input type="text" id="newProdIcon" placeholder="アイコン (例: 👕)" class="settings-input">
-                </div>
-
-                <h4 style="margin-bottom: 10px; display:flex; justify-content:space-between;">
-                    バリエーション設定
-                    <span style="font-size:0.8rem; color:#666; font-weight:normal;">(名前 / 価格 / 在庫)</span>
-                </h4>
-                <div id="newVariantsContainer"></div>
-                <button onclick="addNewVariantRow()"
-                    style="margin-top: 10px; padding: 8px 12px; background: #eee; border: none; border-radius: 4px; cursor: pointer;">+
-                    バリエーション追加</button>
-
-                <div style="margin-top: 20px; text-align: right;">
-                    <button onclick="saveNewProduct()" class="btn-add-list">商品を保存する</button>
-                </div>
-            </div>
-
-            <h3>登録済み商品一覧</h3>
-            <div id="settingsProductList" class="product-grid"></div>
+            <div id="settingsList"></div>
         </div>
 
         <!-- SUMMARY VIEW -->
@@ -769,8 +847,8 @@
         const modal = document.getElementById('variantModal');
         const quickButtonsGrid = document.getElementById('quickButtonsGrid');
         const variantSelect = document.getElementById('variantSelect');
-        const settingsProductList = document.getElementById('settingsProductList');
-        const newVariantsContainer = document.getElementById('newVariantsContainer');
+        const settingsProductList = document.getElementById('settingsProductList'); // This will be removed or repurposed
+        const newVariantsContainer = document.getElementById('newVariantsContainer'); // This will be removed
         const summaryTableBody = document.getElementById('summaryTableBody');
         const summaryTotalAmount = document.getElementById('summaryTotalAmount');
 
@@ -779,7 +857,7 @@
             loadData();
             renderProducts();
             updateCartUI();
-            addNewVariantRow();
+            // addNewVariantRow(); // This is now handled by renderSettingsList
         }
 
         function loadData() {
@@ -811,7 +889,7 @@
                 localStorage.removeItem('pos_sales_log');
                 loadData();
                 renderProducts();
-                if (document.getElementById('settingsView').style.display === 'flex') {
+                if (document.getElementById('settingsView').classList.contains('active')) {
                     renderSettingsList();
                 }
                 alert('初期化しました');
@@ -850,7 +928,7 @@
                 card.onclick = () => openVariantModal(product);
 
                 // Calc total stock for info
-                const totalStock = product.variants.reduce((sum, v => sum + (parseInt(v.stock) || 0)), 0);
+                const totalStock = product.variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
                 const minPrice = product.variants.length > 0 ? Math.min(...product.variants.map(v => v.price)) : 0;
 
                 card.innerHTML = `
@@ -1145,75 +1223,151 @@
             }
         }
 
-        // --- Settings Logic (Updated) ---
+        // --- Settings Logic ---
         function renderSettingsList() {
-            settingsProductList.innerHTML = '';
-            products.forEach((product, index) => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.style.cursor = 'default';
-                card.innerHTML = `
-                <div style="font-size:2rem;">${product.icon}</div>
-                <div style="font-weight:bold;">${product.name}</div>
-                <div style="font-size:0.8rem; color:#666;">変種: ${product.variants.length}</div>
-                <button onclick="deleteProduct(${index})" style="margin-top:10px; background:#ff3b30; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">削除</button>
+            const container = document.getElementById('settingsList');
+            container.innerHTML = `
+                <div class="settings-container">
+                    <!-- New Product Form -->
+                    <div class="settings-card">
+                        <h3>商品を登録する</h3>
+                        <div class="form-group">
+                            <label>商品名</label>
+                            <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ">
+                        </div>
+                        <div class="form-group">
+                            <label>バリエーション (サイズ/色)</label>
+                            <div id="newProdVariants"></div>
+                            <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
+                        </div>
+                        <button class="btn-save-product" onclick="saveNewProduct()">保存する</button>
+                    </div>
+
+                    <!-- Existing Products List -->
+                    <div class="settings-card">
+                        <h3>登録済み商品一覧</h3>
+                        <div id="existingProductsList"></div>
+                    </div>
+                </div>
             `;
-                settingsProductList.appendChild(card);
-            });
+
+            // Initialize with one empty variant row
+            addVariantRow('newProdVariants');
+            renderExistingProducts();
         }
 
-        function addNewVariantRow() {
-            const row = document.createElement('div');
-            row.className = 'variant-row';
-            row.innerHTML = `
-            <input type="text" placeholder="名前 (S...)" class="var-name-input" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
-            <input type="number" placeholder="価格" class="var-price-input" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
-            <input type="number" placeholder="在庫" class="var-stock-input" value="10" style="padding:5px; width:100%; border:1px solid #ddd; border-radius:4px;">
-            <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; cursor:pointer; font-size:1.2rem;">×</button>
-        `;
-            newVariantsContainer.appendChild(row);
+        function addVariantRow(containerId, initialData = null) {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = 'variant-row';
+
+            const nameVal = initialData ? initialData.name : '';
+            const priceVal = initialData ? initialData.price : '';
+            const stockVal = initialData ? initialData.stock : '';
+
+            // Layout: Name | Price | Stock | Del
+            // Use placeholders effectively
+            div.innerHTML = `
+                <input type="text" placeholder="種類名 (S, 赤など)" class="form-control" value="${nameVal}" style="grid-column: span 1">
+                <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
+                <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
+                <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function renderExistingProducts() {
+            const list = document.getElementById('existingProductsList');
+            list.innerHTML = '';
+
+            if (products.length === 0) {
+                list.innerHTML = '<p style="color:#888; text-align:center;">登録された商品はありません</p>';
+                return;
+            }
+
+            products.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.className = 'product-list-item';
+                item.innerHTML = `
+                    <div style="flex:1">
+                        <div style="font-weight:bold; font-size:1.1rem;">${p.name}</div>
+                        <div style="color:#666; font-size:0.9rem;">
+                            ${p.variants.length} バリエーション
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="editProduct(${index})" style="padding:8px 15px; border:1px solid #ddd; background:white; border-radius:6px;">編集</button>
+                        <button onclick="deleteProduct(${index})" style="padding:8px 15px; margin-left:5px; color:red; border:1px solid red; background:white; border-radius:6px;">削除</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
         }
 
         function saveNewProduct() {
             const name = document.getElementById('newProdName').value;
-            const icon = document.getElementById('newProdIcon').value || '📦';
-
             if (!name) { alert('商品名を入力してください'); return; }
 
-            const variantRows = document.querySelectorAll('.variant-row');
+            const variantRows = document.getElementById('newProdVariants').children;
             const variants = [];
-            variantRows.forEach(row => {
-                const vName = row.querySelector('.var-name-input').value;
-                const vPrice = row.querySelector('.var-price-input').value;
-                const vStock = row.querySelector('.var-stock-input').value;
-
-                if (vName && vPrice) {
+            for (let row of variantRows) {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0].value) {
                     variants.push({
-                        name: vName,
-                        price: parseInt(vPrice),
-                        stock: parseInt(vStock) || 0,
-                        isQuickButton: true // Default to true now
+                        name: inputs[0].value,
+                        price: parseInt(inputs[1].value) || 0,
+                        stock: parseInt(inputs[2].value) || 0,
                     });
                 }
-            });
+            }
 
             if (variants.length === 0) { alert('少なくとも1つのバリエーションを入力してください'); return; }
 
             const newProduct = {
                 id: Date.now(),
                 name: name,
-                icon: icon,
+                icon: "📦",
                 variants: variants
             };
+
             products.push(newProduct);
             saveProducts();
 
-            // Reset form
-            document.getElementById('newProdName').value = '';
-            document.getElementById('newProdIcon').value = '';
-            newVariantsContainer.innerHTML = '';
-            addNewVariantRow();
             alert('商品を登録しました');
+            renderSettingsList(); // Reset form
+        }
+
+
+        function saveUpdatedProduct() {
+            if (editingProductIndex === -1) return;
+
+            const name = document.getElementById('newProdName').value;
+            if (!name) { alert('商品名を入力してください'); return; }
+
+            const variantRows = document.getElementById('newProdVariants').children;
+            const variants = [];
+            for (let row of variantRows) {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0].value) {
+                    variants.push({
+                        name: inputs[0].value,
+                        price: parseInt(inputs[1].value) || 0,
+                        stock: parseInt(inputs[2].value) || 0,
+                    });
+                }
+            }
+
+            if (variants.length === 0) { alert('少なくとも1つのバリエーションを入力してください'); return; }
+
+            // Update existing product
+            products[editingProductIndex].name = name;
+            products[editingProductIndex].variants = variants;
+
+            saveProducts();
+            alert('商品を更新しました');
+
+            // Reset UI
+            editingProductIndex = -1;
             renderSettingsList();
         }
 
