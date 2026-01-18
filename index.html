@@ -12,6 +12,7 @@
             --primary-color: #007bff;
             --accent-color: #ff3b30;
             --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
             --text-color: #333;
             --border-radius: 12px;
             --spacing-unit: 16px;
@@ -80,7 +81,8 @@
         .cart-area {
             flex: 1;
             padding: var(--spacing-unit);
-            background-color: var(--card-bg);
+            background-color: #ffffff;
+            /* Explicit white */
             display: flex;
             flex-direction: column;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
@@ -88,9 +90,10 @@
 
         /* Header */
         header {
-            background-color: var(--card-bg);
+            background-color: #ffffff;
+            /* Explicit white */
             padding: var(--spacing-unit);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
             display: flex;
             justify-content: space-between;
@@ -126,7 +129,8 @@
         }
 
         .product-card {
-            background-color: var(--card-bg);
+            background-color: #ffffff;
+            /* Explicit white */
             border-radius: var(--border-radius);
             padding: var(--spacing-unit);
             text-align: center;
@@ -233,7 +237,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+            /* Darker overlay for better contrast */
             display: none;
             align-items: center;
             justify-content: center;
@@ -245,12 +250,13 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
+            background: #ffffff;
+            /* Explicit white */
             border-radius: var(--border-radius);
             width: 90%;
             max-width: 500px;
             padding: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             max-height: 90vh;
             /* Prevent overflow on small screens */
             display: flex;
@@ -1310,27 +1316,27 @@
         function editProduct(index) {
             editingProductIndex = index;
             const p = products[index];
-            
+
             // Populate form
             document.getElementById('newProdName').value = p.name;
             const vContainer = document.getElementById('newProdVariants');
             vContainer.innerHTML = '';
-            
+
             if (p.variants && p.variants.length > 0) {
                 p.variants.forEach(v => addVariantRow('newProdVariants', v));
             } else {
-                addVariantRow('newProdVariants'); 
+                addVariantRow('newProdVariants');
             }
-            
+
             // Scroll to top
-            document.querySelector('.settings-container').scrollIntoView({behavior: 'smooth'});
-            
+            document.querySelector('.settings-container').scrollIntoView({ behavior: 'smooth' });
+
             // Change Button State
             const saveBtn = document.querySelector('.btn-save-product');
             saveBtn.textContent = '更新する (上書き)';
             saveBtn.onclick = saveUpdatedProduct;
             saveBtn.style.background = 'var(--accent-color)';
-            
+
             // Change Title
             document.querySelector('.settings-card h3').textContent = '商品を編集する';
         }
