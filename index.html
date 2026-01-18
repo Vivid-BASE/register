@@ -271,13 +271,34 @@
 
         .variant-btn-group {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
             justify-content: space-between;
-            background-color: #fff;
+            background-color: #f0f9ff;
             border: 2px solid var(--primary-color);
             border-radius: 8px;
             overflow: hidden;
             height: 100%;
+            padding: 4px;
+        }
+
+        .var-name-row {
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 4px;
+            color: var(--primary-color);
+        }
+
+        .qty-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--primary-color);
+            margin-bottom: 2px;
         }
 
         .qty-btn {
@@ -285,12 +306,13 @@
             color: white;
             border: none;
             width: 30px;
-            height: 100%;
+            height: 30px;
             font-size: 1.2rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
         }
 
         .qty-btn:active {
@@ -301,7 +323,13 @@
             flex: 1;
             text-align: center;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
+        }
+
+        .var-info-row {
+            font-size: 0.7rem;
+            color: #666;
+            text-align: center;
         }
 
         .variant-btn:hover {
@@ -741,9 +769,13 @@
                         // Render Control Group [-] Count [+]
                         btn.className = 'variant-btn-group';
                         btn.innerHTML = `
-                            <button class="qty-btn" onclick="decreaseQTY(${currentSelectedProduct.id}, '${variant.name}')">－</button>
-                            <div class="qty-display">${countInCart}</div>
-                            <button class="qty-btn" onclick="increaseQTY(${currentSelectedProduct.id}, '${variant.name}')">＋</button>
+                            <div class="var-name-row">${variant.name}</div>
+                            <div class="qty-row">
+                                <button class="qty-btn" onclick="decreaseQTY(${currentSelectedProduct.id}, '${variant.name}')">－</button>
+                                <div class="qty-display">${countInCart}</div>
+                                <button class="qty-btn" onclick="increaseQTY(${currentSelectedProduct.id}, '${variant.name}')">＋</button>
+                            </div>
+                            <div class="var-info-row">¥${variant.price.toLocaleString()} / 残:${stock}</div>
                         `;
                     } else {
                         // Render Standard Button
