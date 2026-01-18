@@ -1,8 +1,9 @@
-const CACHE_NAME = 'register-app-v2';
+const CACHE_NAME = 'register-app-v3';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icon.svg'
 ];
 
 self.addEventListener('install', (event) => {
