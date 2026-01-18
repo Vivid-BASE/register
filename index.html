@@ -449,6 +449,56 @@
             background-color: #f0f0f0;
         }
 
+        /* Toast Notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
         .btn-batch-add {
             width: 100%;
             background: var(--primary-color);
@@ -897,25 +947,38 @@
             </div>
         </div>
     </div>
-    <div class="modal-content" style="max-width: 400px; max-height: 80vh; overflow-y: auto;">
-        <div class="modal-header">
-            <h2>売上カレンダー</h2>
-            <button class="close-btn" onclick="closeCalendar()">×</button>
-        </div>
-        <div class="calendar-header">
-            <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:1.2rem;">◀</button>
-            <h3 id="calendarTitle" style="margin:0;">2026年 1月</h3>
-            <button onclick="changeMonth(1)" style="background:none; border:none; font-size:1.2rem;">▶</button>
-        </div>
-        <div class="calendar-grid" id="calendarGrid">
-            <!-- Days injected here -->
-        </div>
-        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px; display:none;"
-            id="calendarDetailArea">
-            <h4 id="calendarDetailTitle">1月18日の売上</h4>
-            <div id="calendarDetailContent"></div>
+    <!-- Calendar Modal (Drill-down Style) -->
+    <div class="modal-overlay" id="calendarModal">
+        <div class="modal-content" style="max-width: 400px; height: 80vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2>売上カレンダー</h2>
+                <button class="close-btn" onclick="closeCalendar()">×</button>
+            </div>
+
+            <div id="calendarGridView" style="flex: 1; overflow-y: auto;">
+                <div class="calendar-header">
+                    <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:1.2rem;">◀</button>
+                    <h3 id="calendarTitle" style="margin:0;">2026年 1月</h3>
+                    <button onclick="changeMonth(1)" style="background:none; border:none; font-size:1.2rem;">▶</button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Days injected here -->
+                </div>
+            </div>
+
+            <div id="calendarDetailView" style="display:none; flex: 1; flex-direction: column; overflow-y: auto;">
+                <button onclick="showCalendarGrid()"
+                    style="margin-bottom: 15px; background:none; border:none; color:var(--primary-color); font-size:1rem; cursor:pointer;">◀
+                    カレンダーに戻る</button>
+                <h3 id="calendarDetailTitle"
+                    style="border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">1月18日の売上</h3>
+                <div id="calendarDetailContent"></div>
+            </div>
         </div>
     </div>
+
+    <!-- Toast Element -->
+    <div id="toast" class="toast">Saved to History</div>
     </div>
 
     <!-- Payment Modal (Moved to root) -->
@@ -1567,12 +1630,18 @@
         }
 
         function resetSession() {
-            if (confirm('現在の売上表示をリセットしますか？\n（データは履歴に保存されたまま、表示だけ0になります）')) {
-                sessionStartTime = Date.now();
-                saveSession();
-                renderSummary();
-                alert('表示をリセットしました。\n過去のデータは「📅 過去の売上」から確認できます。');
-            }
+            // One-Tap Reset (No confirm)
+            sessionStartTime = Date.now();
+            saveSession();
+            renderSummary();
+            showToast('本日の売上を履歴に保存しました');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = "toast show";
+            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
         // --- Calendar Logic ---
@@ -1580,13 +1649,18 @@
             const calendarModal = document.getElementById('calendarModal');
             if (calendarModal) {
                 calendarModal.classList.add('active');
+                showCalendarGrid(); // Ensure grid is shown first
                 renderCalendar();
             }
         }
 
         function closeCalendar() {
             document.getElementById('calendarModal').classList.remove('active');
-            document.getElementById('calendarDetailArea').style.display = 'none';
+        }
+
+        function showCalendarGrid() {
+            document.getElementById('calendarGridView').style.display = 'block';
+            document.getElementById('calendarDetailView').style.display = 'none';
         }
 
         function changeMonth(delta) {
@@ -1638,18 +1712,22 @@
         }
 
         function showDailyDetail(dateStr) {
-            const detailArea = document.getElementById('calendarDetailArea');
+            const gridView = document.getElementById('calendarGridView');
+            const detailView = document.getElementById('calendarDetailView');
             const content = document.getElementById('calendarDetailContent');
             const title = document.getElementById('calendarDetailTitle');
 
-            detailArea.style.display = 'block';
+            // Switch views
+            gridView.style.display = 'none';
+            detailView.style.display = 'flex';
+
             title.textContent = `${dateStr} の売上詳細`;
             content.innerHTML = '';
 
             const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
 
             if (logs.length === 0) {
-                content.innerHTML = '<div style="color:#999; text-align:center;">データはありません</div>';
+                content.innerHTML = '<div style="color:#999; text-align:center; margin-top:50px;">データはありません</div>';
                 return;
             }
 
@@ -1665,22 +1743,30 @@
             // Total Header
             const totalDiv = document.createElement('div');
             totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '1.2rem';
-            totalDiv.style.marginBottom = '10px';
+            totalDiv.style.fontSize = '1.8rem';
+            totalDiv.style.color = '#333';
+            totalDiv.style.marginBottom = '20px';
             totalDiv.style.textAlign = 'center';
+            totalDiv.style.padding = '10px';
+            totalDiv.style.background = '#f9f9f9';
+            totalDiv.style.borderRadius = '8px';
             totalDiv.textContent = `合計: ¥${total.toLocaleString()}`;
             content.appendChild(totalDiv);
 
             // List
             const table = document.createElement('table');
             table.style.width = '100%';
-            table.style.fontSize = '0.9rem';
+            table.style.fontSize = '1rem';
+            // table styling
+            table.style.borderCollapse = 'collapse';
+
             Object.values(agg).forEach(item => {
                 const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #eee';
                 tr.innerHTML = `
-                    <td style="padding:4px;">${item.name}</td>
-                    <td style="text-align:right;">x${item.count}</td>
-                    <td style="text-align:right;">¥${(item.price * item.count).toLocaleString()}</td>
+                    <td style="padding:10px 5px;">${item.name}</td>
+                    <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
+                    <td style="text-align:right; font-weight:bold; width:80px;">¥${(item.price * item.count).toLocaleString()}</td>
                 `;
                 table.appendChild(tr);
             });
