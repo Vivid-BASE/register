@@ -67,6 +67,9 @@
             margin: 0;
             padding: 0;
             height: 100vh;
+            /* Fallback */
+            height: 100dvh;
+            /* Mobile viewport fix */
             display: flex;
             flex-direction: column;
         }
@@ -77,6 +80,8 @@
             flex: 1;
             height: 100%;
             overflow: hidden;
+            min-height: 0;
+            /* Important for nested flex scroll */
         }
 
         .product-area {
@@ -89,11 +94,14 @@
         .cart-area {
             flex: 1;
             padding: var(--spacing-unit);
+            /* Handle safe area for tablets */
+            padding-bottom: calc(var(--spacing-unit) + env(safe-area-inset-bottom, 20px));
             background-color: #ffffff;
-            /* Explicit white */
             display: flex;
             flex-direction: column;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            /* Ensure no spill */
         }
 
         /* Header */
