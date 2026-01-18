@@ -3,18 +3,52 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>物販管理アプリ プロトタイプ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>物販レジ</title>
+    <link rel="manifest" href="./manifest.json">
     <!-- Update: Inventory & Sales Management -->
     <style>
         :root {
-            --primary-color: #007AFF;
-            --accent-color: #FF2D55;
-            --bg-color: #F2F2F7;
-            --card-bg: #FFFFFF;
-            --text-color: #333333;
+            --primary-color: #007bff;
+            --accent-color: #ff3b30;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
             --border-radius: 12px;
             --spacing-unit: 16px;
+        }
+
+        /* iPad / Tablet Optimization */
+        @media (min-width: 768px) {
+            .modal-content {
+                width: 90%;
+                max-width: 800px;
+                /* Wider modal for tablets */
+            }
+
+            .quick-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                /* Denser grid */
+            }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 767px) {
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .quick-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+                /* Dense for phone */
+                gap: 8px;
+            }
+
+            .variant-label {
+                font-size: 0.9rem;
+            }
         }
 
         body {
@@ -267,6 +301,14 @@
             cursor: pointer;
             transition: background 0.2s;
             position: relative;
+        }
+
+        /* Force single screen feel - Minimize scrolling */
+        .variant-section {
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            /* Important for flex container scrolling */
         }
 
         .variant-btn-group {
@@ -1059,6 +1101,15 @@
         });
 
         init();
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('SW registered: ', reg))
+                    .catch(err => console.log('SW registration failed: ', err));
+            });
+        }
     </script>
 </body>
 
