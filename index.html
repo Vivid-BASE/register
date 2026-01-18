@@ -1836,6 +1836,7 @@
         function renderSummary() {
             summaryTableBody.innerHTML = '';
             let total = 0;
+            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
 
             // Filter for SESSION only (since last reset)
             const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
@@ -1854,6 +1855,11 @@
                 }
                 aggregation[key].count++;
                 total += log.price;
+
+                // Payment Method Total
+                if (log.paymentMethod === 'paypay') paymentTotals.paypay += log.price;
+                else if (log.paymentMethod === 'credit') paymentTotals.credit += log.price;
+                else paymentTotals.cash += log.price;
             });
 
             Object.values(aggregation).forEach(item => {
@@ -1876,9 +1882,13 @@
                 summaryTableBody.appendChild(tr);
             });
 
-            summaryTotalAmount.textContent = total.toLocaleString();
-
-            // renderHistoryList(); // Replaced by Calendar
+            // Display Total with Payment Breakdown
+            summaryTotalAmount.innerHTML = `
+                ${total.toLocaleString()}
+                <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
+                    (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
+                </div>
+            `;
         }
 
         function resetSession() {
@@ -2112,7 +2122,7 @@
             // Layout: Name | Price | Stock | Del
             // Use placeholders effectively
             div.innerHTML = `
-                <input type="text" placeholder="種類名 (S, 赤など)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
+                <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
                 <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
@@ -2231,9 +2241,13 @@
             const variants = [];
             for (let row of variantRows) {
                 const inputs = row.querySelectorAll('input');
-                if (inputs[0].value) {
+                // Allow empty name if price is set
+                const vName = inputs[0].value.trim() || '通常';
+                const vPrice = parseInt(inputs[1].value);
+
+                if (vPrice >= 0 || inputs[2].value) {
                     variants.push({
-                        name: inputs[0].value,
+                        name: vName,
                         price: parseInt(inputs[1].value) || 0,
                         stock: parseInt(inputs[2].value) || 0,
                     });
@@ -2260,7 +2274,7 @@
             if (name.includes('Tシャツ') || name.includes('ロンT') || name.includes('パーカー')) return '👕';
             if (name.includes('タオル') || name.includes('マフラー')) return '🧣';
             if (name.includes('チェキ')) return '📸';
-            if (name.includes('バッグ')) return '👜';
+            if (name.includes('バッグ')) return '🛍️';
             if (name.includes('キーホルダー') || name.includes('アクリルスタンド') || name.includes('ステッカー') || name.includes('スタンド')) return '🧸';
             if (name.includes('ペンライト') || name.includes('リストバンド')) return '💡';
             if (name.includes('CD') || name.includes('DVD') || name.includes('Blu-ray')) return '💿';
