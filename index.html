@@ -1627,14 +1627,14 @@
                     if (v) stock = v.stock;
                 }
 
-                const methodIcon = item.method === 'paypay' ? '📱' : (item.method === 'credit' ? '💳' : '💵');
+                const methodIcon = item.method === 'paypay' ? 'P' : (item.method === 'credit' ? 'ク' : '現');
 
                 tr.innerHTML = `
         <td>${item.name}</td>
         <td>¥${item.price.toLocaleString()}</td>
         <td>${item.count}</td>
         <td>${stock}</td>
-        <td style="text-align:center; font-size:1.2rem;">${methodIcon}</td>
+        <td style="text-align:center; font-weight:bold;">${methodIcon}</td>
     `;
                 summaryTableBody.appendChild(tr);
             });
@@ -1643,7 +1643,7 @@
             summaryTotalAmount.innerHTML = `
         ${total.toLocaleString()}
         <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
-            (💵: ¥${paymentTotals.cash.toLocaleString()} / 📱: ¥${paymentTotals.paypay.toLocaleString()} / 💳: ¥${paymentTotals.credit.toLocaleString()})
+            (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
         </div>
     `;
         }
