@@ -1482,16 +1482,29 @@
             document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`pm-${currentPaymentMethod}`).classList.add('active');
 
-            // Show/Hide Cash Input
+            // Show/Hide Cash Input (Modified to preserve layout)
             const cashArea = document.getElementById('cashInputArea');
+            const input = document.getElementById('amountReceived');
+
+            // Format check
+            // We keep the area visible. If cashless, we disable input and auto-fill.
+
             if (currentPaymentMethod === 'cash') {
-                cashArea.style.display = 'block';
-                document.getElementById('amountReceived').focus();
+                input.disabled = false;
+                input.readOnly = false;
+                input.style.background = '#fff';
+                input.style.color = '#333';
+                input.placeholder = '¥0';
+                if (!input.value) input.focus();
             } else {
-                cashArea.style.display = 'none';
+                // Cashless: Lock input, fill with total
+                input.disabled = true; // or readOnly
+                input.style.background = '#f0f0f0';
+                input.style.color = '#777';
+
                 // Auto-fill amount received for cashless
                 const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
-                document.getElementById('amountReceived').value = totalText;
+                input.value = totalText;
             }
         }
 
@@ -2050,14 +2063,15 @@
                             <label>バリエーション (サイズ/色)</label>
                             <div style="margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px;">
                                 <label style="font-size:0.9rem; color:#555; display:block; margin-bottom:5px;">ひな形から入力 (名前と種類を自動設定)</label>
-                                <select id="productTemplateSelect" class="form-control" onchange="applyProductTemplate(this.value)">
-                                    <option value="">-- ひな形を選択 --</option>
-                                    <option value="tshirt">Tシャツ (S-XL)</option>
-                                    <option value="longT">ロンT (S-XL)</option>
-                                    <option value="towel">タオル (種類なし)</option>
-                                    <option value="muffler">マフラータオル (赤/青)</option>
-                                    <option value="cheki">チェキ (Normal/Sign)</option>
-                                </select>
+                                <label style="font-size:0.9rem; color:#555; display:block; margin-bottom:5px;">ひな形から入力 (名前と種類を自動設定)</label>
+                                <div class="template-buttons" style="display:flex; flex-wrap:wrap; gap:5px;">
+                                    <button class="variant-preset-btn" onclick="applyProductTemplate('tshirt')">Tシャツ</button>
+                                    <button class="variant-preset-btn" onclick="applyProductTemplate('longT')">ロンT</button>
+                                    <button class="variant-preset-btn" onclick="applyProductTemplate('towel')">タオル</button>
+                                    <button class="variant-preset-btn" onclick="applyProductTemplate('muffler')">マフラー</button>
+                                    <button class="variant-preset-btn" onclick="applyProductTemplate('cheki')">📸 チェキ</button>
+                                </div>
+                            </div>
                             </div>
                             <div id="newProdVariants"></div>
                             <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
