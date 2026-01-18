@@ -782,7 +782,7 @@
         function refreshModalContent() {
             if (!currentSelectedProduct) return;
             quickButtonsGrid.innerHTML = '';
-            variantSelect.innerHTML = '<option value="">選択してください</option>';
+            // variantSelect.innerHTML = '<option value="">選択してください</option>'; // Removed
 
             document.getElementById('quickButtonsArea').style.display = 'block';
 
@@ -843,7 +843,7 @@
             }
 
             // Remove List Area logic since we use buttons for all
-            document.getElementById('listArea').style.display = 'none';
+            // document.getElementById('listArea').style.display = 'none'; // Element removed from DOM
         }
 
         function closeModal() {
@@ -851,14 +851,7 @@
             currentSelectedProduct = null;
         }
 
-        function addFromSelect() {
-            const value = variantSelect.value;
-            if (!value) return;
-            const variant = JSON.parse(value);
-            addToCart(currentSelectedProduct, variant);
-            variantSelect.selectedIndex = 0;
-            alert(`${variant.name} をカートに追加しました`);
-        }
+        // addFromSelect removed as it is no longer used
 
         function increaseQTY(prodId, varName) {
             const product = products.find(p => p.id === prodId);
