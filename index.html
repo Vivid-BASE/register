@@ -983,7 +983,7 @@
 <body>
 
     <header>
-        <h1>物販レジ <span class="version-badge">v2.5</span></h1>
+        <h1>物販レジ <span class="version-badge">v2.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
@@ -1328,9 +1328,6 @@
                 alert('エラー: 商品データが空です (Product list is empty)');
                 return;
             }
-
-            // DEBUG: Alert render count
-            alert(`描画開始: ${products.length}個の商品を表示します (Rendering ${products.length} items)`);
 
             productGrid.innerHTML = '';
             products.forEach(product => {
