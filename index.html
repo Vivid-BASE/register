@@ -41,79 +41,7 @@
             }
         }
 
-        /* Mobile Optimization */
-        /* Mobile Optimization */
-        /* Mobile Optimization */
-        @media (max-width: 767px) {
-            .container {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
 
-            /* Fix: Target the direct parent of product/cart areas with high specificity */
-            .view-content.active,
-            #shopView.active {
-                display: block !important;
-                /* Force block to allow absolute positioning */
-                position: relative;
-                width: 100%;
-                height: 100%;
-                background: #ffcccc;
-                /* DEBUG: Pink Display Check */
-            }
-
-            .product-area {
-                height: 55%;
-                /* Top part */
-                width: 100%;
-                overflow-y: auto;
-                border-right: none;
-                border-bottom: 2px solid #ddd;
-                padding-bottom: 10px;
-                border: 4px solid red;
-                /* DEBUG: Red Border */
-                background: #eef;
-                /* DEBUG: Light Blue Bg */
-            }
-
-            .product-card {
-                border: 2px solid blue !important;
-                /* DEBUG: Blue Border */
-                background: yellow !important;
-                /* DEBUG: Yellow Card */
-            }
-
-            .cart-area {
-                position: absolute;
-                /* Force pin to bottom */
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 45%;
-                /* Bottom part */
-                z-index: 5;
-                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
-                background: #ccffcc;
-                /* DEBUG: Green Cart */
-            }
-
-            .modal-content {
-                width: 95%;
-                max-height: 90vh;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .quick-buttons {
-                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-                gap: 8px;
-            }
-
-            .variant-label {
-                font-size: 0.9rem;
-            }
-        }
 
         html {
             height: 100%;
@@ -996,13 +924,66 @@
                 flex: 0 0 160px;
             }
         }
+
+        /* Mobile Optimization - Moved to bottom for specificity override */
+        @media (max-width: 767px) {
+            .container {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Fix: Target the direct parent of product/cart areas */
+            .view-content.active,
+            #shopView.active {
+                display: block !important;
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .product-area {
+                height: 55%;
+                width: 100%;
+                overflow-y: auto;
+                border: none;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 10px;
+            }
+
+            .cart-area {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 45%;
+                z-index: 5;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .quick-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+                gap: 8px;
+            }
+
+            .variant-label {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <header>
-        <h1>物販レジ <span class="version-badge">v2.4(DEBUG)</span></h1>
+        <h1>物販レジ <span class="version-badge">v2.5</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
