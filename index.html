@@ -114,6 +114,30 @@
             grid-template-rows: auto 1fr;
         }
 
+        /* Views */
+        .view-content {
+            display: none;
+            /* Default hidden */
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            flex-direction: column;
+            /* Default for non-shop views */
+        }
+
+        .view-content.active {
+            display: flex;
+            /* Default flex for desktop/tablet */
+        }
+
+        /* Mobile override for Shop View */
+        @media (max-width: 767px) {
+            #shopView.active {
+                display: block;
+                /* Force block for absolute positioning */
+            }
+        }
+
         /* Layout */
         .container {
             display: flex;
@@ -1263,24 +1287,25 @@
         }
 
         // --- View Switching ---
+        // --- View Switching ---
         function switchView(viewName) {
-            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active', 'flex'));
-            document.querySelectorAll('.view-content').forEach(el => el.style.display = 'none'); // Safety
+            // Remove active class and reset inline display style
+            document.querySelectorAll('.view-content').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = ''; // Clear inline style so CSS takes over
+            });
 
             if (viewName === 'shop') {
                 const el = document.getElementById('shopView');
                 el.classList.add('active');
-                el.style.display = 'flex'; // Restore flex for split layout
                 renderProducts();
             } else if (viewName === 'settings') {
                 const el = document.getElementById('settingsView');
                 el.classList.add('active');
-                el.style.display = 'flex';
                 renderSettingsList();
             } else if (viewName === 'summary') {
                 const el = document.getElementById('summaryView');
                 el.classList.add('active');
-                el.style.display = 'flex';
                 renderSummary();
             }
         }
