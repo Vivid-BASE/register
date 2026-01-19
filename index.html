@@ -1322,24 +1322,40 @@
         }
 
         // --- Shop Logic: Render ---
+        // --- Shop Logic: Render ---
         function renderProducts() {
+            if (!productGrid) {
+                alert('エラー: 商品表示エリアが見つかりません (Error: productGrid missing)');
+                return;
+            }
+            if (!products || products.length === 0) {
+                alert('エラー: 商品データが空です (Product list is empty)');
+                return;
+            }
+
             productGrid.innerHTML = '';
             products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.onclick = () => openVariantModal(product);
+                try {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.onclick = () => openVariantModal(product);
 
-                // Calc total stock for info
-                const totalStock = product.variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
-                const minPrice = product.variants.length > 0 ? Math.min(...product.variants.map(v => v.price)) : 0;
+                    // Calc total stock for info
+                    const variants = product.variants || [];
+                    const totalStock = variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
+                    const minPrice = variants.length > 0 ? Math.min(...variants.map(v => v.price)) : 0;
 
-                card.innerHTML = `
-                <div class="stock-badge">在庫: ${totalStock}</div>
-                <span class="product-icon">${product.icon}</span>
-                <div class="product-name">${product.name}</div>
-                <div class="product-price">¥${minPrice.toLocaleString()}~</div>
-            `;
-                productGrid.appendChild(card);
+                    card.innerHTML = `
+                    <div class="stock-badge">在庫: ${totalStock}</div>
+                    <span class="product-icon">${product.icon || '📦'}</span>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">¥${minPrice.toLocaleString()}~</div>
+                `;
+                    productGrid.appendChild(card);
+                } catch (e) {
+                    console.error('Error rendering product:', product, e);
+                    // alert(`商品描画エラー: ${product.name}`); // Optional: Un-comment if needed
+                }
             });
         }
 
