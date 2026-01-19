@@ -51,10 +51,11 @@
                 height: 100%;
             }
 
-            /* Fix: Target the direct parent of product/cart areas */
-            .view-content {
-                display: block;
-                /* Override flex */
+            /* Fix: Target the direct parent of product/cart areas with high specificity */
+            .view-content.active,
+            #shopView.active {
+                display: block !important;
+                /* Force block to allow absolute positioning */
                 position: relative;
                 width: 100%;
                 height: 100%;
@@ -986,7 +987,7 @@
 <body>
 
     <header>
-        <h1>物販レジ</h1>
+        <h1>物販レジ <span class="version-badge">v2.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
