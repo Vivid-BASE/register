@@ -43,11 +43,21 @@
 
         /* Mobile Optimization */
         /* Mobile Optimization */
+        /* Mobile Optimization */
         @media (max-width: 767px) {
             .container {
                 display: block;
-                /* Disable flex on mobile container */
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Fix: Target the direct parent of product/cart areas */
+            .view-content {
+                display: block;
+                /* Override flex */
                 position: relative;
+                width: 100%;
+                height: 100%;
             }
 
             .product-area {
