@@ -1348,6 +1348,8 @@
             currentSelectedProduct = product;
             currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
+            // Update instruction text to be clearer
+            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください (行タップで +1)';
             refreshModalContent();
             modal.classList.add('active');
         }
@@ -1391,6 +1393,14 @@
                 totalAmount += batchQty * variant.price;
 
                 const tr = document.createElement('tr');
+                // Make row clickable
+                tr.onclick = (e) => {
+                    // Prevent double trigger if button clicked
+                    if (e.target.tagName === 'BUTTON') return;
+                    updateBatch(variant.name, 1);
+                };
+                tr.style.cursor = 'pointer'; // Visual cue
+
                 tr.innerHTML = `
                     <td>
                         <div style="font-weight:bold;">${variant.name}</div>
@@ -1400,7 +1410,7 @@
                     <td>
                         <div class="batch-qty-control">
                             <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
-                            <span class="batch-val">${batchQty}</span>
+                            <span class="batch-val" style="${batchQty > 0 ? 'color:val(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
                             <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${remainingStock <= 0 ? 'disabled style="opacity:0.5"' : ''}>＋</button>
                         </div>
                     </td>
@@ -1450,17 +1460,19 @@
         }
 
         function commitBatchToCart() {
+            let count = 0;
             Object.keys(currentBatchSelections).forEach(variantName => {
                 const qty = currentBatchSelections[variantName];
                 if (qty > 0) {
                     const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
                     for (let i = 0; i < qty; i++) {
                         addToCart(currentSelectedProduct, variant);
+                        count++;
                     }
                 }
             });
             closeModal();
-            // alert('カートに追加しました'); // Removed per user request
+            showToast(`${count}点をカートに追加しました`);
         }
 
         function closeModal() {
