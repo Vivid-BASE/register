@@ -983,7 +983,7 @@
 <body>
 
     <header>
-        <h1>物販レジ <span class="version-badge">v2.8</span></h1>
+        <h1>物販レジ <span class="version-badge">v2.9</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
@@ -1176,40 +1176,7 @@
 
     <script>
         // --- Default Data ---
-        const DEFAULT_PRODUCTS = [
-            {
-                id: 1,
-                name: "Tシャツ",
-                icon: "👕",
-                variants: [
-                    { name: "S", price: 2500, stock: 10, isQuickButton: true },
-                    { name: "M", price: 2500, stock: 20, isQuickButton: true },
-                    { name: "L", price: 2500, stock: 20, isQuickButton: true },
-                    { name: "XL", price: 2800, stock: 10, isQuickButton: true },
-                    { name: "XS (レア)", price: 2500, stock: 2, isQuickButton: false },
-                    { name: "XXL (レア)", price: 3000, stock: 2, isQuickButton: false },
-                    { name: "3XL (受注生産)", price: 3500, stock: 0, isQuickButton: false }
-                ]
-            },
-            {
-                id: 2,
-                name: "マフラータオル",
-                icon: "🧣",
-                variants: [
-                    { name: "赤", price: 2000, stock: 30, isQuickButton: true },
-                    { name: "青", price: 2000, stock: 30, isQuickButton: true }
-                ]
-            },
-            {
-                id: 3,
-                name: "チェキ",
-                icon: "📸",
-                variants: [
-                    { name: "Normal", price: 1000, stock: 100, isQuickButton: true },
-                    { name: "Sign", price: 2000, stock: 50, isQuickButton: true }
-                ]
-            }
-        ];
+        const DEFAULT_PRODUCTS = [];
 
         // --- State ---
         let products = [];
