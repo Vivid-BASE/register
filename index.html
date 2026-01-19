@@ -983,7 +983,7 @@
 <body>
 
     <header>
-        <h1>物販レジ <span class="version-badge">v2.7</span></h1>
+        <h1>物販レジ <span class="version-badge">v2.8</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
             <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
@@ -1695,7 +1695,7 @@
             updateCartUI();
             closePaymentModal();
 
-            showToast('お会計が完了しました');
+
 
             // Re-render shop to show updated stock
             renderProductGrid();
@@ -2302,7 +2302,7 @@
             products.push(newProduct);
             saveProducts();
 
-            showToast('商品を登録しました');
+
             renderSettingsList(); // Reset form
         }
 
@@ -2349,7 +2349,7 @@
             products[editingProductIndex].variants = variants;
 
             saveProducts();
-            showToast('商品を更新しました');
+
 
             // Reset UI
             editingProductIndex = -1;
