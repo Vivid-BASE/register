@@ -1,9 +1,10 @@
-const CACHE_NAME = 'register-app-v43';
+const CACHE_NAME = 'boxx-reg-v1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon.png',
+  './apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
