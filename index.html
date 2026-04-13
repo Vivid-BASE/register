@@ -149,7 +149,9 @@
 
         h1 {
             margin: 0;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         /* Version Badge */
@@ -168,12 +170,13 @@
         .header-btn {
             background: none;
             border: 1px solid #ddd;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             background-color: #fff;
             font-weight: bold;
+            white-space: nowrap;
         }
 
         /* Responsive Grid for Products */
@@ -999,9 +1002,9 @@
     <header>
         <h1>BOXXレジ</h1>
         <div class="header-buttons">
-            <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
-            <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
-            <button class="header-btn" onclick="switchView('settings')">⚙ 設定</button>
+            <button class="header-btn" onclick="switchView('shop')">レジ</button>
+            <button class="header-btn" onclick="switchView('summary')">集計</button>
+            <button class="header-btn" onclick="switchView('settings')">設定</button>
         </div>
     </header>
 
@@ -1037,7 +1040,7 @@
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
             <h2>本日の集計</h2>
-            <div class="summary-total">売上合計: ¥<span id="summaryTotalAmount">0</span></div>
+            <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
             <table class="summary-table">
                 <thead>
@@ -1721,22 +1724,25 @@
             });
 
             // Display Total with Detailed Payment Breakdown
-            summaryTotalAmount.innerHTML = `
-                <div style="font-size:1.2rem; color:#666; font-weight:normal; margin-bottom:5px;">本日の売上合計</div>
-                ¥${total.toLocaleString()}
-                
-                <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:10px; text-align:left;">
-                    <div style="background:#f0f7ff; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
-                        <span style="font-weight:bold; color:#0056b3;">💴 現金合計</span>
-                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.cash.toLocaleString()}</span>
-                    </div>
-                    <div style="background:#fff0f0; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffcccc;">
-                        <span style="font-weight:bold; color:#b02a37;">📱 PayPay合計</span>
-                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.paypay.toLocaleString()}</span>
-                    </div>
-                    <div style="background:#f8f9fa; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
-                        <span style="font-weight:bold; color:#333;">💳 クレジット合計</span>
-                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.credit.toLocaleString()}</span>
+            const container = document.getElementById('summaryTotalAmount');
+            container.innerHTML = `
+                <div style="background:#fff; border:2px solid #eee; border-radius:15px; padding:25px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+                    <div style="font-size:1.4rem; color:#666; font-weight:bold; margin-bottom:10px;">本日の売上合計</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">¥${total.toLocaleString()}</div>
+                    
+                    <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:12px; text-align:left;">
+                        <div style="background:#f0f7ff; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
+                            <span style="font-size:1.2rem; font-weight:bold; color:#0056b3;">現金 合計</span>
+                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.cash.toLocaleString()}</span>
+                        </div>
+                        <div style="background:#fff0f0; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffcccc;">
+                            <span style="font-size:1.2rem; font-weight:bold; color:#b02a37;">PayPay 合計</span>
+                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.paypay.toLocaleString()}</span>
+                        </div>
+                        <div style="background:#f8f9fa; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
+                            <span style="font-size:1.2rem; font-weight:bold; color:#333;">クレジット 合計</span>
+                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.credit.toLocaleString()}</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -2061,7 +2067,7 @@
                 <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <button onclick="this.parentElement.remove()" style="padding: 5px 10px; color:white; background:#ff3b30; border:none; border-radius:6px; font-size:0.9rem; font-weight:bold; cursor:pointer;">削除</button>
+                <div style="width:20px;"></div>
             `;
             container.appendChild(div);
         }
