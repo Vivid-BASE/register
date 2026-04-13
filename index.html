@@ -149,7 +149,7 @@
 
         h1 {
             margin: 0;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
 
         /* Version Badge */
@@ -168,11 +168,12 @@
         .header-btn {
             background: none;
             border: 1px solid #ddd;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             background-color: #fff;
+            font-weight: bold;
         }
 
         /* Responsive Grid for Products */
@@ -207,13 +208,14 @@
 
         .product-name {
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.25rem;
             margin-bottom: 4px;
         }
 
         .product-price {
             color: var(--primary-color);
-            font-weight: 500;
+            font-weight: 800;
+            font-size: 1.2rem;
         }
 
         .stock-badge {
@@ -267,24 +269,26 @@
         }
 
         .cart-total {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 2.2rem;
+            font-weight: 900;
             text-align: right;
             padding-top: var(--spacing-unit);
             border-top: 2px solid #ddd;
+            color: var(--primary-color);
         }
 
         .btn-checkout {
             background-color: var(--primary-color);
             color: #fff;
             border: none;
-            padding: 16px;
+            padding: 20px;
             border-radius: var(--border-radius);
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: bold;
             margin-top: 16px;
             cursor: pointer;
             width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
         }
 
         /* Modal Styles */
@@ -710,11 +714,12 @@
 
         .payment-method-btn {
             flex: 1;
-            padding: 12px;
+            padding: 16px;
             border: 1px solid #ddd;
             background: #fff;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -1114,55 +1119,52 @@
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
-                <h2>お会計</h2>
+                <h2 style="font-size: 1.5rem;">お会計</h2>
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 1rem; color: #555;">合計金額</div>
-                <div id="paymentTotal" style="font-size: 2.5rem; font-weight: bold; color: #333;">¥0</div>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 1.3rem; color: #555; margin-bottom: 5px;">合計金額</div>
+                <div id="paymentTotal" style="font-size: 3.5rem; font-weight: 900; color: #333;">¥0</div>
             </div>
 
             <div class="payment-methods">
                 <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">💵 現金</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱
-                    PayPay</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱 PayPay</button>
                 <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">💳 クレカ</button>
             </div>
 
-            <!-- Cash Input Area (Hidden for cashless) -->
+            <!-- Cash Input Area -->
             <div id="cashInputArea">
                 <div class="form-group">
-                    <label>お預かり</label>
-                    <div
-                        style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 10px;">
+                    <label style="font-size:1.3rem; font-weight:bold; color:#555;">お預かり金額</label>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center; margin-bottom: 20px;">
                         <input type="number" id="amountReceived" class="form-control"
-                            style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
-                            oninput="updateChange()">
+                            style="font-size: 2.2rem; text-align: center; padding: 25px; font-weight:900; background:#fff; border:2px solid var(--primary-color);" 
+                            placeholder="¥0" oninput="updateChange()">
                     </div>
 
-                    <div style="display: flex; gap: 10px; justify-content: center;">
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 25px;">
                         <button onclick="setReceivedAmount(1000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
+                            style="flex:1; padding:20px 10px; background:#e9ecef; border:1px solid #ccc; border-radius:12px; font-weight:bold; font-size:1.4rem; cursor:pointer;">¥1,000</button>
                         <button onclick="setReceivedAmount(5000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
+                            style="flex:1; padding:20px 10px; background:#e9ecef; border:1px solid #ccc; border-radius:12px; font-weight:bold; font-size:1.4rem; cursor:pointer;">¥5,000</button>
                         <button onclick="setReceivedAmount(10000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
+                            style="flex:1; padding:20px 10px; background:#e9ecef; border:1px solid #ccc; border-radius:12px; font-weight:bold; font-size:1.4rem; cursor:pointer;">¥1万</button>
                     </div>
                 </div>
 
-                <div
-                    style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <div style="font-size: 1rem; color: #555;">お釣り</div>
-                    <div id="paymentChange" style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">¥0
-                    </div>
+                <div style="text-align: center; margin-top: 30px; padding: 30px; background: #fffcf0; border-radius: 15px; border:2px solid #ffd700;">
+                    <div style="font-size: 1.4rem; color: #555; font-weight:bold; margin-bottom:10px;">お釣り</div>
+                    <div id="paymentChange" style="font-size: 4rem; font-weight: 900; color: var(--primary-color);">¥0</div>
                 </div>
             </div>
 
-            <div style="margin-top: 25px; display: grid; gap: 10px;">
+            <div style="margin-top: 30px; display: grid; gap: 15px;">
                 <button id="btnCompletePayment" onclick="finalizeCheckout()" class="btn-checkout" disabled
                     style="opacity: 0.5;">会計完了</button>
                 <button onclick="closePaymentModal()"
-                    style="padding: 15px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem;">戻る</button>
+                    style="padding: 20px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor:pointer;">戻る</button>
             </div>
         </div>
     </div>
@@ -2059,7 +2061,7 @@
                 <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
+                <button onclick="this.parentElement.remove()" style="padding: 5px 10px; color:white; background:#ff3b30; border:none; border-radius:6px; font-size:0.9rem; font-weight:bold; cursor:pointer;">削除</button>
             `;
             container.appendChild(div);
         }
