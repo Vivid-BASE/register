@@ -5,2354 +5,761 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>物販レジ</title>
+    <title>物販レジ | Smart Register</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="icon" type="image/svg+xml" href="./icon.svg">
     <link rel="apple-touch-icon" href="./icon.svg">
     <meta name="theme-color" content="#ffffff">
-    <!-- Update: Inventory & Sales Management -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
+
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
         :root {
-            --primary-color: #007bff;
-            --accent-color: #ff3b30;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --border-radius: 12px;
-            --spacing-unit: 16px;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent-color: #f43f5e;
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --border-radius-lg: 20px;
+            --border-radius-md: 12px;
+            --spacing-unit: 20px;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
         }
 
-        /* iPad / Tablet Optimization */
-        @media (min-width: 768px) {
-            .modal-content {
-                width: 90%;
-                max-width: 800px;
-                /* Wider modal for tablets */
-            }
-
-            .quick-buttons {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                /* Denser grid */
-            }
-        }
-
-
-
-        html {
+        html, body {
             height: 100%;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
-            /* Prevent page scroll */
-            background-color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100dvh;
-            /* Dynamic Viewport Height for iOS */
-            overflow: hidden;
-            /* Use Grid for robust header/content split */
             display: grid;
             grid-template-rows: auto 1fr;
+            height: 100dvh;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Views */
         .view-content {
             display: none;
-            /* Default hidden */
             width: 100%;
             height: 100%;
             overflow: hidden;
-            flex-direction: column;
-            /* Default for non-shop views */
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .view-content.active {
             display: flex;
-            /* Default flex for desktop/tablet */
         }
 
-        /* Mobile override for Shop View */
-        @media (max-width: 767px) {
-            #shopView.active {
-                display: block;
-                /* Force block for absolute positioning */
-            }
+        /* Header */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Layout */
+        h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.05);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .header-btn {
+            background: transparent;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-btn.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Layout Shop */
         .container {
             display: flex;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            min-height: 0;
         }
 
         .product-area {
             flex: 2;
             padding: var(--spacing-unit);
             overflow-y: auto;
-            border-right: 1px solid #ddd;
-            height: 100%;
-            min-height: 0;
-        }
-
-        .cart-area {
-            flex: 1;
-            padding: var(--spacing-unit);
-            /* Handle safe area for tablets + extra breathing room */
-            padding-bottom: calc(var(--spacing-unit) + env(safe-area-inset-bottom, 20px) + 20px);
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            height: 100%;
-            min-height: 0;
-        }
-
-        /* Header */
-        header {
-            background-color: #ffffff;
-            padding: 10px;
-            /* Reduced padding */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: nowrap;
-            /* Prevent wrapping */
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 1.2rem;
-        }
-
-        /* Version Badge */
-        .version-badge {
-            font-size: 0.7rem;
-            color: #999;
-            margin-left: 5px;
-            font-weight: normal;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-btn {
-            background: none;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            background-color: #fff;
-        }
-
-        /* Responsive Grid for Products */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            /* Responsive wrapping */
-            gap: var(--spacing-unit);
-        }
-
-        .product-card {
-            background-color: #ffffff;
-            /* Explicit white */
-            border-radius: var(--border-radius);
-            padding: var(--spacing-unit);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
-        .product-card:active {
-            transform: scale(0.98);
+        .cart-area {
+            flex: 0 0 380px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: var(--spacing-unit);
+            padding-bottom: calc(var(--spacing-unit) + env(safe-area-inset-bottom, 20px));
+            box-shadow: -4px 0 15px rgba(0,0,0,0.03);
+            z-index: 10;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
         }
 
         .product-icon {
-            font-size: 3rem;
-            margin-bottom: 8px;
+            font-size: 3.5rem;
+            margin-bottom: 12px;
             display: block;
         }
 
         .product-name {
-            font-weight: bold;
-            font-size: 1rem;
-            margin-bottom: 4px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
         }
 
         .product-price {
             color: var(--primary-color);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .stock-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 0.7rem;
-            background: #eee;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #666;
+            top: 12px;
+            right: 12px;
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.05);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
-        /* Cart Styles */
-        .cart-title {
-            margin-top: 0;
-        }
-
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: var(--spacing-unit);
-            min-height: 0;
-            /* Critical for flex scrolling */
-        }
-
+        /* Cart Items */
+        .cart-title { margin: 0 0 15px 0; font-family: 'Outfit', sans-serif; font-size: 1.5rem; }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 15px; }
         .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #f8fafc; border-radius: 12px; margin-bottom: 10px;
         }
-
-        .cart-item-info {
-            flex: 1;
-        }
-
-        .cart-item-name {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .cart-item-variant {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .cart-item-price {
-            font-weight: 500;
-        }
+        .cart-item-name { font-weight: 700; font-size: 0.95rem; }
+        .cart-remove-btn { background: none; border: none; color: #cbd5e1; cursor: pointer; font-size: 1.2rem; }
+        .cart-remove-btn:hover { color: var(--accent-color); }
 
         .cart-total {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: right;
-            padding-top: var(--spacing-unit);
-            border-top: 2px solid #ddd;
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            color: white; padding: 20px; border-radius: 16px; text-align: right;
         }
+        .cart-total span { font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; }
 
         .btn-checkout {
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            padding: 16px;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 16px;
-            cursor: pointer;
-            width: 100%;
+            background: var(--text-main); color: white; border: none;
+            padding: 18px; border-radius: 16px; font-size: 1.2rem; font-weight: 700;
+            margin-top: 15px; cursor: pointer; width: 100%;
         }
 
-        /* Modal Styles */
+        /* Modals */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            /* Darker overlay for better contrast */
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
         }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
+        .modal-overlay.active { display: flex; }
         .modal-content {
-            background: #ffffff;
-            /* Explicit white */
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            max-height: 90vh;
-            /* Prevent overflow on small screens */
-            display: flex;
-            flex-direction: column;
+            background: white; border-radius: 24px; width: 90%; max-width: 500px;
+            padding: 30px; box-shadow: var(--shadow-lg); animation: scaleIn 0.3s ease;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        /* Summary View Styles */
+        .summary-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 30px; background: white; padding: 24px;
+            border-radius: 20px; border: 1px solid var(--border-color);
         }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+        .summary-total-value { font-size: 2.5rem; font-weight: 800; font-family: 'Outfit'; }
+        .summary-table {
+            width: 100%; border-collapse: collapse; background: white;
+            border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color);
         }
+        .summary-table th, .summary-table td { padding: 16px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .summary-table th { background: #f8fafc; color: var(--text-muted); font-size: 0.85rem; }
 
-        /* Hybrid UI Elements */
-        .variant-section {
-            margin-bottom: 20px;
-            overflow-y: auto;
-        }
-
-        .variant-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Quick Buttons Grid */
-        .quick-buttons {
-            /* Table layout replaces grid */
-            display: block;
-        }
-
-        .variant-btn {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            position: relative;
-        }
-
-        /* Bulk Selection Table Styles */
-        .variant-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .variant-table th {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 2px solid #eee;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .variant-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-
-        .variant-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .batch-qty-control {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .batch-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-            background: white;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--primary-color);
-            transition: all 0.2s;
-        }
-
-        .batch-btn:active {
-            background-color: #f0f0f0;
-            transform: scale(0.95);
-        }
-
-        .batch-val {
-            font-size: 1.2rem;
-            font-weight: bold;
-            width: 30px;
-            text-align: center;
-        }
-
-        /* Modal Footer for Batch Add */
-        .modal-footer {
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            margin-top: auto;
-        }
-
-        .batch-total-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-weight: bold;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 1.1rem;
-        }
-
-        /* Calendar Styles */
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-
-        .calendar-day-header {
-            font-weight: bold;
-            color: #777;
-            font-size: 0.8rem;
-            padding-bottom: 5px;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            font-size: 0.9rem;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .calendar-day.has-data {
-            background-color: #e3f2fd;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .calendar-day.has-data::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            position: absolute;
-            bottom: 4px;
-        }
-
-        .calendar-day.today {
-            border: 1px solid var(--primary-color);
-        }
-
-        .calendar-day:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Toast Notification */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 12px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s;
-        }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        /* Toast Notification */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 12px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s;
-        }
-
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        .btn-batch-add {
-            width: 100%;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn-batch-add:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Force single screen feel - Minimize scrolling */
-        .variant-section {
-            overflow-y: auto;
-            flex: 1;
-            min-height: 0;
-            /* Important for flex container scrolling */
-        }
-
-        .variant-btn-group {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: space-between;
-            background-color: #f0f9ff;
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            overflow: hidden;
-            height: 100%;
-            padding: 4px;
-        }
-
-        .var-name-row {
-            font-weight: bold;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 4px;
-            color: var(--primary-color);
-        }
-
-        .qty-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid var(--primary-color);
-            margin-bottom: 2px;
-        }
-
-        .qty-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-
-        .qty-btn:active {
-            opacity: 0.8;
-        }
-
-        .qty-display {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        .var-info-row {
-            font-size: 0.7rem;
-            color: #666;
-            text-align: center;
-        }
-
-        .variant-btn:hover {
-            background-color: #e0e0e0;
-        }
-
-        .variant-btn:active {
-            background-color: var(--primary-color);
-            color: #fff;
-            transform: scale(0.95);
-        }
-
-        .variant-stock-low {
-            color: #ff3b30;
-            font-weight: bold;
-        }
-
-        .variant-stock-out {
-            opacity: 0.5;
-            background-color: #eee;
-            cursor: not-allowed;
-        }
-
-        /* Dropdown for other variants */
-        .variant-select {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-        }
-
-        .btn-add-list {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        /* Settings & Summary View Styles */
-        .view-content {
-            display: none;
-            padding: 20px;
-            overflow-y: auto;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .view-content.active {
-            display: flex;
-        }
-
-        /* Shop View Layout */
-        #shopView {
-            flex: 1;
-            padding: 0;
-            flex-direction: row;
-        }
-
-
-
-        /* Payment Method Tabs */
-        .payment-methods {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .payment-method-btn {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .payment-method-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* Variant Presets */
-        .variant-preset-btn {
-            background: #e9ecef;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-
-        .variant-preset-btn:hover {
-            background: #dde2e6;
-        }
-
-        /* Settings View Improvements */
-        .settings-container {
-            padding: 10px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
+        /* Settings Styles */
         .settings-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            background: white; border-radius: 24px; padding: 30px; margin-bottom: 24px;
+            border: 1px solid var(--border-color);
         }
-
-        .settings-card h3 {
-            margin-top: 0;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-
+        .form-group { margin-bottom: 20px; }
         .form-control {
-            width: 100%;
-            padding: 12px;
-            /* Larger padding */
-            font-size: 16px;
-            /* Prevent iOS zoom */
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            background: #f9f9f9;
+            width: 100%; padding: 12px 16px; border-radius: 12px;
+            border: 1px solid var(--border-color); background: #f8fafc;
         }
-
-        .form-control:focus {
-            background: white;
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        .variant-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1.8fr 1fr 40px;
-            /* Reduced Name, Increased Price */
-            /* Name Price Stock Delete */
-            gap: 8px;
-            margin-bottom: 10px;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        /* Mobile adjustment for variant row */
-        /* Mobile adjustment for variant row */
-        @media (max-width: 600px) {
-            .variant-row {
-                grid-template-columns: 1.5fr 1fr 40px !important;
-                /* Price | Stock | Delete */
-                row-gap: 8px;
-            }
-
-            .variant-row input:nth-child(1) {
-                grid-column: 1 / -1 !important;
-                /* Name takes full width (Row 1) */
-            }
-        }
-
-        .btn-add-variant {
-            background: #e9ecef;
-            color: #495057;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .btn-save-product {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
-        }
+        .variant-row { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 10px; margin-bottom: 10px; }
+        .btn-add-variant { background: #f1f5f9; border: none; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; margin-bottom: 20px; }
+        .btn-save-product { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; }
 
         .product-list-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            background: white;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px; border-bottom: 1px solid #f1f5f9;
         }
 
-        .product-list-item:hover {
-            background-color: #f8f9fa;
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 12px 24px; border-radius: 30px;
+            font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 2000;
         }
+        .toast.show { opacity: 1; bottom: 50px; }
 
-        .product-list-item:last-child {
-            border-bottom: none;
-        }
-
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .summary-table th,
-        .summary-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .summary-table th {
-            background-color: #f9f9f9;
-            font-weight: bold;
-        }
-
-        .summary-total {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: right;
-            margin: 20px 0;
-            color: var(--primary-color);
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            #shopView {
-                flex-direction: column;
-            }
-
-            .product-area {
-                flex: 1;
-                border-right: none;
-                border-bottom: 1px solid #ddd;
-            }
-
-            .cart-area {
-                flex: 0 0 200px;
-                border-top: 1px solid #ccc;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .product-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .variant-row {
-                grid-template-columns: 2fr 1.5fr 1.5fr 40px 30px;
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .cart-area {
-                flex: 0 0 160px;
-            }
-        }
-
-        /* Mobile Optimization - Moved to bottom for specificity override */
+        /* Mobile */
         @media (max-width: 767px) {
-            .container {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
-
-            /* Fix: Target the direct parent of product/cart areas */
-            .view-content.active,
-            #shopView.active {
-                display: block !important;
-                position: relative;
-                width: 100%;
-                height: 100%;
-            }
-
-            .product-area {
-                height: 55%;
-                width: 100%;
-                overflow-y: auto;
-                border: none;
-                border-bottom: 1px solid #ddd;
-                padding-bottom: 10px;
-            }
-
-            .cart-area {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 45%;
-                z-index: 5;
-                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .modal-content {
-                width: 95%;
-                max-height: 90vh;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .quick-buttons {
-                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-                gap: 8px;
-            }
-
-            .variant-label {
-                font-size: 0.9rem;
-            }
+            body { display: block; height: auto; }
+            .container { display: block; height: auto; }
+            .product-area { height: 60vh; padding: 15px; }
+            .cart-area { flex: none; width: 100%; height: 40vh; border-left: none; border-top: 1px solid var(--border-color); }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .variant-row { grid-template-columns: 1fr 1fr 40px; }
+            .variant-row input:first-child { grid-column: span 3; }
         }
     </style>
 </head>
 
 <body>
-
     <header>
-        <h1>物販レジ</h1>
+        <h1>Smart Register</h1>
         <div class="header-buttons">
-            <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
-            <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
-            <button class="header-btn" onclick="switchView('settings')">⚙ 設定</button>
+            <button class="header-btn active" id="btn-view-shop" onclick="switchView('shop')">レジ</button>
+            <button class="header-btn" id="btn-view-summary" onclick="switchView('summary')">集計</button>
+            <button class="header-btn" id="btn-view-settings" onclick="switchView('settings')">設定</button>
         </div>
     </header>
 
     <div class="container">
-
-        <!-- SHOP VIEW -->
         <!-- SHOP VIEW -->
         <div id="shopView" class="view-content active">
             <main class="product-area">
-                <div id="productGrid" class="product-grid">
-                    <!-- Items injected by JS -->
-                </div>
+                <div id="productGrid" class="product-grid"></div>
             </main>
             <aside class="cart-area">
                 <h2 class="cart-title">カート</h2>
-                <div id="cartItems" class="cart-items">
-                    <div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>
+                <div id="cartItems" class="cart-items"></div>
+                <div class="cart-total">
+                    <label>合計金額</label>
+                    <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                        <span>¥</span><span id="cartTotal">0</span>
+                    </div>
                 </div>
-                <div class="cart-total">合計: ¥<span id="cartTotal">0</span></div>
                 <button class="btn-checkout" onclick="checkout()">会計する</button>
             </aside>
         </div>
 
-        <!-- SETTINGS VIEW -->
-        <div id="settingsView" class="view-content">
-            <h2>商品登録・編集</h2>
-            <div style="margin-bottom: 20px; text-align: right;">
-                <button onclick="resetToDefaultData()"
-                    style="padding: 8px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer;">データ初期化</button>
-            </div>
-
-
-            <div id="settingsList"></div>
-        </div>
-
         <!-- SUMMARY VIEW -->
-        <div id="summaryView" class="view-content">
-            <h2>本日の集計</h2>
-            <div class="summary-total">売上合計: ¥<span id="summaryTotalAmount">0</span></div>
-
+        <div id="summaryView" class="view-content" style="flex-direction:column; padding:20px; overflow-y:auto;">
+            <h2 style="font-family:'Outfit'; margin-bottom:20px;">本日の売上</h2>
+            <div class="summary-header">
+                <div>
+                    <div style="color:var(--text-muted); font-size:0.9rem;">売上合計</div>
+                    <div class="summary-total-value">¥<span id="summaryTotalAmount">0</span></div>
+                </div>
+                <div id="summaryMethodBreakdown" style="text-align:right; font-size:0.9rem; color:var(--text-muted); line-height:1.6;"></div>
+            </div>
+            
+            <h3 style="margin-bottom:15px;">商品別内訳</h3>
             <table class="summary-table">
-                <thead>
-                    <tr>
-                        <th>商品名 - バリエーション</th>
-                        <th>価格</th>
-                        <th>本日売れた数</th>
-                        <th>残り在庫</th>
-                        <th>決済</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>商品名 - 種類</th><th style="text-align:right">単価</th><th style="text-align:center">数量</th><th style="text-align:right">在庫</th></tr></thead>
                 <tbody id="summaryTableBody"></tbody>
             </table>
 
-            <div style="margin-top: 40px; text-align: center; display:flex; flex-direction:column; gap:15px;">
-                <div style="display:flex; justify-content:center; gap:10px;">
-                    <button onclick="downloadSalesCSV()"
-                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        📊 CSV保存
-                    </button>
-                    <button onclick="openCalendar()"
-                        style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        📅 過去の売上
-                    </button>
-                </div>
-
-                <button onclick="resetSession()"
-                    style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    本日の売上をリセット (保存してクリア)
+            <div style="margin-top:40px; text-align:center; padding:30px; background:#fff1f2; border:1px solid #fecdd3; border-radius:20px;">
+                <h4 style="color:var(--accent-color); margin-top:0;">集計のリセット</h4>
+                <p style="font-size:0.85rem; color: #9f1239; margin-bottom:20px;">「本日の売上」をリセットし、新しいセッションを開始します。<br>※販売履歴自体は消去されません。</p>
+                <button onclick="resetSession()" style="background:var(--accent-color); color:white; border:none; padding:12px 30px; border-radius:12px; font-weight:700; cursor:pointer;">
+                    本日の売上をリセット
                 </button>
             </div>
-
-            <!-- Removed History List from here as it's now in Calendar -->
-            <div style="margin-top:20px; color:#777; font-size:0.9rem; text-align:center;">
-                ※リセットしても過去のデータは「📅 過去の売上」から確認できます。
-            </div>
         </div>
 
+        <!-- SETTINGS VIEW -->
+        <div id="settingsView" class="view-content" style="flex-direction:column; padding:20px; overflow-y:auto;">
+            <div class="settings-card">
+                <h3 id="settingsFormTitle">商品を登録する</h3>
+                <div class="form-group">
+                    <label>商品名</label>
+                    <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ" list="namePresets">
+                    <datalist id="namePresets">
+                        <option value="Tシャツ"><option value="タオル"><option value="チェキ"><option value="パーカー">
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label>種類 (価格と在庫)</label>
+                    <div id="newProdVariants"></div>
+                    <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ 種類を追加</button>
+                </div>
+                <button class="btn-save-product" id="btnSaveProduct" onclick="saveNewProduct()">保存する</button>
+            </div>
+
+            <div class="settings-card">
+                <h3>登録済み商品一覧</h3>
+                <div id="existingProductsList"></div>
+            </div>
+
+            <div style="text-align:center; color:var(--text-muted); font-size:0.75rem; padding:20px;">
+                Smart Register v3.0 | FREE VERSION
+            </div>
+        </div>
     </div>
 
-    <!-- Modal for Hybrid Variant Selection -->
+    <!-- Modals -->
     <div id="variantModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalProductName">商品名</h2>
-                <button class="close-btn" onclick="closeModal()">×</button>
-            </div>
-
-            <div id="quickButtonsArea" class="variant-section">
-                <span class="variant-label">よく使う項目 (タップで追加)</span>
-                <div id="quickButtonsGrid" class="quick-buttons"></div>
-            </div>
-
-            <!-- Redundant "Close" button removed as per user request -->
-        </div>
-    </div>
-    <!-- Calendar Modal (Drill-down Style) -->
-    <div class="modal-overlay" id="calendarModal">
-        <div class="modal-content" style="max-width: 400px; height: 80vh; display: flex; flex-direction: column;">
-            <div class="modal-header">
-                <h2>売上カレンダー</h2>
-                <button class="close-btn" onclick="closeCalendar()">×</button>
-            </div>
-
-            <div id="calendarGridView" style="flex: 1; overflow-y: auto;">
-                <div class="calendar-header">
-                    <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:1.2rem;">◀</button>
-                    <h3 id="calendarTitle" style="margin:0;">2026年 1月</h3>
-                    <button onclick="changeMonth(1)" style="background:none; border:none; font-size:1.2rem;">▶</button>
-                </div>
-                <div class="calendar-grid" id="calendarGrid">
-                    <!-- Days injected here -->
-                </div>
-            </div>
-
-            <div id="calendarDetailView" style="display:none; flex: 1; flex-direction: column; overflow-y: auto;">
-                <button onclick="showCalendarGrid()"
-                    style="margin-bottom: 15px; background:none; border:none; color:var(--primary-color); font-size:1rem; cursor:pointer;">◀
-                    カレンダーに戻る</button>
-                <h3 id="calendarDetailTitle"
-                    style="border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">1月18日の売上</h3>
-                <div id="calendarDetailContent"></div>
-            </div>
+            <h2 id="modalProductName" style="margin-top:0; font-family:'Outfit';">商品名</h2>
+            <div id="quickButtonsGrid" style="display:grid; grid-template-columns:1fr; gap:10px; margin:20px 0; max-height:50vh; overflow-y:auto;"></div>
+            <button onclick="closeModal()" style="width:100%; padding:12px; background:#f1f5f9; border:none; border-radius:12px; font-weight:600; cursor:pointer;">閉じる</button>
         </div>
     </div>
 
-    <!-- Toast Element -->
-    <div id="toast" class="toast">Saved to History</div>
-    </div>
-
-    <!-- Payment Modal (Moved to root) -->
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h2>お会計</h2>
-                <button class="close-btn" onclick="closePaymentModal()">×</button>
+    <div id="paymentModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-top:0; font-family:'Outfit'; text-align:center;">お会計</h2>
+            <div style="text-align:center; margin-bottom:20px;">
+                <div style="color:var(--text-muted);">合計金額</div>
+                <div id="paymentTotal" style="font-size:2.5rem; font-weight:800; color:var(--primary-color);">¥0</div>
             </div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 1rem; color: #555;">合計金額</div>
-                <div id="paymentTotal" style="font-size: 2.5rem; font-weight: bold; color: #333;">¥0</div>
+            
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <button class="header-btn active" id="pm-cash" onclick="setPaymentMethod('cash')" style="flex:1; padding:15px; border:1px solid var(--border-color);">💵 現金</button>
+                <button class="header-btn" id="pm-paypay" onclick="setPaymentMethod('paypay')" style="flex:1; padding:15px; border:1px solid var(--border-color);">📱 PayPay</button>
+                <button class="header-btn" id="pm-credit" onclick="setPaymentMethod('credit')" style="flex:1; padding:15px; border:1px solid var(--border-color);">💳 クレカ</button>
             </div>
 
-            <div class="payment-methods">
-                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">💵 現金</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱
-                    PayPay</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">💳 クレカ</button>
-            </div>
-
-            <!-- Cash Input Area (Hidden for cashless) -->
             <div id="cashInputArea">
-                <div class="form-group">
-                    <label>お預かり</label>
-                    <div
-                        style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 10px;">
-                        <input type="number" id="amountReceived" class="form-control"
-                            style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
-                            oninput="updateChange()">
-                    </div>
-
-                    <div style="display: flex; gap: 10px; justify-content: center;">
-                        <button onclick="setReceivedAmount(1000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
-                        <button onclick="setReceivedAmount(5000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
-                        <button onclick="setReceivedAmount(10000)"
-                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
-                    </div>
+                <input type="number" id="amountReceived" class="form-control" style="font-size:1.5rem; text-align:center; margin-bottom:10px;" placeholder="お預かり金額" oninput="updateChange()">
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:15px;">
+                    <button onclick="quickCash(1000)" style="padding:10px; border-radius:8px; border:1px solid #ddd; background:#fff;">1000</button>
+                    <button onclick="quickCash(5000)" style="padding:10px; border-radius:8px; border:1px solid #ddd; background:#fff;">5000</button>
+                    <button onclick="quickCash(10000)" style="padding:10px; border-radius:8px; border:1px solid #ddd; background:#fff;">1万</button>
                 </div>
-
-                <div
-                    style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <div style="font-size: 1rem; color: #555;">お釣り</div>
-                    <div id="paymentChange" style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">¥0
-                    </div>
+                <div style="text-align:center; padding:15px; background:#f8fafc; border-radius:12px;">
+                    <div style="color:var(--text-muted); font-size:0.8rem;">お釣り</div>
+                    <div id="paymentChange" style="font-size:1.5rem; font-weight:700;">¥0</div>
                 </div>
             </div>
 
-            <div style="margin-top: 25px; display: grid; gap: 10px;">
-                <button id="btnCompletePayment" onclick="finalizeCheckout()" class="btn-checkout" disabled
-                    style="opacity: 0.5;">会計完了</button>
-                <button onclick="closePaymentModal()"
-                    style="padding: 15px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem;">戻る</button>
-            </div>
+            <button id="btnCompletePayment" onclick="finalizeCheckout()" class="btn-save-product" style="margin-top:20px;" disabled>会計完了</button>
+            <button onclick="closePaymentModal()" style="width:100%; margin-top:10px; padding:12px; background:none; border:none; color:var(--text-muted); cursor:pointer;">戻る</button>
         </div>
     </div>
+
+    <div id="toast" class="toast"></div>
 
     <script>
-        // --- Default Data ---
-        const DEFAULT_PRODUCTS = [];
-
         // --- State ---
         let products = [];
         let cart = [];
-        let salesLog = []; // { date: timestamp, productId, variantName, count, price }
+        let salesLog = [];
+        let sessionStartTime = 0;
         let currentSelectedProduct = null;
-        let currentBatchSelections = {}; // To track batch quantities { variantName: quantity }
-
-        let sessionStartTime = 0; // For "Reset" functionality
-        let currentCalendarDate = new Date(); // For calendar view
-
-        // --- DOM Elements ---
-        const productGrid = document.getElementById('productGrid');
-        const cartItemsContainer = document.getElementById('cartItems');
-        const cartTotalEl = document.getElementById('cartTotal');
-        const modal = document.getElementById('variantModal');
-        const calendarModal = document.getElementById('calendarModal'); // Will add ID to the modal above
-        const quickButtonsGrid = document.getElementById('quickButtonsGrid');
-        const variantSelect = document.getElementById('variantSelect');
-        const settingsProductList = document.getElementById('settingsProductList'); // This will be removed or repurposed
-        const newVariantsContainer = document.getElementById('newVariantsContainer'); // This will be removed
-        const summaryTableBody = document.getElementById('summaryTableBody');
-        const summaryTotalAmount = document.getElementById('summaryTotalAmount');
+        let currentPaymentMethod = 'cash';
+        let editingProductIndex = -1;
 
         // --- Initialization ---
         function init() {
-            loadData();
+            products = JSON.parse(localStorage.getItem('pos_products') || '[]');
+            salesLog = JSON.parse(localStorage.getItem('pos_sales_log') || '[]');
+            sessionStartTime = parseInt(localStorage.getItem('pos_session_start') || '0') || Date.now();
+            if (!localStorage.getItem('pos_session_start')) localStorage.setItem('pos_session_start', sessionStartTime);
+            
             renderProducts();
             updateCartUI();
-            // addNewVariantRow(); // This is now handled by renderSettingsList
         }
 
-        function loadData() {
-            const savedProds = localStorage.getItem('pos_products');
-            if (savedProds) {
-                products = JSON.parse(savedProds);
-            } else {
-                products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-                saveProducts();
-            }
+        function saveProducts() { localStorage.setItem('pos_products', JSON.stringify(products)); }
+        function saveSales() { localStorage.setItem('pos_sales_log', JSON.stringify(salesLog)); }
 
-            const savedSales = localStorage.getItem('pos_sales_log');
-            if (savedSales) {
-                salesLog = JSON.parse(savedSales);
-            }
-
-            const savedSession = localStorage.getItem('pos_session_start');
-            if (savedSession) {
-                sessionStartTime = parseInt(savedSession);
-            } else {
-                // Default to beginning of today if no session set
-                const now = new Date();
-                now.setHours(0, 0, 0, 0);
-                sessionStartTime = now.getTime();
-                saveSession();
-            }
-        }
-
-        function saveProducts() {
-            localStorage.setItem('pos_products', JSON.stringify(products));
-        }
-
-        function saveSales() {
-            localStorage.setItem('pos_sales_log', JSON.stringify(salesLog));
-        }
-
-        function saveSession() {
-            localStorage.setItem('pos_session_start', sessionStartTime.toString());
-        }
-
-        function resetToDefaultData() {
-            if (confirm('全てのデータを初期化してデフォルトに戻しますか？')) {
-                localStorage.removeItem('pos_products');
-                localStorage.removeItem('pos_sales_log');
-                loadData();
-                renderProducts();
-                if (document.getElementById('settingsView').classList.contains('active')) {
-                    renderSettingsList();
-                }
-                alert('初期化しました');
-            }
-        }
-
-        // --- View Switching ---
         // --- View Switching ---
         function switchView(viewName) {
-            // Remove active class and reset inline display style
-            document.querySelectorAll('.view-content').forEach(el => {
-                el.classList.remove('active');
-                el.style.display = ''; // Clear inline style so CSS takes over
-            });
-
-            if (viewName === 'shop') {
-                const el = document.getElementById('shopView');
-                el.classList.add('active');
-                renderProducts();
-            } else if (viewName === 'settings') {
-                const el = document.getElementById('settingsView');
-                el.classList.add('active');
-                renderSettingsList();
-            } else if (viewName === 'summary') {
-                const el = document.getElementById('summaryView');
-                el.classList.add('active');
-                renderSummary();
-            }
+            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${viewName}View`).classList.add('active');
+            document.querySelectorAll('.header-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-view-${viewName}`).classList.add('active');
+            if (viewName === 'shop') renderProducts();
+            if (viewName === 'settings') renderSettingsList();
+            if (viewName === 'summary') renderSummary();
         }
 
-        // --- Shop Logic: Render ---
-        // --- Shop Logic: Render ---
+        // --- Shop logic ---
         function renderProducts() {
-            if (!productGrid) {
-                alert('エラー: 商品表示エリアが見つかりません (Error: productGrid missing)');
-                return;
-            }
-            if (!products || products.length === 0) {
-                alert('エラー: 商品データが空です (Product list is empty)');
-                return;
-            }
-
-            productGrid.innerHTML = '';
-            products.forEach(product => {
-                try {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.onclick = () => openVariantModal(product);
-
-                    // Calc total stock for info
-                    const variants = product.variants || [];
-                    const totalStock = variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
-                    const minPrice = variants.length > 0 ? Math.min(...variants.map(v => v.price)) : 0;
-
-                    card.innerHTML = `
-                    <div class="stock-badge">在庫: ${totalStock}</div>
-                    <span class="product-icon">${product.icon || '📦'}</span>
-                    <div class="product-name">${product.name}</div>
-                    <div class="product-price">¥${minPrice.toLocaleString()}~</div>
-                `;
-                    productGrid.appendChild(card);
-                } catch (e) {
-                    console.error('Error rendering product:', product, e);
-                    // alert(`商品描画エラー: ${product.name}`); // Optional: Un-comment if needed
-                }
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.length ? '' : '<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted);">設定から商品を追加してください</div>';
+            products.forEach(p => {
+                const minPrice = p.variants.length ? Math.min(...p.variants.map(v => v.price)) : 0;
+                const totalStock = p.variants.reduce((s, v) => s + (parseInt(v.stock) || 0), 0);
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openVariantModal(p);
+                card.innerHTML = `<div class="stock-badge">在庫: ${totalStock}</div><span class="product-icon">${p.icon}</span><div class="product-name">${p.name}</div><div class="product-price">¥${minPrice.toLocaleString()}〜</div>`;
+                grid.appendChild(card);
             });
         }
 
-        // --- Shop Logic: Modal ---
         function openVariantModal(product) {
             currentSelectedProduct = product;
-            currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
-            // Update instruction text to be clearer
-            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください (行タップで +1)';
-            refreshModalContent();
-            modal.classList.add('active');
-        }
-
-        function refreshModalContent() {
-            if (!currentSelectedProduct) return;
-            const container = document.getElementById('quickButtonsGrid');
-            container.innerHTML = '';
-
-            // Layout: Table of Variants
-            const table = document.createElement('table');
-            table.className = 'variant-table';
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        <th>バリエーション</th>
-                        <th style="text-align:right">在庫</th>
-                        <th style="text-align:right">数量</th>
-                    </tr>
-                </thead>
-                <tbody id="variantTableBody"></tbody>
-            `;
-            container.appendChild(table);
-            const tbody = table.querySelector('tbody');
-
-            let totalQty = 0;
-            let totalAmount = 0;
-
-            currentSelectedProduct.variants.forEach(variant => {
-                const stock = parseInt(variant.stock) || 0;
-                // Currently in cart for this specific product/variant
-                const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
-
-                // Current batch selection
-                const batchQty = currentBatchSelections[variant.name] || 0;
-
-                // Max addable is stock
-                const remainingStock = stock - inCart - batchQty;
-
-                totalQty += batchQty;
-                totalAmount += batchQty * variant.price;
-
-                const tr = document.createElement('tr');
-                // Make row clickable
-                tr.onclick = (e) => {
-                    // Prevent double trigger if button clicked
-                    if (e.target.tagName === 'BUTTON') return;
-                    updateBatch(variant.name, 1);
-                };
-                tr.style.cursor = 'pointer'; // Visual cue
-
-                tr.innerHTML = `
-                    <td>
-                        <div style="font-weight:bold;">${variant.name}</div>
-                        <div style="font-size:0.8rem; color:#666;">¥${variant.price.toLocaleString()}</div>
-                    </td>
-                    <td style="text-align:right; font-family:monospace;">${stock}</td>
-                    <td>
-                        <div class="batch-qty-control">
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
-                            <span class="batch-val" style="${batchQty > 0 ? 'color:val(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${remainingStock <= 0 ? 'disabled style="opacity:0.5"' : ''}>＋</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+            const grid = document.getElementById('quickButtonsGrid');
+            grid.innerHTML = '';
+            product.variants.forEach(v => {
+                const btn = document.createElement('button');
+                btn.className = 'form-control';
+                btn.style = "text-align:left; display:flex; justify-content:space-between; cursor:pointer;";
+                btn.innerHTML = `<span>${v.name}</span><strong>¥${v.price.toLocaleString()}</strong>`;
+                btn.onclick = () => { addToCart(product, v); closeModal(); };
+                grid.appendChild(btn);
             });
-
-            // Footer (Total & Add Button)
-            // Check if footer exists, if not create it, if yes update it
-            let footer = document.getElementById('modalFooter');
-            if (!footer) {
-                footer = document.createElement('div');
-                footer.id = 'modalFooter';
-                footer.className = 'modal-footer';
-                document.getElementById('quickButtonsArea').appendChild(footer);
-            }
-
-            footer.innerHTML = `
-                <div class="batch-total-info">
-                    <span>選択合計: ${totalQty}点</span>
-                    <span>¥${totalAmount.toLocaleString()}</span>
-                </div>
-                <button class="btn-batch-add" onclick="commitBatchToCart()" ${totalQty === 0 ? 'disabled' : ''}>
-                    カートに入れる
-                </button>
-            `;
+            document.getElementById('variantModal').classList.add('active');
         }
 
-        function updateBatch(variantName, change) {
-            const currentQty = currentBatchSelections[variantName] || 0;
-            const newQty = currentQty + change;
+        function closeModal() { document.getElementById('variantModal').classList.remove('active'); }
 
-            if (newQty < 0) return;
-
-            // Check stock limit
-            const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
-            const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variantName).length;
-            const stock = parseInt(variant.stock) || 0;
-
-            if (newQty + inCart > stock) {
-                // Prevent going over stock
-                return;
-            }
-
-            currentBatchSelections[variantName] = newQty;
-            refreshModalContent();
-        }
-
-        function commitBatchToCart() {
-            let count = 0;
-            Object.keys(currentBatchSelections).forEach(variantName => {
-                const qty = currentBatchSelections[variantName];
-                if (qty > 0) {
-                    const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
-                    for (let i = 0; i < qty; i++) {
-                        addToCart(currentSelectedProduct, variant);
-                        count++;
-                    }
-                }
-            });
-            closeModal();
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            currentSelectedProduct = null;
-        }
-
-        // addFromSelect removed as it is no longer used
-
-        function increaseQTY(prodId, varName) {
-            const product = products.find(p => p.id === prodId);
-            const variant = product.variants.find(v => v.name === varName);
-
-            // Check stock
-            const countInCart = cart.filter(item => item.productId === prodId && item.variantName === varName).length;
-            const stock = parseInt(variant.stock) || 0;
-
-            if (countInCart < stock) {
-                addToCart(product, variant);
-                refreshModalContent();
-            } else {
-                alert('在庫が足りません');
-            }
-        }
-
-        function decreaseQTY(prodId, varName) {
-            // Find last instance to remove (LIFOish)
-            const index = cart.findLastIndex(item => item.productId === prodId && item.variantName === varName);
-            if (index !== -1) {
-                cart.splice(index, 1);
-                updateCartUI();
-                refreshModalContent();
-            }
-        }
-
-        // --- Shop Logic: Cart & Checkout ---
         function addToCart(product, variant) {
-            const cartItem = {
-                productId: product.id,
-                productName: product.name,
-                variantName: variant.name,
-                price: parseInt(variant.price),
-                id: Date.now() + Math.random()
-            };
-            cart.push(cartItem);
+            cart.push({ id: Date.now(), productId: product.id, productName: product.name, variantName: variant.name, price: variant.price });
             updateCartUI();
-        }
-
-        function removeFromCart(cartItemId) {
-            cart = cart.filter(item => item.id !== cartItemId);
-            updateCartUI();
-            if (modal.classList.contains('active')) refreshModalContent();
+            showToast('追加しました');
         }
 
         function updateCartUI() {
-            cartItemsContainer.innerHTML = '';
+            const container = document.getElementById('cartItems');
+            container.innerHTML = cart.length ? '' : '<div style="text-align:center; color:#999; margin-top:20px;">カートは空です</div>';
             let total = 0;
-            const displayCart = [...cart].reverse();
-
-            if (displayCart.length === 0) {
-                cartItemsContainer.innerHTML = '<div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>';
-            } else {
-                displayCart.forEach(item => {
-                    total += item.price;
-                    const el = document.createElement('div');
-                    el.className = 'cart-item';
-                    el.innerHTML = `
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.productName}</div>
-                        <div class="cart-item-variant">${item.variantName}</div>
-                    </div>
-                    <div class="cart-item-price">¥${item.price.toLocaleString()}</div>
-                    <button style="margin-left:10px; color:#ff3b30; border:none; background:none; cursor:pointer;" onclick="removeFromCart(${item.id})">×</button>
-                `;
-                    cartItemsContainer.appendChild(el);
-                });
-            }
-            cartTotalEl.textContent = total.toLocaleString();
+            [...cart].reverse().forEach(item => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `<div><div class="cart-item-name">${item.productName}</div><div style="font-size:0.8rem; color:#666;">${item.variantName}</div></div><div style="display:flex; align-items:center; gap:10px;"><strong>¥${item.price.toLocaleString()}</strong><button class="cart-remove-btn" onclick="removeFromCart(${item.id})">×</button></div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('cartTotal').textContent = total.toLocaleString();
         }
 
-        // Global Payment State
-        let currentPaymentMethod = 'cash'; // cash, paypay, credit
+        function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
 
+        // --- Checkout ---
         function checkout() {
-            if (cart.length === 0) {
-                alert('カートは空です');
-                return;
-            }
-
-            // Reset Payment Modal State
-            currentPaymentMethod = 'cash';
-            updatePaymentUI();
-
-            // Fix: Handle flat cart items (count optional, default 1)
-            const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
-
+            if (!cart.length) return;
+            const total = cart.reduce((s, i) => s + i.price, 0);
             document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
-            document.getElementById('paymentChange').textContent = '¥0';
-
-            const btn = document.getElementById('btnCompletePayment');
-            btn.disabled = true;
-            btn.style.opacity = '0.5';
-
+            updateChange();
+            setPaymentMethod('cash');
             document.getElementById('paymentModal').classList.add('active');
         }
 
         function setPaymentMethod(method) {
             currentPaymentMethod = method;
-            updatePaymentUI();
-            updateChange(); // Recalculate based on new method
-        }
-
-        function updatePaymentUI() {
-            // Update Buttons
-            document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`pm-${currentPaymentMethod}`).classList.add('active');
-
-            // Show/Hide Cash Input (Modified to preserve layout)
-            const cashArea = document.getElementById('cashInputArea');
-            const input = document.getElementById('amountReceived');
-
-            // Format check
-            // We keep the area visible. If cashless, we disable input and auto-fill.
-
-            if (currentPaymentMethod === 'cash') {
-                input.disabled = false;
-                input.readOnly = false;
-                input.style.background = '#fff';
-                input.style.color = '#333';
-                input.placeholder = '¥0';
-                if (!input.value) input.focus();
+            document.querySelectorAll('#paymentModal .header-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`pm-${method}`).classList.add('active');
+            const inputArea = document.getElementById('cashInputArea');
+            if (method === 'cash') {
+                inputArea.style.opacity = '1'; inputArea.style.pointerEvents = 'auto';
             } else {
-                // Cashless: Lock input, fill with total
-                input.disabled = true; // or readOnly
-                input.style.background = '#f0f0f0';
-                input.style.color = '#777';
-
-                // Auto-fill amount received for cashless
-                const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
-                input.value = totalText;
+                inputArea.style.opacity = '0.3'; inputArea.style.pointerEvents = 'none';
+                document.getElementById('amountReceived').value = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
             }
+            updateChange();
         }
 
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.remove('active');
-        }
-
-        function setReceivedAmount(amount) {
-            const currentVal = parseInt(document.getElementById('amountReceived').value) || 0;
-            document.getElementById('amountReceived').value = currentVal + amount;
+        function quickCash(amt) {
+            const current = parseInt(document.getElementById('amountReceived').value) || 0;
+            document.getElementById('amountReceived').value = current + amt;
             updateChange();
         }
 
         function updateChange() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
-            const received = parseInt(document.getElementById('amountReceived').value);
-            const btn = document.getElementById('btnCompletePayment');
-
-            // Logic for Cashless: received is auto-filled to equal total, so change is 0.
-
-            if (!isNaN(received) && received >= total) {
-                const change = received - total;
-                document.getElementById('paymentChange').textContent = `¥${change.toLocaleString()}`;
-                document.getElementById('paymentChange').style.color = 'var(--primary-color)';
-                btn.disabled = false;
-                btn.style.opacity = '1';
-            } else {
-                document.getElementById('paymentChange').textContent = '¥0';
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-            }
+            const rec = parseInt(document.getElementById('amountReceived').value) || 0;
+            const change = Math.max(0, rec - total);
+            document.getElementById('paymentChange').textContent = `¥${change.toLocaleString()}`;
+            document.getElementById('btnCompletePayment').disabled = rec < total;
         }
 
         function finalizeCheckout() {
-            const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
-            const timestamp = Date.now();
-
+            const ts = Date.now();
             cart.forEach(item => {
-                const count = item.count || 1; // Fix: Default to 1 if undefined
-
-                // Deduct Stock
-                const product = products.find(p => p.id === item.productId);
-                if (product) {
-                    const variant = product.variants.find(v => v.name === item.variantName);
-                    if (variant) {
-                        variant.stock = (parseInt(variant.stock) || 0) - count;
-                    }
-                }
-
-                // Add to Log (One entry per unit)
-                for (let i = 0; i < count; i++) {
-                    salesLog.push({
-                        timestamp: timestamp,
-                        productId: item.productId,
-                        productName: item.productName,
-                        variantName: item.variantName,
-                        price: item.price,
-                        paymentMethod: currentPaymentMethod // Record method
-                    });
-                }
-            });
-
-            saveSales();
-            saveProducts(); // Save updated stock
-
-            // Clear Cart
-            cart = [];
-            updateCartUI();
-            closePaymentModal();
-
-
-
-            // Re-render shop to show updated stock
-            renderProducts();
-        }
-
-
-        // --- Summary Logic ---
-        function renderSummary() {
-            summaryTableBody.innerHTML = '';
-            let total = 0;
-            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
-
-            // Filter for SESSION only (since last reset)
-            const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
-
-            // Aggregate by Variant AND Payment Method
-            const aggregation = {};
-
-            sessionLogs.forEach(log => {
-                const method = log.paymentMethod || 'cash'; // Default safe
-                const key = `${log.productName} - ${log.variantName} - ${method}`;
-
-                if (!aggregation[key]) {
-                    aggregation[key] = {
-                        name: `${log.productName} - ${log.variantName}`,
-                        price: log.price,
-                        count: 0,
-                        method: method
-                    };
-                }
-                aggregation[key].count++;
-                total += log.price;
-
-                // Payment Method Total
-                if (method === 'paypay') paymentTotals.paypay += log.price;
-                else if (method === 'credit') paymentTotals.credit += log.price;
-                else paymentTotals.cash += log.price;
-            });
-
-            Object.values(aggregation).forEach(item => {
-                const tr = document.createElement('tr');
-
-                // Find current stock
-                let stock = '-';
-                const p = products.find(prod => prod.name === item.name.split(' - ')[0]);
+                // Adjust stock
+                const p = products.find(p => p.id === item.productId);
                 if (p) {
-                    const v = p.variants.find(va => va.name === item.name.split(' - ')[1]);
-                    if (v) stock = v.stock;
+                    const v = p.variants.find(v => v.name === item.variantName);
+                    if (v) v.stock = Math.max(0, (parseInt(v.stock) || 0) - 1);
                 }
-
-                const methodIcon = item.method === 'paypay' ? 'P' : (item.method === 'credit' ? 'ク' : '現');
-
-                tr.innerHTML = `
-        <td>${item.name}</td>
-        <td>¥${item.price.toLocaleString()}</td>
-        <td>${item.count}</td>
-        <td>${stock}</td>
-        <td style="text-align:center; font-weight:bold;">${methodIcon}</td>
-    `;
-                summaryTableBody.appendChild(tr);
+                salesLog.push({ timestamp: ts, productName: item.productName, variantName: item.variantName, price: item.price, paymentMethod: currentPaymentMethod });
             });
-
-            // Display Total with Payment Breakdown
-            summaryTotalAmount.innerHTML = `
-        ${total.toLocaleString()}
-        <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
-            (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
-        </div>
-    `;
+            saveSales(); saveProducts();
+            cart = []; updateCartUI();
+            closePaymentModal();
+            showToast('会計完了');
         }
 
-        function resetSession() {
-            // One-Tap Reset (No confirm)
-            sessionStartTime = Date.now();
-            saveSession();
-            renderSummary();
-            showToast('本日の売上を履歴に保存しました');
-        }
+        function closePaymentModal() { document.getElementById('paymentModal').classList.remove('active'); }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        // --- Calendar Logic ---
-        function openCalendar() {
-            const calendarModal = document.getElementById('calendarModal');
-            if (calendarModal) {
-                calendarModal.classList.add('active');
-                showCalendarGrid(); // Ensure grid is shown first
-                renderCalendar();
-            }
-        }
-
-        function closeCalendar() {
-            document.getElementById('calendarModal').classList.remove('active');
-        }
-
-        function showCalendarGrid() {
-            document.getElementById('calendarGridView').style.display = 'block';
-            document.getElementById('calendarDetailView').style.display = 'none';
-        }
-
-        function changeMonth(delta) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const year = currentCalendarDate.getFullYear();
-            const month = currentCalendarDate.getMonth();
-
-            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-
-            // Headers
-            const days = ['日', '月', '火', '水', '木', '金', '土'];
-            days.forEach(d => {
-                const div = document.createElement('div');
-                div.className = 'calendar-day-header';
-                div.textContent = d;
-                grid.appendChild(div);
-            });
-
-            // Days
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-
-            // Padding for start
-            for (let i = 0; i < firstDay.getDay(); i++) {
-                grid.appendChild(document.createElement('div'));
-            }
-
-            // Dates
-            for (let d = 1; d <= lastDay.getDate(); d++) {
-                const dateObj = new Date(year, month, d);
-                const dateStr = dateObj.toLocaleDateString('ja-JP');
-
-                // Check data
-                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
-                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
-
-                const cell = document.createElement('div');
-                cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
-                cell.textContent = d;
-                cell.onclick = () => showDailyDetail(dateStr);
-                grid.appendChild(cell);
-            }
-        }
-
-        function showDailyDetail(dateStr) {
-            const gridView = document.getElementById('calendarGridView');
-            const detailView = document.getElementById('calendarDetailView');
-            const content = document.getElementById('calendarDetailContent');
-            const title = document.getElementById('calendarDetailTitle');
-
-            // Switch views
-            gridView.style.display = 'none';
-            detailView.style.display = 'flex';
-
-            title.textContent = `${dateStr} の売上詳細`;
-            content.innerHTML = '';
-
-            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
-
-            if (logs.length === 0) {
-                content.innerHTML = '<div style="color:#999; text-align:center; margin-top:50px;">データはありません</div>';
-                return;
-            }
-
+        // --- Summary ---
+        function renderSummary() {
+            const logs = salesLog.filter(l => l.timestamp >= sessionStartTime);
+            const body = document.getElementById('summaryTableBody');
+            body.innerHTML = '';
             let total = 0;
-            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
+            const methods = { cash: 0, paypay: 0, credit: 0 };
             const agg = {};
+            
             logs.forEach(l => {
-                const k = `${l.productName} ${l.variantName}`;
-                if (!agg[k]) agg[k] = { name: k, price: l.price, count: 0 };
+                const k = `${l.productName} - ${l.variantName}`;
+                if (!agg[k]) agg[k] = { count: 0, price: l.price };
                 agg[k].count++;
                 total += l.price;
-
-                // Payment Method Total
-                if (l.paymentMethod === 'paypay') paymentTotals.paypay += l.price;
-                else if (l.paymentMethod === 'credit') paymentTotals.credit += l.price;
-                else paymentTotals.cash += l.price;
+                methods[l.paymentMethod] += l.price;
             });
 
-            // Total Header
-            const totalDiv = document.createElement('div');
-            totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '1.8rem';
-            totalDiv.style.color = '#333';
-            totalDiv.style.marginBottom = '20px';
-            totalDiv.style.textAlign = 'center';
-            totalDiv.style.padding = '10px';
-            totalDiv.style.background = '#f9f9f9';
-            totalDiv.style.borderRadius = '8px';
-
-            totalDiv.innerHTML = `
-                合計: ¥${total.toLocaleString()}
-                <div style="font-size:0.9rem; margin-top:5px; color:#555; font-weight:normal;">
-                    (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
-                </div>
-            `;
-            content.appendChild(totalDiv);
-
-            // List
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.fontSize = '1rem';
-            // table styling
-            table.style.borderCollapse = 'collapse';
-
-            Object.values(agg).forEach(item => {
+            Object.entries(agg).forEach(([name, data]) => {
                 const tr = document.createElement('tr');
-                tr.style.borderBottom = '1px solid #eee';
-                tr.innerHTML = `
-                    <td style="padding:10px 5px;">${item.name}</td>
-                    <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
-                    <td style="text-align:right; font-weight:bold; width:80px;">¥${(item.price * item.count).toLocaleString()}</td>
-                    <td style="text-align:right; font-size:0.8rem; color:#666; white-space:nowrap; padding-left:10px;">${item.price.toLocaleString()}</td>
-                `;
-                table.appendChild(tr);
-            });
-            content.appendChild(table);
-        }
-
-        // (Removed duplicate sync downloadSalesCSV function)
-
-        async function downloadSalesCSV() {
-            if (salesLog.length === 0) {
-                alert('データがありません');
-                return;
-            }
-
-            // CSV Header
-            let csvContent = "日時,商品名,種類,価格,支払い方法\n";
-
-            // CSV Rows
-            salesLog.forEach(log => {
-                const date = new Date(log.timestamp);
-                const dateStr = date.toLocaleString('ja-JP');
-                const method = log.paymentMethod === 'paypay' ? 'PayPay' :
-                    log.paymentMethod === 'credit' ? 'クレカ' : '現金';
-                csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price},"${method}"\n`;
+                tr.innerHTML = `<td><strong>${name}</strong></td><td style="text-align:right">¥${data.price.toLocaleString()}</td><td style="text-align:center">${data.count}</td><td style="text-align:right">-</td>`;
+                body.appendChild(tr);
             });
 
-            // Add BOM for Excel compatibility
-            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-            const blob = new Blob([bom, csvContent], { type: "text/csv" });
-            const fileName = `sales_log_${new Date().toISOString().slice(0, 10)}.csv`;
-
-            // Web Share API (Phone/Tablet support)
-            if (navigator.share && navigator.canShare) {
-                const file = new File([blob], fileName, { type: "text/csv" });
-                const shareData = {
-                    files: [file],
-                    title: '売上データ',
-                    text: '本日の売上CSVデータです。'
-                };
-
-                if (navigator.canShare(shareData)) {
-                    try {
-                        await navigator.share(shareData);
-                        return; // Shared successfully
-                    } catch (err) {
-                        console.log('Share API skipped or cancelled:', err);
-                        if (err.name !== 'AbortError') {
-                            // If error is not "User Cancelled", try fallback. 
-                            // formatting error in console log, but proceed to download
-                        } else {
-                            return; // User cancelled
-                        }
-                    }
-                }
-            }
-
-            // Fallback: Download link (PC)
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            document.getElementById('summaryTotalAmount').textContent = total.toLocaleString();
+            document.getElementById('summaryMethodBreakdown').innerHTML = `現金: ¥${methods.cash.toLocaleString()}<br>PayPay: ¥${methods.paypay.toLocaleString()}<br>クレジット: ¥${methods.credit.toLocaleString()}`;
         }
-
-
 
         function resetSession() {
-            // One-Tap Reset (No confirm)
+            if (!confirm('本日の集計対象をリセット（セッション終了）してよろしいですか？\n※全期間のデータは削除されません。')) return;
             sessionStartTime = Date.now();
-            saveSession();
+            localStorage.setItem('pos_session_start', sessionStartTime);
             renderSummary();
-            showToast('本日の売上を履歴に保存しました');
+            showToast('リセットしました');
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        // --- Calendar Logic ---
-        function openCalendar() {
-            const calendarModal = document.getElementById('calendarModal');
-            if (calendarModal) {
-                calendarModal.classList.add('active');
-                showCalendarGrid(); // Ensure grid is shown first
-                renderCalendar();
-            }
-        }
-
-        function closeCalendar() {
-            document.getElementById('calendarModal').classList.remove('active');
-        }
-
-        function showCalendarGrid() {
-            document.getElementById('calendarGridView').style.display = 'block';
-            document.getElementById('calendarDetailView').style.display = 'none';
-        }
-
-        function changeMonth(delta) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const year = currentCalendarDate.getFullYear();
-            const month = currentCalendarDate.getMonth();
-
-            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-
-            // Headers
-            const days = ['日', '月', '火', '水', '木', '金', '土'];
-            days.forEach(d => {
-                const div = document.createElement('div');
-                div.className = 'calendar-day-header';
-                div.textContent = d;
-                grid.appendChild(div);
-            });
-
-            // Days
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-
-            // Padding for start
-            for (let i = 0; i < firstDay.getDay(); i++) {
-                grid.appendChild(document.createElement('div'));
-            }
-
-            // Dates
-            for (let d = 1; d <= lastDay.getDate(); d++) {
-                const dateObj = new Date(year, month, d);
-                const dateStr = dateObj.toLocaleDateString('ja-JP');
-
-                // Check data
-                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
-                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
-
-                const cell = document.createElement('div');
-                cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
-                cell.textContent = d;
-                cell.onclick = () => showDailyDetail(dateStr);
-                grid.appendChild(cell);
-            }
-        }
-
-
-
-        // resetDailySales Removed
-
-        // --- Settings Logic ---
+        // --- Settings ---
         function renderSettingsList() {
-            const container = document.getElementById('settingsList');
-            container.innerHTML = `
-                <div class="settings-container">
-                    <!-- New Product Form -->
-                    <div class="settings-card">
-                        <h3>商品を登録する</h3>
-                        <div class="form-group">
-                            <label>商品名</label>
-                            <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ" list="commonProductNames">
-                            <datalist id="commonProductNames">
-                                <option value="Tシャツ">
-                                <option value="タオル">
-                                <option value="チェキ">
-                                <option value="マフラータオル">
-                                <option value="パーカー">
-                                <option value="ロンT">
-                                <option value="トートバッグ">
-                                <option value="アクリルスタンド">
-                                <option value="キーホルダー">
-                                <option value="ステッカー">
-                                <option value="ポストカード">
-                                <option value="パンフレット">
-                                <option value="CD">
-                                <option value="DVD">
-                                <option value="Blu-ray">
-                                <option value="カレンダー">
-                                <option value="写真集">
-                                <option value="ペンライト">
-                                <option value="リストバンド">
-                            </datalist>
-                        </div>
-                        <div class="form-group">
-                            <label>バリエーション (サイズ/色)</label>
-                            <datalist id="commonVariantNames">
-                                <option value="S">
-                                <option value="M">
-                                <option value="L">
-                                <option value="XL">
-                                <option value="XS">
-                                <option value="XXL">
-                                <option value="Free">
-                                <option value="レディース">
-                                <option value="赤">
-                                <option value="青">
-                                <option value="黄">
-                                <option value="緑">
-                                <option value="白">
-                                <option value="黒">
-                                <option value="通常">
-                                <option value="サイン入り">
-                                <option value="セット">
-                            </datalist>
-                            <div id="newProdVariants"></div>
-                            <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
-                        </div>
-                        <button class="btn-save-product" onclick="saveNewProduct()">保存する</button>
-                    </div>
-
-                    <!-- Existing Products List -->
-                    <div class="settings-card">
-                        <h3>登録済み商品一覧</h3>
-                        <div id="existingProductsList"></div>
-                    </div>
-
-                    <!-- App Info Footer -->
-                    <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
-                        <p>物販レジ App v2.12</p>
-                        <p>Developed by vivid-base</p>
-                    </div>
-                </div>
-            `;
-
-            // Initialize with one empty variant row
-            addVariantRow('newProdVariants');
             renderExistingProducts();
         }
 
-        function addVariantRow(containerId, initialData = null) {
-            const container = document.getElementById(containerId);
+        function addVariantRow(containerId, data = null) {
             const div = document.createElement('div');
             div.className = 'variant-row';
-
-            const nameVal = initialData ? initialData.name : '';
-            const priceVal = initialData ? initialData.price : '';
-            const stockVal = initialData ? initialData.stock : '';
-
-            // Layout: Name | Price | Stock | Del
-            // Use placeholders effectively
             div.innerHTML = `
-                <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
-                <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
-                <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
+                <input type="text" placeholder="種類 (S/Mなど)" class="form-control" value="${data ? data.name : ''}">
+                <input type="number" placeholder="価格" class="form-control" value="${data ? data.price : ''}">
+                <input type="number" placeholder="在庫" class="form-control" value="${data ? data.stock : ''}">
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:red; font-size:1.2rem; cursor:pointer;">×</button>
             `;
-            container.appendChild(div);
+            document.getElementById(containerId).appendChild(div);
         }
 
-        function applyProductTemplate(type) {
-            if (!type) return;
-
-            const nameInput = document.getElementById('newProdName');
-            const container = document.getElementById('newProdVariants');
-            container.innerHTML = ''; // Clear existing
-
-            // Auto-set Icon if possible (optional refinement)
-            // nameInput.value could be set too
-
-            let variants = [];
-
-            if (type === 'tshirt') {
-                nameInput.value = 'Tシャツ';
-                variants = ['S', 'M', 'L', 'XL'];
-            } else if (type === 'longT') {
-                nameInput.value = 'ロンT';
-                variants = ['S', 'M', 'L', 'XL'];
-            } else if (type === 'towel') {
-                nameInput.value = 'フェイスタオル';
-                // Single generic variant or color
-                addVariantRow('newProdVariants', { name: 'Free', price: '', stock: '' });
-                return;
-            } else if (type === 'muffler') {
-                nameInput.value = 'マフラータオル';
-                variants = ['赤', '青'];
-            } else if (type === 'cheki') {
-                nameInput.value = 'チェキ';
-                addVariantRow('newProdVariants', { name: 'Normal', price: '1000', stock: '' });
-                addVariantRow('newProdVariants', { name: 'Sign', price: '2000', stock: '' });
-                return;
-            } else if (type === 'adult') {
-                // Keep backward compatibility for presets logic if needed, but UI replaced
-                variants = ['S', 'M', 'L', 'XL'];
+        function saveNewProduct() {
+            const name = document.getElementById('newProdName').value;
+            if (!name) return alert('商品名を入力してください');
+            const rows = document.getElementById('newProdVariants').children;
+            const variants = [];
+            for (let r of rows) {
+                const ins = r.querySelectorAll('input');
+                if (ins[1].value) variants.push({ name: ins[0].value || '通常', price: parseInt(ins[1].value), stock: parseInt(ins[2].value) || 0 });
             }
+            if (!variants.length) return alert('価格を設定してください');
 
-            variants.forEach(v => {
-                addVariantRow('newProdVariants', { name: v, price: '', stock: '' });
-            });
-
-            // Reset select?
-            // document.getElementById('productTemplateSelect').value = ''; 
+            const p = { id: Date.now(), name, icon: getIcon(name), variants };
+            if (editingProductIndex > -1) {
+                products[editingProductIndex] = p;
+                editingProductIndex = -1;
+                document.getElementById('settingsFormTitle').textContent = '商品を登録する';
+                document.getElementById('btnSaveProduct').textContent = '保存する';
+            } else {
+                products.push(p);
+            }
+            saveProducts();
+            document.getElementById('newProdName').value = '';
+            document.getElementById('newProdVariants').innerHTML = '';
+            addVariantRow('newProdVariants');
+            renderExistingProducts();
+            showToast('保存しました');
         }
 
         function renderExistingProducts() {
             const list = document.getElementById('existingProductsList');
             list.innerHTML = '';
-
-            if (products.length === 0) {
-                list.innerHTML = '<p style="color:#888; text-align:center;">登録された商品はありません</p>';
-                return;
-            }
-
-            products.forEach((p, index) => {
-                const item = document.createElement('div');
-                item.className = 'product-list-item';
-                item.innerHTML = `
-                    <div style="flex:1">
-                        <div style="font-weight:bold; font-size:1.1rem;">${p.name}</div>
-                        <div style="color:#666; font-size:0.9rem;">
-                            ${p.variants.length} バリエーション
-                        </div>
-                    </div>
-                    <div>
-                        <button onclick="editProduct(${index})" style="padding:8px 15px; border:1px solid #ddd; background:white; border-radius:6px;">編集</button>
-                        <button onclick="deleteProduct(${index})" style="padding:8px 15px; margin-left:5px; color:red; border:1px solid red; background:white; border-radius:6px;">削除</button>
-                    </div>
-                `;
-                list.appendChild(item);
+            products.forEach((p, idx) => {
+                const div = document.createElement('div');
+                div.className = 'product-list-item';
+                div.innerHTML = `<div><strong>${p.name}</strong><div style="font-size:0.8rem; color:#666;">${p.variants.length}種類</div></div>
+                                 <div style="display:flex; gap:10px;"><button onclick="editProduct(${idx})" style="padding:6px 12px; border-radius:8px; border:1px solid #ddd; background:#fff;">編集</button>
+                                 <button onclick="deleteProduct(${idx})" style="padding:6px 12px; border-radius:8px; border:1px solid #fee2e2; color:red; background:#fff;">削除</button></div>`;
+                list.appendChild(div);
             });
         }
 
-        // --- Edit Logic ---
-        let editingProductIndex = -1;
-
-        function editProduct(index) {
-            editingProductIndex = index;
-            const p = products[index];
-
-            // Populate form
+        function editProduct(idx) {
+            editingProductIndex = idx;
+            const p = products[idx];
             document.getElementById('newProdName').value = p.name;
-            const vContainer = document.getElementById('newProdVariants');
-            vContainer.innerHTML = '';
-
-            if (p.variants && p.variants.length > 0) {
-                p.variants.forEach(v => addVariantRow('newProdVariants', v));
-            } else {
-                addVariantRow('newProdVariants');
-            }
-
-            // Scroll to top
-            document.querySelector('.settings-container').scrollIntoView({ behavior: 'smooth' });
-
-            // Change Button State
-            const saveBtn = document.querySelector('.btn-save-product');
-            saveBtn.textContent = '更新する (上書き)';
-            saveBtn.onclick = saveUpdatedProduct;
-            saveBtn.style.background = 'var(--accent-color)';
-
-            // Change Title
-            document.querySelector('.settings-card h3').textContent = '商品を編集する';
+            document.getElementById('newProdVariants').innerHTML = '';
+            p.variants.forEach(v => addVariantRow('newProdVariants', v));
+            document.getElementById('settingsFormTitle').textContent = '商品を編集';
+            document.getElementById('btnSaveProduct').textContent = '更新する';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function saveNewProduct() {
-            const name = document.getElementById('newProdName').value;
-            if (!name) { alert('商品名を入力してください'); return; }
-
-            const variantRows = document.getElementById('newProdVariants').children;
-            const variants = [];
-            for (let row of variantRows) {
-                const inputs = row.querySelectorAll('input');
-                // Allow empty name if price is set
-                const vName = inputs[0].value.trim() || '通常';
-                const vPrice = parseInt(inputs[1].value);
-
-                if (vPrice >= 0 || inputs[2].value) {
-                    variants.push({
-                        name: vName,
-                        price: parseInt(inputs[1].value) || 0,
-                        stock: parseInt(inputs[2].value) || 0,
-                    });
-                }
-            }
-
-            if (variants.length === 0) { alert('少なくとも1つのバリエーションを入力してください'); return; }
-
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                icon: getIconForName(name),
-                variants: variants
-            };
-
-            products.push(newProduct);
-            saveProducts();
-
-
-            renderSettingsList(); // Reset form
+        function deleteProduct(idx) {
+            if (confirm('削除してもよろしいですか？')) { products.splice(idx, 1); saveProducts(); renderExistingProducts(); }
         }
 
-        function getIconForName(name) {
-            if (name.includes('Tシャツ') || name.includes('ロンT') || name.includes('パーカー')) return '👕';
-            if (name.includes('タオル') || name.includes('マフラー')) return '🧣';
-            if (name.includes('チェキ')) return '📸';
-            if (name.includes('バッグ')) return '🛍️';
-            if (name.includes('キーホルダー') || name.includes('アクリルスタンド') || name.includes('ステッカー') || name.includes('スタンド')) return '🧸';
-            if (name.includes('ペンライト') || name.includes('リストバンド')) return '💡';
-            if (name.includes('CD') || name.includes('DVD') || name.includes('Blu-ray')) return '💿';
-            if (name.includes('本') || name.includes('写真集') || name.includes('パンフレット') || name.includes('カレンダー')) return '📚';
+        function getIcon(name) {
+            if (name.includes('Tシャツ')) return '👕'; if (name.includes('タオル')) return '🧣';
+            if (name.includes('チェキ')) return '📸'; if (name.includes('CD')) return '💿';
             return '🛍️';
         }
 
-
-        function saveUpdatedProduct() {
-            if (editingProductIndex === -1) return;
-
-            const name = document.getElementById('newProdName').value;
-            if (!name) { alert('商品名を入力してください'); return; }
-
-            const variantRows = document.getElementById('newProdVariants').children;
-            const variants = [];
-            for (let row of variantRows) {
-                const inputs = row.querySelectorAll('input');
-                // Allow empty name
-                const vName = inputs[0].value.trim() || '通常';
-                const vPrice = parseInt(inputs[1].value);
-
-                if (vPrice >= 0 || inputs[2].value) {
-                    variants.push({
-                        name: vName,
-                        price: parseInt(inputs[1].value) || 0,
-                        stock: parseInt(inputs[2].value) || 0,
-                    });
-                }
-            }
-
-            if (variants.length === 0) { alert('少なくとも1つのバリエーションを入力してください'); return; }
-
-            // Update existing product
-            products[editingProductIndex].name = name;
-            products[editingProductIndex].variants = variants;
-
-            saveProducts();
-
-
-            // Reset UI
-            editingProductIndex = -1;
-            renderSettingsList();
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        function deleteProduct(index) {
-            if (confirm('本当に削除しますか？')) {
-                products.splice(index, 1);
-                saveProducts();
-                renderSettingsList();
+        // --- Preserved Premium Functions (Hidden from UI) ---
+        // These are kept for future version upgrades.
+        
+        function downloadSalesCSV(period) {
+            let logs = salesLog;
+            if (period === 'today') {
+                const today = new Date().toLocaleDateString('ja-JP');
+                logs = salesLog.filter(l => new Date(l.timestamp).toLocaleDateString('ja-JP') === today);
             }
+            if (logs.length === 0) return alert('データがありません');
+            let csv = '\uFEFF日時,商品名,種類,単価,決済\n';
+            logs.forEach(l => {
+                const m = l.paymentMethod === 'paypay' ? 'PayPay' : (l.paymentMethod === 'credit' ? 'クレカ' : '現金');
+                csv += `"${new Date(l.timestamp).toLocaleString('ja-JP')}","${l.productName}","${l.variantName}",${l.price},"${m}"\n`;
+            });
+            const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+            const a = document.createElement('a'); a.href = url; a.download = `sales_${period}.csv`; a.click();
         }
 
-        // Modal close
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
+        function exportAppData() {
+            const data = { products, salesLog, exportDate: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `backup_${new Date().toISOString().split('T')[0]}.json`; a.click();
+        }
+
+        function handleImportFile(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (confirm('データを復元しますか？（現在の設定は上書きされます）')) {
+                        products = data.products || []; salesLog = data.salesLog || [];
+                        saveProducts(); saveSales(); location.reload();
+                    }
+                } catch { alert('ファイル形式が正しくありません'); }
+            };
+            reader.readAsText(file);
+        }
+
+        let currentCalendarDate = new Date();
+        function changeMonth(delta) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); renderCalendar(); }
+        function renderCalendar() {
+            const y = currentCalendarDate.getFullYear(), m = currentCalendarDate.getMonth();
+            const title = document.getElementById('calendarTitle');
+            if (title) title.textContent = `${y}年 ${m + 1}月`;
+            const grid = document.getElementById('calendarGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(d => {
+                const div = document.createElement('div'); div.className = 'calendar-day-header'; div.textContent = d; grid.appendChild(div);
+            });
+            const first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
+            for (let i = 0; i < first; i++) grid.appendChild(document.createElement('div'));
+            for (let d = 1; d <= last; d++) {
+                const dateObj = new Date(y, m, d);
+                const hasData = salesLog.some(l => new Date(l.timestamp).toLocaleDateString('ja-JP') === dateObj.toLocaleDateString('ja-JP'));
+                const div = document.createElement('div'); div.className = `calendar-day ${hasData ? 'has-data' : ''}`;
+                div.textContent = d; div.onclick = () => showDailyDetail(dateObj.toLocaleDateString('ja-JP'));
+                grid.appendChild(div);
+            }
+        }
 
         init();
-
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('SW registered: ', reg))
-                    .catch(err => console.log('SW registration failed: ', err));
-            });
-        }
+        addVariantRow('newProdVariants');
     </script>
 </body>
-
 </html>
