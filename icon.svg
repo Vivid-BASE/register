@@ -1,22 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#FFF8DC;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+    <linearGradient id="indigoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E2E66;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1A40;stop-opacity:1" />
     </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="15" />
+      <feOffset dx="0" dy="10" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
   </defs>
-  <!-- Background: Deep Black with rounded corners -->
-  <rect width="512" height="512" rx="100" ry="100" fill="#1A1A1A"/>
+  <!-- Background: Deep Indigo mesh-like gradient -->
+  <rect width="512" height="512" fill="url(#indigoGrad)"/>
   
-  <!-- Stylized "STB" Logo -->
-  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" 
-        font-family="system-ui, -apple-system, sans-serif" font-weight="900" 
-        font-size="220" fill="url(#goldGrad)" letter-spacing="-10">
-    STB
-  </text>
-  
-  <!-- Subtle outline/glow -->
-  <rect x="10" y="10" width="492" height="492" rx="90" ry="90" fill="none" 
-        stroke="url(#goldGrad)" stroke-width="4" opacity="0.4"/>
+  <!-- Premium Filled Shopping Bag Logo with soft shadow -->
+  <g filter="url(#softShadow)">
+    <path d="M360,170h-30c-5-55-50-100-105-100s-100,45-105,100h-30c-15,0-25,10-25,25v220c0,15,10,25,25,25h270c15,0,25-10,25-25V195C385,180,375,170,360,170z M225,115c30,0,55,20,60,55h-120C170,135,195,115,225,115z" fill="#FFFFFF"/>
+    <!-- Solid Bag Body -->
+    <path d="M90,195v220c0,15,10,25,25,25h270c15,0,25-10,25-25V195c0-15-10-25-25-25H115C100,170,90,180,90,195z" fill="#FFFFFF"/>
+    <!-- Stylized Checkmark -->
+    <path d="M210,310l35,35l75,-75" fill="none" stroke="#2E2E66" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>
+
+

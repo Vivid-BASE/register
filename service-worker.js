@@ -1,10 +1,10 @@
-const CACHE_NAME = 'boxx-reg-v8'; // Forced refresh for v2.2.2 icon and modal fixes
+const CACHE_NAME = 'boxx-reg-v11'; // Final definitive cache bust for indigo icon
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png',
-  './apple-touch-icon.png'
+  './icon-v11.png',
+  './apple-touch-icon-v11.png'
 ];
 
 self.addEventListener('install', (event) => {
