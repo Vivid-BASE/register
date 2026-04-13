@@ -1718,13 +1718,26 @@
                 summaryTableBody.appendChild(tr);
             });
 
-            // Display Total with Payment Breakdown
+            // Display Total with Detailed Payment Breakdown
             summaryTotalAmount.innerHTML = `
-        ${total.toLocaleString()}
-        <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
-            (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
-        </div>
-    `;
+                <div style="font-size:1.2rem; color:#666; font-weight:normal; margin-bottom:5px;">本日の売上合計</div>
+                ¥${total.toLocaleString()}
+                
+                <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:10px; text-align:left;">
+                    <div style="background:#f0f7ff; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
+                        <span style="font-weight:bold; color:#0056b3;">💴 現金合計</span>
+                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.cash.toLocaleString()}</span>
+                    </div>
+                    <div style="background:#fff0f0; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffcccc;">
+                        <span style="font-weight:bold; color:#b02a37;">📱 PayPay合計</span>
+                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.paypay.toLocaleString()}</span>
+                    </div>
+                    <div style="background:#f8f9fa; padding:15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
+                        <span style="font-weight:bold; color:#333;">💳 クレジット合計</span>
+                        <span style="font-size:1.2rem; font-weight:900;">¥${paymentTotals.credit.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
         }
 
         function resetSession() {
