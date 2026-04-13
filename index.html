@@ -1014,10 +1014,7 @@
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
             <h2>商品登録・編集</h2>
-            <div style="margin-bottom: 20px; text-align: right;">
-                <button onclick="resetToDefaultData()"
-                    style="padding: 8px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer;">データ初期化</button>
-            </div>
+            <!-- 有料機能: データ初期化ボタンを削除 -->
 
 
             <div id="settingsList"></div>
@@ -1042,27 +1039,14 @@
             </table>
 
             <div style="margin-top: 40px; text-align: center; display:flex; flex-direction:column; gap:15px;">
-                <div style="display:flex; justify-content:center; gap:10px;">
-                    <button onclick="downloadSalesCSV()"
-                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        📊 CSV保存
-                    </button>
-                    <button onclick="openCalendar()"
-                        style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        📅 過去の売上
-                    </button>
-                </div>
-
+                <!-- 有料機能: CSV保存・過去売上ボタンを削除 -->
                 <button onclick="resetSession()"
                     style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
                     本日の売上をリセット (保存してクリア)
                 </button>
             </div>
 
-            <!-- Removed History List from here as it's now in Calendar -->
-            <div style="margin-top:20px; color:#777; font-size:0.9rem; text-align:center;">
-                ※リセットしても過去のデータは「📅 過去の売上」から確認できます。
-            </div>
+            <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
         </div>
 
     </div>
@@ -1735,18 +1719,21 @@
         }
 
         function resetSession() {
-            // One-Tap Reset (No confirm)
+            // 誤操作防止の確認ダイアログを追加
+            if (!confirm('本日の売上をリセットしてよろしいですか？\n(売上データはブラウザ内に保存されますが、本日の集計は0から開始されます)')) return;
             sessionStartTime = Date.now();
             saveSession();
             renderSummary();
-            showToast('本日の売上を履歴に保存しました');
+            showToast('本日の売上をリセットしました');
         }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
+            if (toast) {
+                toast.textContent = message;
+                toast.className = "toast show";
+                setTimeout(function () { toast.className = "toast"; }, 3000);
+            }
         }
 
         // --- Calendar Logic ---
@@ -1964,9 +1951,11 @@
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = "toast show";
-            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
+            if (toast) {
+                toast.textContent = message;
+                toast.className = "toast show";
+                setTimeout(function () { toast.className = "toast"; }, 3000);
+            }
         }
 
         // --- Calendar Logic ---
