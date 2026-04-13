@@ -1,10 +1,10 @@
 {
-  "name": "Product Sales Register",
-  "short_name": "SalesReg",
+  "name": "SHOWTIMEBOXX レジ",
+  "short_name": "STBレジ",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f8f9fa",
-  "theme_color": "#007bff",
+  "background_color": "#1A1A1A",
+  "theme_color": "#1A1A1A",
   "icons": [
     {
       "src": "./icon.svg",

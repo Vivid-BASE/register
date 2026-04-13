@@ -1,4 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="100" ry="100" fill="#007bff"/>
-  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="300">🏪</text>
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFF8DC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background: Deep Black with rounded corners -->
+  <rect width="512" height="512" rx="100" ry="100" fill="#1A1A1A"/>
+  
+  <!-- Stylized "STB" Logo -->
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" 
+        font-family="system-ui, -apple-system, sans-serif" font-weight="900" 
+        font-size="220" fill="url(#goldGrad)" letter-spacing="-10">
+    STB
+  </text>
+  
+  <!-- Subtle outline/glow -->
+  <rect x="10" y="10" width="492" height="492" rx="90" ry="90" fill="none" 
+        stroke="url(#goldGrad)" stroke-width="4" opacity="0.4"/>
 </svg>
