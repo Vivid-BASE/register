@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v1';
+const CACHE_NAME = 'boxx-reg-v2'; // Version up to force refresh
 const ASSETS = [
   './',
   './index.html',
