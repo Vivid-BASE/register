@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v6'; // Forced refresh for v2.2.0 fixes
+const CACHE_NAME = 'boxx-reg-v8'; // Forced refresh for v2.2.2 icon and modal fixes
 const ASSETS = [
   './',
   './index.html',

@@ -373,7 +373,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+            flex-shrink: 0;
         }
 
         .close-btn {
@@ -779,6 +782,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex-shrink: 0;
         }
 
         .payment-method-btn.active {
@@ -1075,7 +1079,7 @@
 <body>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.2.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.2.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1201,7 +1205,7 @@
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
             
-            <div id="paymentOrderSummary" style="margin-top: 10px; margin-bottom: 12px; padding: 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 100px; overflow-y: auto; font-size: 0.95rem; font-weight: bold;">
+            <div id="paymentOrderSummary" style="margin-top: 5px; margin-bottom: 12px; padding: 15px 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 100px; overflow-y: auto; font-size: 1rem; font-weight: bold; flex-shrink: 0;">
             </div>
 
             <div style="text-align: center; margin-bottom: 10px;">
@@ -1235,7 +1239,7 @@
                     </div>
                 </div>
 
-                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 8px; padding: 10px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap;">
+                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 8px; padding: 10px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
                     <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;">お釣り</div>
                     <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
                 </div>
@@ -2321,8 +2325,8 @@
         function getIconForName(name) {
             const lowName = name.toLowerCase();
             if (lowName.includes('tシャツ') || lowName.includes('t-shirt') || lowName.includes('tshirt') || lowName.includes('tee') || lowName.includes('ロンt') || lowName.includes('パーカー') || lowName.includes('hoodie')) return '👕';
-            if (lowName.includes('タオル') || lowName.includes('towel')) return '🛀';
-            if (lowName.includes('マフラー') || lowName.includes('muffler')) return '🛀';
+            if (lowName.includes('タオル') || lowName.includes('towel')) return '🏳️';
+            if (lowName.includes('マフラー') || lowName.includes('muffler')) return '🏳️';
             if (lowName.includes('チェキ') || lowName.includes('photo') || lowName.includes('instax')) return '📸';
             if (lowName.includes('バッグ') || lowName.includes('bag') || lowName.includes('tote')) return '🛍️';
             if (lowName.includes('キーホルダー') || lowName.includes('acrylic') || lowName.includes('acsta') || lowName.includes('アクスタ') || lowName.includes('ステッカー') || lowName.includes('sticker')) return '🧸';
