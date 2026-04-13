@@ -136,22 +136,21 @@
         /* Header */
         header {
             background-color: #ffffff;
-            padding: 10px;
-            /* Reduced padding */
+            padding: 6px 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: nowrap;
-            /* Prevent wrapping */
         }
 
         h1 {
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             white-space: nowrap;
             flex-shrink: 0;
+            color: #333;
         }
 
         /* Version Badge */
@@ -170,10 +169,10 @@
         .header-btn {
             background: none;
             border: 1px solid #ddd;
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1.15rem;
+            font-size: 1rem;
             background-color: #fff;
             font-weight: bold;
             white-space: nowrap;
@@ -188,14 +187,14 @@
 
         .product-card {
             background-color: #ffffff;
-            border-radius: var(--border-radius);
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.1s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             border: 1px solid #eee;
             position: relative;
         }
@@ -212,15 +211,15 @@
 
         .product-name {
             font-weight: 900;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             line-height: 1.1;
-            color: #333;
+            color: #222;
         }
 
         .product-price {
             color: var(--primary-color);
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
         }
         
         .product-info-right {
@@ -234,9 +233,9 @@
         .in-cart-badge {
             background: #e7f3ff;
             color: #007bff;
-            padding: 4px 10px;
+            padding: 2px 8px;
             border-radius: 20px;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 900;
             border: 1px solid #b3d7ff;
         }
@@ -287,11 +286,11 @@
         }
 
         .cart-total {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             text-align: right;
-            padding-top: var(--spacing-unit);
-            border-top: 2px solid #ddd;
+            padding: 8px 0;
+            border-top: 1px solid #ddd;
             color: var(--primary-color);
         }
 
@@ -935,9 +934,21 @@
             }
 
             .cart-area {
-                flex: 0 0 200px;
-                border-top: 1px solid #ccc;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                flex: 0 0 content;
+                max-height: 40vh;
+                border-top: 2px solid #ccc;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                background: #fdfdfd;
+                padding-bottom: 0px;
+            }
+            
+            .btn-checkout {
+                margin: 0;
+                border-radius: 0;
+                padding: 18px;
+                font-size: 1.5rem;
             }
 
             .product-grid {
@@ -956,7 +967,17 @@
             }
 
             .cart-area {
-                flex: 0 0 160px;
+                flex: 0 0 auto;
+            }
+            .cart-items {
+                margin-bottom: 5px;
+            }
+            .cart-total {
+                font-size: 1.6rem;
+                padding: 5px 0;
+            }
+            .btn-checkout {
+                padding: 15px;
             }
         }
 
@@ -1018,7 +1039,7 @@
 <body>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.0.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.1.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1144,15 +1165,18 @@
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
             
-            <div style="text-align: center; margin-bottom: 25px;">
-                <div style="font-size: 1.3rem; color: #555; margin-bottom: 5px;">合計金額</div>
-                <div id="paymentTotal" style="font-size: 3.5rem; font-weight: 900; color: #333;">¥0</div>
+            <div id="paymentOrderSummary" style="margin-bottom: 20px; padding: 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 120px; overflow-y: auto; font-size: 0.9rem;">
+            </div>
+
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div style="font-size: 1.1rem; color: #555; margin-bottom: 2px;">合計金額</div>
+                <div id="paymentTotal" style="font-size: 2.5rem; font-weight: 900; color: #333;">¥0</div>
             </div>
 
             <div class="payment-methods">
-                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">💵 現金</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱 PayPay</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">💳 クレカ</button>
+                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">現金</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">PayPay</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">クレジット</button>
             </div>
 
             <!-- Cash Input Area -->
@@ -1556,13 +1580,25 @@
                 return;
             }
 
-            // Reset Payment Modal State
-            currentPaymentMethod = 'cash';
-            updatePaymentUI();
+            // Populate Item Summary for Modal
+            const summaryContainer = document.getElementById('paymentOrderSummary');
+            summaryContainer.innerHTML = '';
+            
+            // Group and count
+            const grouped = {};
+            cart.forEach(item => {
+                const key = `${item.productName} (${item.variantName})`;
+                grouped[key] = (grouped[key] || 0) + 1;
+            });
+            
+            Object.keys(grouped).forEach(name => {
+                const row = document.createElement('div');
+                row.style = "display:flex; justify-content:space-between; margin-bottom:4px; font-weight:bold;";
+                row.innerHTML = `<span>${name}</span><span>×${grouped[name]}</span>`;
+                summaryContainer.appendChild(row);
+            });
 
-            // Fix: Handle flat cart items (count optional, default 1)
             const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
-
             document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
             document.getElementById('paymentChange').textContent = '¥0';
@@ -1570,6 +1606,11 @@
             const btn = document.getElementById('btnCompletePayment');
             btn.disabled = true;
             btn.style.opacity = '0.5';
+
+            // Ensure modal scrolling
+            const modalContent = document.querySelector('#paymentModal .modal-content');
+            modalContent.style.maxHeight = '92vh';
+            modalContent.style.overflowY = 'auto';
 
             document.getElementById('paymentModal').classList.add('active');
         }
@@ -1644,6 +1685,7 @@
         function finalizeCheckout() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const timestamp = Date.now();
+            const CACHE_NAME = 'boxx-reg-v5'; // Version up to v5 to reflect v2.1.0 UI updates
 
             cart.forEach(item => {
                 const count = item.count || 1; // Fix: Default to 1 if undefined
