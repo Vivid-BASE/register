@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v5'; // Version up to v5 to reflect v2.1.0 UI updates
+const CACHE_NAME = 'boxx-reg-v6'; // Forced refresh for v2.2.0 fixes
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Force new service worker to become active immediately
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
@@ -16,8 +16,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim()); // Take control of all pages immediately
-  // Clean up old caches
+  event.waitUntil(clients.claim());
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(

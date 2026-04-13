@@ -764,15 +764,15 @@
 
         .payment-method-btn {
             flex: 1;
-            padding: 10px 5px;
+            padding: 10px 4px;
             border: 1px solid #ddd;
             background: #fff;
             border-radius: 8px;
             font-weight: 900;
-            font-size: 1.1rem;
+            font-size: 0.95rem; /* Reduced to ensure 'クレジット' fits */
             cursor: pointer;
             transition: all 0.2s;
-            height: 60px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1075,7 +1075,7 @@
 <body>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.1.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.2.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1201,7 +1201,7 @@
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
             
-            <div id="paymentOrderSummary" style="margin-top: 5px; margin-bottom: 15px; padding: 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 120px; overflow-y: auto; font-size: 0.95rem; font-weight: bold;">
+            <div id="paymentOrderSummary" style="margin-top: 10px; margin-bottom: 12px; padding: 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 100px; overflow-y: auto; font-size: 0.95rem; font-weight: bold;">
             </div>
 
             <div style="text-align: center; margin-bottom: 10px;">
@@ -1235,9 +1235,9 @@
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; padding: 10px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700;">
-                    <div style="font-size: 1.2rem; color: #555; font-weight:bold;">お釣り</div>
-                    <div id="paymentChange" style="font-size: 2.5rem; font-weight: 900; color: var(--primary-color);">¥0</div>
+                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 8px; padding: 10px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap;">
+                    <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;">お釣り</div>
+                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
                 </div>
             </div>
 
@@ -1290,9 +1290,15 @@
             if (savedProds) {
                 products = JSON.parse(savedProds);
                 // Force sync icons for existing products (Migration)
+                let changed = false;
                 products.forEach(p => {
-                    p.icon = getIconForName(p.name);
+                    const newIcon = getIconForName(p.name);
+                    if (p.icon !== newIcon) {
+                        p.icon = newIcon;
+                        changed = true;
+                    }
                 });
+                if (changed) saveProducts();
             } else {
                 products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
                 saveProducts();
@@ -2313,15 +2319,16 @@
         }
 
         function getIconForName(name) {
-            if (name.includes('Tシャツ') || name.includes('ロンT') || name.includes('パーカー')) return '👕';
-            if (name.includes('タオル')) return '🛀';
-            if (name.includes('マフラー')) return '🛀';
-            if (name.includes('チェキ')) return '📸';
-            if (name.includes('バッグ')) return '🛍️';
-            if (name.includes('キーホルダー') || name.includes('アクリルスタンド') || name.includes('ステッカー') || name.includes('スタンド')) return '🧸';
-            if (name.includes('ペンライト') || name.includes('リストバンド')) return '💡';
-            if (name.includes('CD') || name.includes('DVD') || name.includes('Blu-ray')) return '💿';
-            if (name.includes('本') || name.includes('写真集') || name.includes('パンフレット') || name.includes('カレンダー')) return '📚';
+            const lowName = name.toLowerCase();
+            if (lowName.includes('tシャツ') || lowName.includes('t-shirt') || lowName.includes('tshirt') || lowName.includes('tee') || lowName.includes('ロンt') || lowName.includes('パーカー') || lowName.includes('hoodie')) return '👕';
+            if (lowName.includes('タオル') || lowName.includes('towel')) return '🛀';
+            if (lowName.includes('マフラー') || lowName.includes('muffler')) return '🛀';
+            if (lowName.includes('チェキ') || lowName.includes('photo') || lowName.includes('instax')) return '📸';
+            if (lowName.includes('バッグ') || lowName.includes('bag') || lowName.includes('tote')) return '🛍️';
+            if (lowName.includes('キーホルダー') || lowName.includes('acrylic') || lowName.includes('acsta') || lowName.includes('アクスタ') || lowName.includes('ステッカー') || lowName.includes('sticker')) return '🧸';
+            if (lowName.includes('ペンライト') || lowName.includes('light') || lowName.includes('リストバンド') || lowName.includes('wrist')) return '💡';
+            if (lowName.includes('cd') || lowName.includes('dvd') || lowName.includes('blu-ray')) return '💿';
+            if (lowName.includes('本') || lowName.includes('写真集') || lowName.includes('photo book') || lowName.includes('パンフレット') || lowName.includes('pamphlet') || lowName.includes('カレンダー') || lowName.includes('calendar')) return '📚';
             return '🛍️';
         }
 
