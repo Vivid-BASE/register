@@ -1720,7 +1720,7 @@
 
         function resetSession() {
             // 誤操作防止の確認ダイアログを追加
-            if (!confirm('本日の売上をリセットします。宜しいですか？')) return;
+            if (!confirm('本日の売上をリセットします。\n宜しいですか？')) return;
             sessionStartTime = Date.now();
             saveSession();
             renderSummary();
