@@ -299,12 +299,11 @@
         
         .btn-remove-item {
             color: #ff3b30;
-            border: 1.5px solid #ff3b30;
-            background: white;
+            background: none;
+            border: none;
             cursor: pointer;
             width: 36px;
             height: 36px;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -424,11 +423,12 @@
 
         .variant-table th {
             text-align: left;
-            padding: 12px 8px;
+            padding: 8px;
             border-bottom: 2px solid #eee;
             color: #333;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 900;
+            white-space: nowrap;
         }
 
         .variant-table td {
@@ -1401,7 +1401,7 @@
             currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
             // Update instruction text to be clearer
-            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください (行タップで +1)';
+            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください';
             refreshModalContent();
             modal.classList.add('active');
         }
@@ -1417,9 +1417,9 @@
             table.innerHTML = `
                 <thead>
                     <tr>
-                        <th>バリエーション</th>
-                        <th style="text-align:right">在庫</th>
-                        <th style="text-align:right">数量</th>
+                        <th style="white-space:nowrap;">バリエーション</th>
+                        <th style="text-align:right; white-space:nowrap;">在庫</th>
+                        <th style="text-align:right; white-space:nowrap;">数量</th>
                     </tr>
                 </thead>
                 <tbody id="variantTableBody"></tbody>
