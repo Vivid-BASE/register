@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v3'; // Version up again to force immediate update
+const CACHE_NAME = 'boxx-reg-v5'; // Version up to v5 to reflect v2.1.0 UI updates
 const ASSETS = [
   './',
   './index.html',
