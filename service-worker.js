@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v21'; // Forced synchronization to break deadlock
+const CACHE_NAME = 'boxx-reg-v23'; // Update bug fix v2.4.7
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Forced update to break the manual update deadlock
+  // Removed skipWaiting to enable manual update check logic
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))

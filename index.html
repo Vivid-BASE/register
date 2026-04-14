@@ -1157,7 +1157,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.4.6</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.4.7</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2518,7 +2518,8 @@
 
             window.addEventListener('load', () => {
                 // Cache-busting registration with query string (Safari fix)
-                navigator.serviceWorker.register('./service-worker.js?v=20')
+                // Using 2407 to ensure it's different from previous v20
+                navigator.serviceWorker.register('./service-worker.js?v=2407')
                     .then(registration => {
                         swRegistration = registration;
                         console.log('SW registered: ', registration);
@@ -2542,7 +2543,8 @@
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Removed navigator.serviceWorker.controller check for robustness on Safari
+                                if (newWorker.state === 'installed') {
                                     // New version is installed and waiting
                                     showUpdateBanner(registration);
                                 }
@@ -2587,11 +2589,11 @@
                 return;
             }
 
-            showToast('更新を確認しています...');
+            showToast('更新を確認中...');
             
             try {
                 // Force check the server for a new Service Worker file
-                const result = await swRegistration.update();
+                await swRegistration.update();
                 
                 // If an update was found and is already waiting
                 if (swRegistration.waiting) {
@@ -2602,10 +2604,11 @@
                     setTimeout(() => {
                         if (swRegistration.waiting || swRegistration.installing) {
                             showUpdateBanner(swRegistration);
+                            showToast('新しいバージョンをご利用いただけます');
                         } else {
-                            showToast('アプリは最新の状態です');
+                            showToast('アプリは最新の状態です (v2.4.7)');
                         }
-                    }, 2000);
+                    }, 2500);
                 }
             } catch (err) {
                 console.error('Update check failed:', err);
