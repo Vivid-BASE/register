@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v20'; // Reliability fix v2.4.4
+const CACHE_NAME = 'boxx-reg-v21'; // Forced synchronization to break deadlock
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  // Removed self.skipWaiting() to enable the manual update banner for the NEXT update
+  self.skipWaiting(); // Forced update to break the manual update deadlock
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
