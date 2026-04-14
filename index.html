@@ -1157,7 +1157,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.4.3</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.4.4</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2514,9 +2514,13 @@
 
         // PWA Service Worker Registration with Update Detection
         if ('serviceWorker' in navigator) {
+            let swRegistration = null;
+
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
+                // Cache-busting registration with query string (Safari fix)
+                navigator.serviceWorker.register('./service-worker.js?v=20')
                     .then(registration => {
+                        swRegistration = registration;
                         console.log('SW registered: ', registration);
                         
                         // Check for updates periodically (Safari fix)
@@ -2575,6 +2579,38 @@
 
         function hideUpdateBanner() {
             document.getElementById('update-banner').style.display = 'none';
+        }
+
+        async function manualUpdateCheck() {
+            if (!swRegistration) {
+                alert('アプリの初期化中です。もう一度お試しください。');
+                return;
+            }
+
+            showToast('更新を確認しています...');
+            
+            try {
+                // Force check the server for a new Service Worker file
+                const result = await swRegistration.update();
+                
+                // If an update was found and is already waiting
+                if (swRegistration.waiting) {
+                    showUpdateBanner(swRegistration);
+                    showToast('新しいバージョンが見つかりました！');
+                } else {
+                    // Give it a small delay as Safari background download might take a moment
+                    setTimeout(() => {
+                        if (swRegistration.waiting || swRegistration.installing) {
+                            showUpdateBanner(swRegistration);
+                        } else {
+                            showToast('アプリは最新の状態です');
+                        }
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Update check failed:', err);
+                showToast('更新チェックに失敗しました');
+            }
         }
     </script>
 </body>
