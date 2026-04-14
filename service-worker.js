@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v11'; // Final definitive cache bust for indigo icon
+const CACHE_NAME = 'boxx-reg-v12'; // Added in-app update notification support
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  // Removed self.skipWaiting() to allow manual update trigger
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
@@ -35,4 +35,11 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
       .then((response) => response || fetch(event.request))
   );
+});
+
+// Listener for the UI to trigger activation of the new service worker
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

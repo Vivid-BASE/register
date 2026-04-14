@@ -1074,10 +1074,47 @@
                 font-size: 0.9rem;
             }
         }
+        /* Update Banner */
+        #update-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #1A1A40;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: bold;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        #update-banner button {
+            background: white;
+            color: #1A1A40;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            margin-left: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 
 <body>
+    <div id="update-banner">
+        新しいバージョンがあります
+        <button id="update-button">今すぐ更新</button>
+    </div>
 
     <header>
         <h1>BOXXレジ <span class="version-badge">v2.2.2</span></h1>
@@ -2390,13 +2427,50 @@
 
         init();
 
-        // PWA Service Worker Registration
+        // PWA Service Worker Registration with Update Detection
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('SW registered: ', reg))
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version is installed and waiting
+                                    showUpdateBanner(registration);
+                                }
+                            });
+                        });
+                        
+                        // If there is already a waiting worker (e.g. from previous load)
+                        if (registration.waiting) {
+                            showUpdateBanner(registration);
+                        }
+                    })
                     .catch(err => console.log('SW registration failed: ', err));
             });
+            
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
+            });
+        }
+
+        function showUpdateBanner(registration) {
+            const banner = document.getElementById('update-banner');
+            const button = document.getElementById('update-button');
+            banner.style.display = 'block';
+            button.onclick = () => {
+                if (registration.waiting) {
+                    registration.waiting.postMessage('SKIP_WAITING');
+                }
+            };
         }
     </script>
 </body>
