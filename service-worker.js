@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v18'; // Manual update test v2.4.2
+const CACHE_NAME = 'boxx-reg-v19'; // Responsiveness fix v2.4.3
 const ASSETS = [
   './',
   './index.html',

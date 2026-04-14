@@ -1157,7 +1157,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.4.2</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.4.3</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2519,6 +2519,21 @@
                     .then(registration => {
                         console.log('SW registered: ', registration);
                         
+                        // Check for updates periodically (Safari fix)
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+
+                        // Check on focus
+                        document.addEventListener('visibilitychange', () => {
+                            if (document.visibilityState === 'visible') {
+                                registration.update();
+                            }
+                        });
+
+                        // Initial check
+                        registration.update();
+
                         // Check for updates
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
