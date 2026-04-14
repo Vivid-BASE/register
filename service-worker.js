@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v15'; // Robust Safari fix: Decomposed Blob Response
+const CACHE_NAME = 'boxx-reg-v16'; // Added Sales Cancellation feature
 const ASSETS = [
   './',
   './index.html',
