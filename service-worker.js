@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v12'; // Added in-app update notification support
+const CACHE_NAME = 'boxx-reg-v13'; // Fix for 'Response served by service worker has redirections' on Safari
 const ASSETS = [
   './',
   './index.html',
@@ -33,7 +33,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => response || fetch(event.request))
+      .then((response) => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then((fetchResponse) => {
+          // Fix for Safari: If the response is redirected, rebuild it to 'clean' the flag
+          if (fetchResponse.redirected) {
+            return new Response(fetchResponse.body, {
+              status: fetchResponse.status,
+              statusText: fetchResponse.statusText,
+              headers: fetchResponse.headers
+            });
+          }
+          return fetchResponse;
+        });
+      })
   );
 });
 
