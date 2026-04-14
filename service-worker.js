@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v13'; // Fix for 'Response served by service worker has redirections' on Safari
+const CACHE_NAME = 'boxx-reg-v14'; // Force update once to stabilize manual update UI and Safari fix
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  // Removed self.skipWaiting() to allow manual update trigger
+  self.skipWaiting(); // Temporarily restored to force immediate activation for baseline stability
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
