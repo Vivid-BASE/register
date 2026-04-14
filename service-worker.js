@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v16'; // Added Sales Cancellation feature
+const CACHE_NAME = 'boxx-reg-v17'; // Switching to user-controlled update mode
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Force update to establish the robust baseline
+  // Removed self.skipWaiting() to enable the manual update banner for the NEXT update
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
