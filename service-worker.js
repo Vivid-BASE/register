@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v17'; // Switching to user-controlled update mode
+const CACHE_NAME = 'boxx-reg-v18'; // Manual update test v2.4.2
 const ASSETS = [
   './',
   './index.html',
