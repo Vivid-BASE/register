@@ -1219,16 +1219,30 @@
 
         .bridge-arrow {
             position: absolute;
-            top: -60px;
-            right: 10px;
             width: 60px;
             height: 60px;
-            animation: bridge-bounce 1.5s infinite;
         }
 
-        @keyframes bridge-bounce {
+        .bridge-arrow-top {
+            top: -60px;
+            right: 10px;
+            animation: bridge-bounce-top 1.5s infinite;
+        }
+
+        .bridge-arrow-bottom {
+            bottom: -60px;
+            right: 10px;
+            animation: bridge-bounce-bottom 1.5s infinite;
+        }
+
+        @keyframes bridge-bounce-top {
             0%, 100% { transform: translateY(0) rotate(15deg); }
             50% { transform: translateY(-15px) rotate(15deg); }
+        }
+
+        @keyframes bridge-bounce-bottom {
+            0%, 100% { transform: translateY(0) rotate(105deg); }
+            50% { transform: translateY(15px) rotate(105deg); }
         }
 
         #pwa-install-banner {
@@ -1311,7 +1325,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.1</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.7.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2781,7 +2795,7 @@
             window.addEventListener('load', () => {
                 // Cache-busting registration with query string (Safari fix)
                 // Using 2407 to ensure it's different from previous v20
-                navigator.serviceWorker.register('./service-worker.js?v=2710')
+                navigator.serviceWorker.register('./service-worker.js?v=2720')
                     .then(registration => {
                         swRegistration = registration;
                         console.log('SW registered: ', registration);
@@ -2897,24 +2911,28 @@
                 overlay.className = 'active';
                 
                 const currentUrl = window.location.href;
+                // iPhone版LINEはメニューが「右下」にあるため判定
+                const isIosLine = isIOS && isLine;
+                const menuLoc = isIosLine ? "右下" : "右上";
+                const arrowClass = isIosLine ? "bridge-arrow-bottom" : "bridge-arrow-top";
 
                 overlay.innerHTML = `
                     <div class="bridge-guide-box">
-                        <svg class="bridge-arrow" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="bridge-arrow ${arrowClass}" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
                         
                         <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">ブラウザで開いてください</h2>
                         
-                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.9rem; line-height:1.6;">
-                            <p style="margin-bottom:10px;">① 右上のメニュー <strong>( <span style="font-size:1.2rem; vertical-align:middle;">…</span> )</strong> または <strong>共有ボタン</strong> をタップ</p>
+                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
+                            <p style="margin-bottom:12px;">① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( … )</strong> または <strong>共有ボタン</strong> をタップ</p>
                             <p>② <strong>「Safariで開く」</strong> または <strong>「デフォルトのブラウザで開く」</strong> を選択してください。</p>
                         </div>
 
                         <div style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
                             <p style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">メニューが見つからない場合は：</p>
-                            <button id="copy-url-btn" style="background:#fff; color:#333; border:none; padding:10px 15px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <button id="copy-url-btn" style="background:#fff; color:#333; border:none; padding:12px 15px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
                                 <span>📋 URLをコピーしてSafariで開く</span>
                             </button>
                             <p id="copy-msg" style="font-size:0.75rem; color:#4cd964; margin-top:8px; display:none;">コピーしました！Safariへ貼り付けてください</p>
