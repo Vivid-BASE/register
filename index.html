@@ -1194,7 +1194,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.5</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1210,7 +1210,7 @@
             <main class="product-area">
                 <a href="https://showtimeboxx.com/lab/" target="_blank" class="ad-banner ad-theme-lab">
                     <div class="ad-banner-title">SHOWTIMEBOXX LAB</div>
-                    <div class="ad-banner-text">超・効率化！オリジナル業務アプリ開発</div>
+                    <div class="ad-banner-text">業務効率化！オリジナルアプリ開発</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -1234,7 +1234,7 @@
         <div id="settingsView" class="view-content">
             <a href="https://showtimeboxx.com/creative/" target="_blank" class="ad-banner ad-theme-creative">
                 <div class="ad-banner-title">SHOWTIMEBOXX CREATIVE</div>
-                <div class="ad-banner-text">目を引くデザイン・最新システムHP制作</div>
+                <div class="ad-banner-text">HP制作ならおまかせ</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1250,7 +1250,7 @@
         <div id="summaryView" class="view-content">
             <a href="https://showtimeboxx.com/" target="_blank" class="ad-banner ad-theme-main">
                 <div class="ad-banner-title">SHOWTIMEBOXX</div>
-                <div class="ad-banner-text">オンラインレッスン・各種イベント企画</div>
+                <div class="ad-banner-text">オンラインレッスン・イベント企画</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1278,7 +1278,7 @@
                     本日の売上をリセット
                 </button>
                 <div style="font-size: 0.85rem; color: #777; margin-top: 5px;">次回に向けての準備はお済みですか？</div>
-                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;"
                    style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                     📦 不足している備品をチェック (Amazon)
                 </a>
@@ -1350,7 +1350,7 @@
             </button>
             <script>
                 function confirmAndOpenAmazon() {
-                    window.open("https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22", "_blank");
+                    window.open(getRandomAmazonLink(), "_blank");
                     closeDailyStartModal();
                 }
             </script>
@@ -1428,6 +1428,19 @@
     </div>
 
     <script>
+        // --- Amazon Links Data ---
+        const AMAZON_LINKS = [
+            "https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22", // テラオカ黒テープ
+            "https://www.amazon.co.jp/s?k=%E6%A2%B1%E5%8C%85%E8%B3%87%E6%9D%90+%E3%83%97%E3%83%81%E3%83%97%E3%83%81&tag=jackpotrash-22", // プチプチ
+            "https://www.amazon.co.jp/s?k=%E3%82%B3%E3%82%A4%E3%83%B3%E3%82%B1%E3%83%BC%E3%82%B9+%E9%87%A3%E9%8A%AD&tag=jackpotrash-22", // コインケース
+            "https://www.amazon.co.jp/s?k=%E5%8F%B0%E8%EBB%8A+%E6%8A%98%E3%82%8A%E3%81%9F%E3%81%9F%E3%81%BF&tag=jackpotrash-22", // 折りたたみ台車
+            "https://www.amazon.co.jp/s?k=%E3%83%AC%E3%82%B8%E3%83%AD%E3%83%BC%E3%83%AB%E7%B4%99&tag=jackpotrash-22", // レジロール
+            "https://www.amazon.co.jp/s?k=%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E5%A4%A7%E5%AE%B9%E9%87%8F&tag=jackpotrash-22" // モバイルバッテリー
+        ];
+        function getRandomAmazonLink() {
+            return AMAZON_LINKS[Math.floor(Math.random() * AMAZON_LINKS.length)];
+        }
+
         // --- Default Data ---
         const DEFAULT_PRODUCTS = [];
 
@@ -2397,7 +2410,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.5</p>
+                        <p>BOXXレジ App v2.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
