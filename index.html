@@ -1190,9 +1190,9 @@
             <main class="product-area">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h2 style="margin: 0; font-size: 1.2rem; color: #333;">商品一覧</h2>
-                    <a href="https://showtimeboxx.com/creative/" target="_blank"
+                    <a href="https://showtimeboxx.com/lab/" target="_blank"
                        class="ad-btn">
-                       💡 自社専用レジ・アプリ開発のご相談
+                       💡 業務効率化アプリ・ツール制作
                     </a>
                 </div>
                 <div id="productGrid" class="product-grid">
@@ -1215,7 +1215,7 @@
                 <h2 style="margin: 0;">商品登録・編集</h2>
                 <a href="https://showtimeboxx.com/creative/" target="_blank"
                    class="ad-btn">
-                   🚀 オリジナルWEB開発・制作のご相談
+                   🚀 オリジナルWEBサイト・HP作成のご相談
                 </a>
             </div>
             <!-- 有料機能: データ初期化ボタンを削除 -->
@@ -1228,9 +1228,9 @@
         <div id="summaryView" class="view-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin: 0;">本日の集計</h2>
-                <a href="https://showtimeboxx.com/creative/" target="_blank"
+                <a href="https://showtimeboxx.com/" target="_blank"
                    class="ad-btn">
-                   🌐 売上UPのためのシステム開発
+                   🎪 エンターテインメント・イベント企画
                 </a>
             </div>
             <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
@@ -1449,7 +1449,7 @@
 
         function checkDailyStartup() {
             const today = new Date().toDateString();
-            const lastCheck = localStorage.getItem('boxx_daily_check');
+            const lastCheck = sessionStorage.getItem('boxx_daily_check');
             if (lastCheck !== today) {
                 setTimeout(() => {
                     document.getElementById('dailyStartModal').classList.add('active');
@@ -1459,7 +1459,7 @@
 
         function closeDailyStartModal() {
             const today = new Date().toDateString();
-            localStorage.setItem('boxx_daily_check', today);
+            sessionStorage.setItem('boxx_daily_check', today);
             document.getElementById('dailyStartModal').classList.remove('active');
         }
 
