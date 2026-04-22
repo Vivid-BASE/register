@@ -1157,7 +1157,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.4.7</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.5</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1217,8 +1217,14 @@
                 <!-- 有料機能: CSV保存・過去売上ボタンを削除 -->
                 <button onclick="resetSession()"
                     style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    本日の売上をリセット (保存してクリア)
+                    本日の売上をリセット
                 </button>
+                
+                <!-- Monetization Amazon Affiliate -->
+                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                   style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    📦 アマゾンで物販に必要な備品を補充
+                </a>
             </div>
 
             <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
@@ -1284,15 +1290,15 @@
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
             
-            <div id="paymentOrderSummary" style="margin-top: 5px; margin-bottom: 12px; padding: 15px 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 100px; overflow-y: auto; font-size: 1rem; font-weight: bold; flex-shrink: 0;">
+            <div id="paymentOrderSummary" style="margin-top: 5px; margin-bottom: 5px; padding: 8px 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 80px; overflow-y: auto; font-size: 1rem; font-weight: bold; flex-shrink: 0;">
             </div>
 
-            <div style="text-align: center; margin-bottom: 10px;">
+            <div style="text-align: center; margin-bottom: 5px;">
                 <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;">合計</div>
                 <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;">¥0</div>
             </div>
 
-            <div class="payment-methods">
+            <div class="payment-methods" style="margin-bottom: 10px;">
                 <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">現金</button>
                 <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">PayPay</button>
                 <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">クレジット</button>
@@ -1301,24 +1307,36 @@
             <!-- Cash Input Area -->
             <div id="cashInputArea">
                 <div class="form-group" style="margin-bottom: 5px;">
-                    <label style="font-size:1.1rem; font-weight:bold; color:#555;">お預かり金額</label>
-                    <div style="display: flex; gap: 10px; margin-top: 5px; justify-content: center; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <label style="font-size:1.1rem; font-weight:bold; color:#555; margin:0;">お預かり金額</label>
+                        <button onclick="document.getElementById('amountReceived').value=''; updateChange();" 
+                                style="padding: 4px 12px; background: #fff; color: #ff3b30; border: 1px solid #ff3b30; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer;">クリア</button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 0px; justify-content: center; margin-bottom: 8px;">
                         <input type="number" id="amountReceived" class="form-control"
-                            style="font-size: 1.8rem; text-align: center; padding: 12px; font-weight:900; background:#fff; border:2px solid var(--primary-color); height: auto; margin-bottom: 0;" 
+                            style="font-size: 1.8rem; text-align: center; padding: 10px; font-weight:900; background:#fff; border:2px solid var(--primary-color); height: auto; margin-bottom: 0;" 
                             placeholder="¥0" oninput="updateChange()">
                     </div>
 
-                    <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
+                        <button onclick="setReceivedAmount(100)"
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥100</button>
+                        <button onclick="setReceivedAmount(500)"
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥500</button>
                         <button onclick="setReceivedAmount(1000)"
-                            style="flex:1; padding:12px 5px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.2rem; cursor:pointer;">¥1,000</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1,000</button>
+                        
                         <button onclick="setReceivedAmount(5000)"
-                            style="flex:1; padding:12px 5px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.2rem; cursor:pointer;">¥5,000</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥5,000</button>
                         <button onclick="setReceivedAmount(10000)"
-                            style="flex:1; padding:12px 5px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.2rem; cursor:pointer;">¥1万</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1万</button>
+                        <button onclick="setExactAmount()"
+                            style="padding:10px 2px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">ピッタリ</button>
                     </div>
                 </div>
 
-                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 8px; padding: 10px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
+                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 4px; padding: 8px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
                     <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;">お釣り</div>
                     <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
                 </div>
@@ -1328,7 +1346,7 @@
                 <button id="btnCompletePayment" onclick="finalizeCheckout()" class="btn-checkout" disabled
                     style="opacity: 0.5;">会計完了</button>
                 <button onclick="closePaymentModal()"
-                    style="padding: 20px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor:pointer;">戻る</button>
+                    style="padding: 15px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor:pointer;">戻る</button>
             </div>
         </div>
     </div>
@@ -1789,6 +1807,15 @@
             const currentVal = parseInt(document.getElementById('amountReceived').value) || 0;
             document.getElementById('amountReceived').value = currentVal + amount;
             updateChange();
+        }
+
+        function setExactAmount() {
+            const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
+            const total = parseInt(totalText);
+            if (!isNaN(total)) {
+                document.getElementById('amountReceived').value = total;
+                updateChange();
+            }
         }
 
         function updateChange() {
@@ -2274,8 +2301,8 @@
 
                     <!-- App Info Footer -->
                     <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
-                        <p>BOXXレジ App v2.12</p>
-                        <p>Developed by <a href="https://showtimeboxx.com/creative/" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX</a></p>
+                        <p>BOXXレジ App v2.5</p>
+                        <p>Developed by <a href="https://showtimeboxx.com/lab/" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
             `;
@@ -2606,7 +2633,7 @@
                             showUpdateBanner(swRegistration);
                             showToast('新しいバージョンをご利用いただけます');
                         } else {
-                            showToast('アプリは最新の状態です (v2.4.7)');
+                            showToast('アプリは最新の状態です (v2.5)');
                         }
                     }, 2500);
                 }
