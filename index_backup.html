@@ -5,21 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BOXXレジ</title>
-    <meta name="apple-mobile-web-app-title" content="BOXXレジ">
-    
-    <!-- LINE / SNS Sharing (OGP) -->
-    <meta property="og:title" content="BOXXレジ | シンプル物販管理">
-    <meta property="og:description" content="SHOWTIMEBOXXが提供する、オフライン対応の「BOXXレジ」アプリ。在庫管理から売上集計まで、その場で完結。">
-    <meta name="description" content="SHOWTIMEBOXXが提供する、オフライン対応の「BOXXレジ」アプリ。在庫管理から売上集計まで、その場ですぐに完結。">
-    <meta property="og:image" content="https://register-492.pages.dev/icon-v11.png?v=11">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://register-492.pages.dev/">
-
+    <title>物販レジ</title>
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" href="./icon-v11.png?v=11">
-    <link rel="apple-touch-icon" href="./apple-touch-icon-v11.png?v=11">
-    <meta name="theme-color" content="#1A1A40">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <meta name="theme-color" content="#ffffff">
     <!-- Update: Inventory & Sales Management -->
     <style>
         * {
@@ -137,21 +127,20 @@
         /* Header */
         header {
             background-color: #ffffff;
-            padding: 6px 15px;
+            padding: 10px;
+            /* Reduced padding */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: nowrap;
+            /* Prevent wrapping */
         }
 
         h1 {
             margin: 0;
-            font-size: 1.1rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #333;
+            font-size: 1.2rem;
         }
 
         /* Version Badge */
@@ -171,32 +160,29 @@
             background: none;
             border: 1px solid #ddd;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             background-color: #fff;
-            font-weight: bold;
-            white-space: nowrap;
         }
 
-        /* List View for Products */
+        /* Responsive Grid for Products */
         .product-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            /* Responsive wrapping */
+            gap: var(--spacing-unit);
         }
 
         .product-card {
             background-color: #ffffff;
-            border-radius: 10px;
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            /* Explicit white */
+            border-radius: var(--border-radius);
+            padding: var(--spacing-unit);
+            text-align: center;
             cursor: pointer;
-            transition: background-color 0.1s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid #eee;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
@@ -204,48 +190,32 @@
             transform: scale(0.98);
         }
 
-        .product-info-left {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+            display: block;
         }
 
         .product-name {
-            font-weight: 900;
-            font-size: 1.3rem;
-            line-height: 1.1;
-            color: #222;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 4px;
         }
 
         .product-price {
             color: var(--primary-color);
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-        
-        .product-info-right {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        
-        .in-cart-badge {
-            background: #e7f3ff;
-            color: #007bff;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            font-weight: 900;
-            border: 1px solid #b3d7ff;
-            flex-shrink: 0;
+            font-weight: 500;
         }
 
         .stock-badge {
-            font-size: 0.9rem;
-            color: #777;
-            font-weight: bold;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #666;
         }
 
         /* Cart Styles */
@@ -271,70 +241,41 @@
 
         .cart-item-info {
             flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
         }
 
         .cart-item-name {
             font-weight: bold;
-            font-size: 1.15rem;
-            white-space: nowrap;
+            font-size: 0.9rem;
         }
 
         .cart-item-variant {
-            font-size: 1rem;
+            font-size: 0.8rem;
             color: #666;
-            background: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
         }
 
         .cart-item-price {
-            font-weight: 900;
-            font-size: 1.1rem;
-            margin: 0 10px;
-        }
-        
-        .btn-remove-item {
-            color: #ff3b30;
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            flex-shrink: 0;
-            line-height: 1;
+            font-weight: 500;
         }
 
         .cart-total {
-            font-size: 1.8rem;
-            font-weight: 900;
+            font-size: 1.5rem;
+            font-weight: bold;
             text-align: right;
-            padding: 8px 0;
-            border-top: 1px solid #ddd;
-            color: var(--primary-color);
+            padding-top: var(--spacing-unit);
+            border-top: 2px solid #ddd;
         }
 
         .btn-checkout {
             background-color: var(--primary-color);
             color: #fff;
             border: none;
-            padding: 20px;
+            padding: 16px;
             border-radius: var(--border-radius);
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
             margin-top: 16px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
         }
 
         /* Modal Styles */
@@ -374,10 +315,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
-            flex-shrink: 0;
+            margin-bottom: 20px;
         }
 
         .close-btn {
@@ -395,10 +333,10 @@
 
         .variant-label {
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: #333;
-            font-size: 1.2rem;
+            color: #666;
+            font-size: 0.9rem;
         }
 
         /* Quick Buttons Grid */
@@ -429,18 +367,14 @@
             text-align: left;
             padding: 8px;
             border-bottom: 2px solid #eee;
-            color: #333;
-            font-size: 1rem;
-            font-weight: 900;
-            white-space: nowrap;
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .variant-table td {
-            padding: 18px 8px;
+            padding: 12px 8px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
-            font-size: 1.3rem;
-            font-weight: bold;
         }
 
         .variant-table tr:last-child td {
@@ -475,9 +409,9 @@
         }
 
         .batch-val {
-            font-size: 1.8rem;
-            font-weight: 900;
-            width: 45px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 30px;
             text-align: center;
         }
 
@@ -492,12 +426,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: bold;
             width: 100%;
             border-radius: 8px;
-            font-size: 1.5rem;
-            color: #333;
+            font-size: 1.1rem;
         }
 
         /* Calendar Styles */
@@ -768,22 +701,13 @@
 
         .payment-method-btn {
             flex: 1;
-            padding: 10px 4px;
+            padding: 12px;
             border: 1px solid #ddd;
             background: #fff;
             border-radius: 8px;
-            font-weight: 900;
-            font-size: 0.95rem; /* Reduced to ensure 'クレジット' fits */
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex-shrink: 0;
         }
 
         .payment-method-btn.active {
@@ -837,20 +761,21 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 12px;
-            font-weight: 900;
-            font-size: 1.4rem;
-            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
 
         .form-control {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            font-weight: bold;
+            /* Larger padding */
+            font-size: 16px;
+            /* Prevent iOS zoom */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background: #f9f9f9;
         }
 
         .form-control:focus {
@@ -861,8 +786,8 @@
 
         .variant-row {
             display: grid;
-            grid-template-columns: 2.5fr 1fr 1fr 40px;
-            /* Reduced Price, Increased Name */
+            grid-template-columns: 1.2fr 1.8fr 1fr 40px;
+            /* Reduced Name, Increased Price */
             /* Name Price Stock Delete */
             gap: 8px;
             margin-bottom: 10px;
@@ -871,43 +796,6 @@
             padding: 10px;
             border-radius: 8px;
         }
-
-        .ad-banner {
-            display: block;
-            border-radius: 8px;
-            padding: 14px 16px;
-            text-decoration: none;
-            color: #fff;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-            transition: all 0.2s ease;
-        }
-        .ad-banner:active { transform: scale(0.97); }
-        .ad-banner-title {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.8);
-            font-weight: 900;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-        .ad-banner-text {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #fff;
-        }
-        .ad-banner-arrow {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255,255,255,0.6);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .ad-theme-lab { background: linear-gradient(135deg, #1e3a8a, #3b82f6); border: 1px solid #1e3a8a; }
-        .ad-theme-creative { background: linear-gradient(135deg, #581c87, #9333ea); border: 1px solid #581c87; }
-        .ad-theme-main { background: linear-gradient(135deg, #7f1d1d, #ef4444); border: 1px solid #7f1d1d; }
 
         /* Mobile adjustment for variant row */
         /* Mobile adjustment for variant row */
@@ -1012,21 +900,9 @@
             }
 
             .cart-area {
-                flex: 0 0 content;
-                max-height: 40vh;
-                border-top: 2px solid #ccc;
-                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
-                display: flex;
-                flex-direction: column;
-                background: #fdfdfd;
-                padding-bottom: 0px;
-            }
-            
-            .btn-checkout {
-                margin: 0;
-                border-radius: 0;
-                padding: 18px;
-                font-size: 1.5rem;
+                flex: 0 0 200px;
+                border-top: 1px solid #ccc;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             }
 
             .product-grid {
@@ -1045,17 +921,7 @@
             }
 
             .cart-area {
-                flex: 0 0 auto;
-            }
-            .cart-items {
-                margin-bottom: 5px;
-            }
-            .cart-total {
-                font-size: 1.6rem;
-                padding: 5px 0;
-            }
-            .btn-checkout {
-                padding: 15px;
+                flex: 0 0 160px;
             }
         }
 
@@ -1111,211 +977,17 @@
                 font-size: 0.9rem;
             }
         }
-        /* Update Banner */
-        #update-banner {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #1A1A40;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            z-index: 9999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            font-weight: bold;
-            animation: slideDown 0.5s ease;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        #update-banner button {
-            background: white;
-            color: #1A1A40;
-            border: none;
-            padding: 6px 15px;
-            border-radius: 20px;
-            margin: 0 10px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        #update-banner .close-update {
-            background: transparent;
-            color: white;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            box-shadow: none;
-            vertical-align: middle;
-            margin-right: 0;
-            padding: 0 10px;
-        }
-
-        /* Summary Cancel Button */
-        .btn-cancel-sale {
-            background: #ff3b30;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .btn-cancel-sale:hover {
-            background: #d32f2f;
-            transform: scale(1.1);
-        }
-
-        .btn-cancel-sale:active {
-            transform: scale(0.95);
-        }
-        /* PWA Bridge Styles */
-        #pwa-bridge-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 10000;
-            display: none;
-            color: white;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        #pwa-bridge-overlay.active {
-            display: flex;
-        }
-
-        .bridge-guide-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            border-radius: 24px;
-            max-width: 320px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .bridge-arrow {
-            position: absolute;
-            top: -60px;
-            right: 10px;
-            width: 60px;
-            height: 60px;
-            animation: bridge-bounce 1.5s infinite;
-        }
-
-        @keyframes bridge-bounce {
-            0%, 100% { transform: translateY(0) rotate(15deg); }
-            50% { transform: translateY(-15px) rotate(15deg); }
-        }
-
-        #pwa-install-banner {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(150px);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(0,0,0,0.08);
-            color: #333;
-        }
-
-        #pwa-install-banner.active {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .banner-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #1A1A40 0%, #007bff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .banner-text {
-            flex: 1;
-        }
-
-        .banner-title {
-            font-weight: 900;
-            font-size: 1.1rem;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .banner-desc {
-            font-size: 0.85rem;
-            color: #666;
-            line-height: 1.2;
-        }
-
-        .banner-close {
-            background: #eee;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 0.9rem;
-            color: #666;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
     </style>
-
 </head>
 
 <body>
-    <div id="update-banner">
-        新しいバージョンがあります
-        <button id="update-button">今すぐ更新</button>
-        <button class="close-update" onclick="hideUpdateBanner()">×</button>
-    </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.0</span></h1>
+        <h1>物販レジ</h1>
         <div class="header-buttons">
-            <button class="header-btn" onclick="switchView('shop')">レジ</button>
-            <button class="header-btn" onclick="switchView('summary')">集計</button>
-            <button class="header-btn" onclick="switchView('settings')">設定</button>
+            <button class="header-btn" onclick="switchView('shop')">🏠 レジ</button>
+            <button class="header-btn" onclick="switchView('summary')">📊 集計</button>
+            <button class="header-btn" onclick="switchView('settings')">⚙ 設定</button>
         </div>
     </header>
 
@@ -1325,14 +997,6 @@
         <!-- SHOP VIEW -->
         <div id="shopView" class="view-content active">
             <main class="product-area">
-                <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=shop_view" target="_blank" class="ad-banner ad-theme-lab">
-                    <div class="ad-banner-title">SHOWTIMEBOXX LAB</div>
-                    <div class="ad-banner-text">業務効率化！オリジナルアプリ開発</div>
-                    <div class="ad-banner-arrow">〉</div>
-                </a>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="margin: 0; font-size: 1.2rem; color: #333;">商品一覧</h2>
-                </div>
                 <div id="productGrid" class="product-grid">
                     <!-- Items injected by JS -->
                 </div>
@@ -1349,15 +1013,11 @@
 
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
-            <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
-                <div class="ad-banner-title">SHOWTIMEBOXX CREATIVE</div>
-                <div class="ad-banner-text">HP制作ならおまかせ</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">商品登録・編集</h2>
+            <h2>商品登録・編集</h2>
+            <div style="margin-bottom: 20px; text-align: right;">
+                <button onclick="resetToDefaultData()"
+                    style="padding: 8px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer;">データ初期化</button>
             </div>
-            <!-- 有料機能: データ初期化ボタンを削除 -->
 
 
             <div id="settingsList"></div>
@@ -1365,43 +1025,44 @@
 
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
-            <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
-                <div class="ad-banner-title">SHOWTIMEBOXX</div>
-                <div class="ad-banner-text">オンラインレッスン・イベント企画</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">本日の集計</h2>
-            </div>
-            <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
+            <h2>本日の集計</h2>
+            <div class="summary-total">売上合計: ¥<span id="summaryTotalAmount">0</span></div>
 
             <table class="summary-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">商品名 - バリエーション</th>
-                        <th>単価</th>
+                        <th>商品名 - バリエーション</th>
+                        <th>価格</th>
                         <th>本日売れた数</th>
                         <th>残り在庫</th>
                         <th>決済</th>
-                        <th style="width: 50px;">取消</th>
                     </tr>
                 </thead>
                 <tbody id="summaryTableBody"></tbody>
             </table>
 
-            <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+            <div style="margin-top: 40px; text-align: center; display:flex; flex-direction:column; gap:15px;">
+                <div style="display:flex; justify-content:center; gap:10px;">
+                    <button onclick="downloadSalesCSV()"
+                        style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        📊 CSV保存
+                    </button>
+                    <button onclick="openCalendar()"
+                        style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        📅 過去の売上
+                    </button>
+                </div>
+
                 <button onclick="resetSession()"
-                    style="padding: 12px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(255,59,48,0.2);">
-                    本日の売上をリセット
+                    style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    本日の売上をリセット (保存してクリア)
                 </button>
-                <div style="font-size: 0.85rem; color: #777; margin-top: 5px;">次回に向けての準備はお済みですか？</div>
-                <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;"
-                   style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-                    📦 不足している備品をチェック (Amazon)
-                </a>
             </div>
 
-            <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
+            <!-- Removed History List from here as it's now in Calendar -->
+            <div style="margin-top:20px; color:#777; font-size:0.9rem; text-align:center;">
+                ※リセットしても過去のデータは「📅 過去の売上」から確認できます。
+            </div>
         </div>
 
     </div>
@@ -1454,115 +1115,66 @@
 
     <!-- Toast Element -->
     <div id="toast" class="toast">Saved to History</div>
-    
-    <!-- Daily Startup Modal -->
-    <div class="modal-overlay" id="dailyStartModal" style="z-index: 200;">
-        <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
-            <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;">おはようございます！</h2>
-            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 25px;">準備は万全ですか？</p>
-            
-            <button onclick="confirmAndOpenAmazon()"
-                style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 25px;">
-                📦 備品を確認して開始する
-            </button>
-
-            <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
-                <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
-                <span>このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
-            </div>
-            <script>
-                function confirmAndOpenAmazon() {
-                    window.open(getRandomAmazonLink(), "_blank");
-                    closeDailyStartModal();
-                }
-            </script>
-        </div>
-    </div>
     </div>
 
     <!-- Payment Modal (Moved to root) -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
-                <h2 style="font-size: 1.5rem;">お会計</h2>
+                <h2>お会計</h2>
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
-            
-            <div id="paymentOrderSummary" style="margin-top: 5px; margin-bottom: 5px; padding: 8px 12px; border: 1px solid #eee; border-radius: 12px; background: #f9f9f9; max-height: 80px; overflow-y: auto; font-size: 1rem; font-weight: bold; flex-shrink: 0;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 1rem; color: #555;">合計金額</div>
+                <div id="paymentTotal" style="font-size: 2.5rem; font-weight: bold; color: #333;">¥0</div>
             </div>
 
-            <div style="text-align: center; margin-bottom: 5px;">
-                <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;">合計</div>
-                <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;">¥0</div>
+            <div class="payment-methods">
+                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">💵 現金</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">📱
+                    PayPay</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">💳 クレカ</button>
             </div>
 
-            <div class="payment-methods" style="margin-bottom: 10px;">
-                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">現金</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">PayPay</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">クレジット</button>
-            </div>
-
-            <!-- Cash Input Area -->
+            <!-- Cash Input Area (Hidden for cashless) -->
             <div id="cashInputArea">
-                <div class="form-group" style="margin-bottom: 5px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label style="font-size:1.1rem; font-weight:bold; color:#555; margin:0;">お預かり金額</label>
-                        <button onclick="document.getElementById('amountReceived').value=''; updateChange();" 
-                                style="padding: 4px 12px; background: #fff; color: #ff3b30; border: 1px solid #ff3b30; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer;">クリア</button>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 0px; justify-content: center; margin-bottom: 8px;">
+                <div class="form-group">
+                    <label>お預かり</label>
+                    <div
+                        style="display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 10px;">
                         <input type="number" id="amountReceived" class="form-control"
-                            style="font-size: 1.8rem; text-align: center; padding: 10px; font-weight:900; background:#fff; border:2px solid var(--primary-color); height: auto; margin-bottom: 0;" 
-                            placeholder="¥0" oninput="updateChange()">
+                            style="font-size: 1.5rem; text-align: center; padding: 15px;" placeholder="¥0"
+                            oninput="updateChange()">
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
-                        <button onclick="setReceivedAmount(100)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥100</button>
-                        <button onclick="setReceivedAmount(500)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥500</button>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
                         <button onclick="setReceivedAmount(1000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1,000</button>
-                        
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1,000</button>
                         <button onclick="setReceivedAmount(5000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥5,000</button>
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥5,000</button>
                         <button onclick="setReceivedAmount(10000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1万</button>
-                        <button onclick="setExactAmount()"
-                            style="padding:10px 2px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">ピッタリ</button>
+                            style="flex:1; padding:10px; background:#e9ecef; border:none; border-radius:6px; font-weight:bold;">¥1万</button>
                     </div>
                 </div>
 
-                <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 4px; padding: 8px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
-                    <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;">お釣り</div>
-                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
+                <div
+                    style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 1rem; color: #555;">お釣り</div>
+                    <div id="paymentChange" style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">¥0
+                    </div>
                 </div>
             </div>
 
-            <div style="margin-top: 30px; display: grid; gap: 15px;">
+            <div style="margin-top: 25px; display: grid; gap: 10px;">
                 <button id="btnCompletePayment" onclick="finalizeCheckout()" class="btn-checkout" disabled
                     style="opacity: 0.5;">会計完了</button>
                 <button onclick="closePaymentModal()"
-                    style="padding: 15px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1.2rem; cursor:pointer;">戻る</button>
+                    style="padding: 15px; background: #ddd; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem;">戻る</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Amazon Links Data ---
-        const AMAZON_LINKS = [
-            "https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22", // テラオカ黒テープ
-            "https://www.amazon.co.jp/s?k=%E6%A2%B1%E5%8C%85%E8%B3%87%E6%9D%90+%E3%83%97%E3%83%81%E3%83%97%E3%83%81&tag=jackpotrash-22", // プチプチ
-            "https://www.amazon.co.jp/s?k=%E3%82%B3%E3%82%A4%E3%83%B3%E3%82%B1%E3%83%BC%E3%82%B9+%E9%87%A3%E9%8A%AD&tag=jackpotrash-22", // コインケース
-            "https://www.amazon.co.jp/s?k=%E5%8F%B0%E8%EBB%8A+%E6%8A%98%E3%82%8A%E3%81%9F%E3%81%9F%E3%81%BF&tag=jackpotrash-22", // 折りたたみ台車
-            "https://www.amazon.co.jp/s?k=%E3%83%9D%E3%83%83%E3%83%97%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%89+%E5%8D%93%E4%B8%8A&tag=jackpotrash-22", // ポップスタンド 卓上
-            "https://www.amazon.co.jp/s?k=%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E5%A4%A7%E5%AE%B9%E9%87%8F&tag=jackpotrash-22" // モバイルバッテリー
-        ];
-        function getRandomAmazonLink() {
-            return AMAZON_LINKS[Math.floor(Math.random() * AMAZON_LINKS.length)];
-        }
-
         // --- Default Data ---
         const DEFAULT_PRODUCTS = [];
 
@@ -1594,40 +1206,13 @@
             loadData();
             renderProducts();
             updateCartUI();
-            checkDailyStartup();
             // addNewVariantRow(); // This is now handled by renderSettingsList
-        }
-
-        function checkDailyStartup() {
-            const today = new Date().toDateString();
-            const lastCheck = sessionStorage.getItem('boxx_daily_check');
-            if (lastCheck !== today) {
-                setTimeout(() => {
-                    document.getElementById('dailyStartModal').classList.add('active');
-                }, 500);
-            }
-        }
-
-        function closeDailyStartModal() {
-            const today = new Date().toDateString();
-            sessionStorage.setItem('boxx_daily_check', today);
-            document.getElementById('dailyStartModal').classList.remove('active');
         }
 
         function loadData() {
             const savedProds = localStorage.getItem('pos_products');
             if (savedProds) {
                 products = JSON.parse(savedProds);
-                // Force sync icons for existing products (Migration)
-                let changed = false;
-                products.forEach(p => {
-                    const newIcon = getIconForName(p.name);
-                    if (p.icon !== newIcon) {
-                        p.icon = newIcon;
-                        changed = true;
-                    }
-                });
-                if (changed) saveProducts();
             } else {
                 products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
                 saveProducts();
@@ -1702,38 +1287,38 @@
         // --- Shop Logic: Render ---
         // --- Shop Logic: Render ---
         function renderProducts() {
-            if (!productGrid) return;
+            if (!productGrid) {
+                alert('エラー: 商品表示エリアが見つかりません (Error: productGrid missing)');
+                return;
+            }
+            if (!products || products.length === 0) {
+                alert('エラー: 商品データが空です (Product list is empty)');
+                return;
+            }
+
             productGrid.innerHTML = '';
-            
-            // Calc cart items frequency
-            const cartCounts = {};
-            cart.forEach(item => {
-                cartCounts[item.productId] = (cartCounts[item.productId] || 0) + 1;
-            });
-
             products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.onclick = () => openVariantModal(product);
+                try {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.onclick = () => openVariantModal(product);
 
-                const variants = product.variants || [];
-                const totalStock = variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
-                const minPrice = variants.length > 0 ? Math.min(...variants.map(v => v.price)) : 0;
-                const inCartCount = cartCounts[product.id] || 0;
+                    // Calc total stock for info
+                    const variants = product.variants || [];
+                    const totalStock = variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0);
+                    const minPrice = variants.length > 0 ? Math.min(...variants.map(v => v.price)) : 0;
 
-                card.innerHTML = `
-                    <span class="product-icon" style="font-size: 2rem;">${product.icon || '📦'}</span>
-                    <div class="product-info-left">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">¥${minPrice.toLocaleString()}〜</div>
-                    </div>
-                    <div class="product-info-right">
-                        ${inCartCount > 0 ? `<div class="in-cart-badge">済 ${inCartCount}点</div>` : ''}
-                        <div class="stock-badge">残 ${totalStock}</div>
-                    </div>
-                    <div style="margin-left: 10px; color: var(--primary-color); font-size: 1.5rem;">▶︎</div>
+                    card.innerHTML = `
+                    <div class="stock-badge">在庫: ${totalStock}</div>
+                    <span class="product-icon">${product.icon || '📦'}</span>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">¥${minPrice.toLocaleString()}~</div>
                 `;
-                productGrid.appendChild(card);
+                    productGrid.appendChild(card);
+                } catch (e) {
+                    console.error('Error rendering product:', product, e);
+                    // alert(`商品描画エラー: ${product.name}`); // Optional: Un-comment if needed
+                }
             });
         }
 
@@ -1743,7 +1328,7 @@
             currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
             // Update instruction text to be clearer
-            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください';
+            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください (行タップで +1)';
             refreshModalContent();
             modal.classList.add('active');
         }
@@ -1759,9 +1344,9 @@
             table.innerHTML = `
                 <thead>
                     <tr>
-                        <th style="white-space:nowrap;">バリエーション</th>
-                        <th style="text-align:right; white-space:nowrap;">在庫</th>
-                        <th style="text-align:right; white-space:nowrap;">数量</th>
+                        <th>バリエーション</th>
+                        <th style="text-align:right">在庫</th>
+                        <th style="text-align:right">数量</th>
                     </tr>
                 </thead>
                 <tbody id="variantTableBody"></tbody>
@@ -1938,7 +1523,7 @@
                         <div class="cart-item-variant">${item.variantName}</div>
                     </div>
                     <div class="cart-item-price">¥${item.price.toLocaleString()}</div>
-                    <button class="btn-remove-item" onclick="removeFromCart(${item.id})">×</button>
+                    <button style="margin-left:10px; color:#ff3b30; border:none; background:none; cursor:pointer;" onclick="removeFromCart(${item.id})">×</button>
                 `;
                     cartItemsContainer.appendChild(el);
                 });
@@ -1955,25 +1540,13 @@
                 return;
             }
 
-            // Populate Item Summary for Modal
-            const summaryContainer = document.getElementById('paymentOrderSummary');
-            summaryContainer.innerHTML = '';
-            
-            // Group and count
-            const grouped = {};
-            cart.forEach(item => {
-                const key = `${item.productName} (${item.variantName})`;
-                grouped[key] = (grouped[key] || 0) + 1;
-            });
-            
-            Object.keys(grouped).forEach(name => {
-                const row = document.createElement('div');
-                row.style = "display:flex; justify-content:space-between; margin-bottom:4px; font-weight:bold;";
-                row.innerHTML = `<span>${name}</span><span>×${grouped[name]}</span>`;
-                summaryContainer.appendChild(row);
-            });
+            // Reset Payment Modal State
+            currentPaymentMethod = 'cash';
+            updatePaymentUI();
 
+            // Fix: Handle flat cart items (count optional, default 1)
             const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
+
             document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
             document.getElementById('paymentChange').textContent = '¥0';
@@ -1981,11 +1554,6 @@
             const btn = document.getElementById('btnCompletePayment');
             btn.disabled = true;
             btn.style.opacity = '0.5';
-
-            // Ensure modal scrolling
-            const modalContent = document.querySelector('#paymentModal .modal-content');
-            modalContent.style.maxHeight = '92vh';
-            modalContent.style.overflowY = 'auto';
 
             document.getElementById('paymentModal').classList.add('active');
         }
@@ -2037,15 +1605,6 @@
             updateChange();
         }
 
-        function setExactAmount() {
-            const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
-            const total = parseInt(totalText);
-            if (!isNaN(total)) {
-                document.getElementById('amountReceived').value = total;
-                updateChange();
-            }
-        }
-
         function updateChange() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const received = parseInt(document.getElementById('amountReceived').value);
@@ -2069,7 +1628,6 @@
         function finalizeCheckout() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const timestamp = Date.now();
-            const CACHE_NAME = 'boxx-reg-v16'; // Added Sales Cancellation feature
 
             cart.forEach(item => {
                 const count = item.count || 1; // Fix: Default to 1 if undefined
@@ -2158,100 +1716,37 @@
                 const methodIcon = item.method === 'paypay' ? 'P' : (item.method === 'credit' ? 'ク' : '現');
 
                 tr.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>¥${item.price.toLocaleString()}</td>
-                    <td>${item.count}</td>
-                    <td>${stock}</td>
-                    <td style="text-align:center; font-weight:bold;">${methodIcon}</td>
-                    <td>
-                        <button class="btn-cancel-sale" title="この売上を取り消す" 
-                            onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
-                    </td>
-                `;
+        <td>${item.name}</td>
+        <td>¥${item.price.toLocaleString()}</td>
+        <td>${item.count}</td>
+        <td>${stock}</td>
+        <td style="text-align:center; font-weight:bold;">${methodIcon}</td>
+    `;
                 summaryTableBody.appendChild(tr);
             });
 
-            // Display Total with Detailed Payment Breakdown
-            const container = document.getElementById('summaryTotalAmount');
-            container.innerHTML = `
-                <div style="background:#fff; border:2px solid #eee; border-radius:15px; padding:25px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-                    <div style="font-size:1.4rem; color:#666; font-weight:bold; margin-bottom:10px;">本日の売上合計</div>
-                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">¥${total.toLocaleString()}</div>
-                    
-                    <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:12px; text-align:left;">
-                        <div style="background:#f0f7ff; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#0056b3;">現金 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.cash.toLocaleString()}</span>
-                        </div>
-                        <div style="background:#fff0f0; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffcccc;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#b02a37;">PayPay 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.paypay.toLocaleString()}</span>
-                        </div>
-                        <div style="background:#f8f9fa; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#333;">クレジット 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.credit.toLocaleString()}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function cancelSale(prodName, varName, method) {
-            if (!confirm(`「${prodName} (${varName})」の売上（決済：${method === 'paypay' ? 'PayPay' : (method === 'credit' ? 'クレジット' : '現金')}）を取り消しますか？\n（在庫は1点分復元されます）`)) return;
-
-            // Find matching index from the end (LIFO - latest sale first)
-            const index = salesLog.findLastIndex(log => 
-                log.productName === prodName && 
-                log.variantName === varName && 
-                (log.paymentMethod || 'cash') === method &&
-                log.timestamp >= sessionStartTime
-            );
-
-            if (index !== -1) {
-                const item = salesLog[index];
-                
-                // 1. Restore Stock
-                const product = products.find(p => p.id === item.productId);
-                if (product) {
-                    const variant = product.variants.find(v => v.name === item.variantName);
-                    if (variant) {
-                        variant.stock = (parseInt(variant.stock) || 0) + 1;
-                    }
-                }
-
-                // 2. Remove from Log
-                salesLog.splice(index, 1);
-
-                // 3. Save
-                saveSales();
-                saveProducts();
-
-                // 4. Refresh UI
-                renderSummary();
-                renderProducts(); // Update shop view stock badges
-                
-                showToast('売上が取り消されました');
-            } else {
-                alert('取り消し可能なデータが見つかりませんでした');
-            }
+            // Display Total with Payment Breakdown
+            summaryTotalAmount.innerHTML = `
+        ${total.toLocaleString()}
+        <div style="font-size:0.9rem; margin-top:10px; color:#555; text-align:right; font-weight:normal;">
+            (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
+        </div>
+    `;
         }
 
         function resetSession() {
-            // 誤操作防止の確認ダイアログを追加
-            if (!confirm('本日の売上をリセットします。\n宜しいですか？')) return;
+            // One-Tap Reset (No confirm)
             sessionStartTime = Date.now();
             saveSession();
             renderSummary();
-            showToast('本日の売上をリセットしました');
+            showToast('本日の売上を履歴に保存しました');
         }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = message;
-                toast.className = "toast show";
-                setTimeout(function () { toast.className = "toast"; }, 3000);
-            }
+            toast.textContent = message;
+            toast.className = "toast show";
+            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
         // --- Calendar Logic ---
@@ -2459,17 +1954,97 @@
 
 
 
-        // 重複および不要な関数定義を整理しました
+        function resetSession() {
+            // One-Tap Reset (No confirm)
+            sessionStartTime = Date.now();
+            saveSession();
+            renderSummary();
+            showToast('本日の売上を履歴に保存しました');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = "toast show";
+            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // --- Calendar Logic ---
+        function openCalendar() {
+            const calendarModal = document.getElementById('calendarModal');
+            if (calendarModal) {
+                calendarModal.classList.add('active');
+                showCalendarGrid(); // Ensure grid is shown first
+                renderCalendar();
+            }
+        }
+
+        function closeCalendar() {
+            document.getElementById('calendarModal').classList.remove('active');
+        }
+
+        function showCalendarGrid() {
+            document.getElementById('calendarGridView').style.display = 'block';
+            document.getElementById('calendarDetailView').style.display = 'none';
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Headers
+            const days = ['日', '月', '火', '水', '木', '金', '土'];
+            days.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'calendar-day-header';
+                div.textContent = d;
+                grid.appendChild(div);
+            });
+
+            // Days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+
+            // Padding for start
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+
+            // Dates
+            for (let d = 1; d <= lastDay.getDate(); d++) {
+                const dateObj = new Date(year, month, d);
+                const dateStr = dateObj.toLocaleDateString('ja-JP');
+
+                // Check data
+                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
+
+                const cell = document.createElement('div');
+                cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
+                cell.textContent = d;
+                cell.onclick = () => showDailyDetail(dateStr);
+                grid.appendChild(cell);
+            }
+        }
+
+
+
+        // resetDailySales Removed
 
         // --- Settings Logic ---
         function renderSettingsList() {
             const container = document.getElementById('settingsList');
             container.innerHTML = `
                 <div class="settings-container">
-                    <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 20px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
-                        <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
-                        <span>Safariのメニューから<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
-                    </div>
                     <!-- New Product Form -->
                     <div class="settings-card">
                         <h3>商品を登録する</h3>
@@ -2533,11 +2108,8 @@
 
                     <!-- App Info Footer -->
                     <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
-                        <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                            🔄 最新バージョンを確認
-                        </button>
-                        <p>BOXXレジ App v2.6.2</p>
-                        <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
+                        <p>物販レジ App v2.12</p>
+                        <p>Developed by vivid-base</p>
                     </div>
                 </div>
             `;
@@ -2562,7 +2134,7 @@
                 <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <div style="width:20px;"></div>
+                <button onclick="this.parentElement.remove()" style="color:red; background:none; border:none; font-size:1.2rem;">×</button>
             `;
             container.appendChild(div);
         }
@@ -2708,16 +2280,14 @@
         }
 
         function getIconForName(name) {
-            const lowName = name.toLowerCase();
-            if (lowName.includes('tシャツ') || lowName.includes('t-shirt') || lowName.includes('tshirt') || lowName.includes('tee') || lowName.includes('ロンt') || lowName.includes('パーカー') || lowName.includes('hoodie')) return '👕';
-            if (lowName.includes('タオル') || lowName.includes('towel')) return '🏳️';
-            if (lowName.includes('マフラー') || lowName.includes('muffler')) return '🏳️';
-            if (lowName.includes('チェキ') || lowName.includes('photo') || lowName.includes('instax')) return '📸';
-            if (lowName.includes('バッグ') || lowName.includes('bag') || lowName.includes('tote')) return '🛍️';
-            if (lowName.includes('キーホルダー') || lowName.includes('acrylic') || lowName.includes('acsta') || lowName.includes('アクスタ') || lowName.includes('ステッカー') || lowName.includes('sticker')) return '🧸';
-            if (lowName.includes('ペンライト') || lowName.includes('light') || lowName.includes('リストバンド') || lowName.includes('wrist')) return '💡';
-            if (lowName.includes('cd') || lowName.includes('dvd') || lowName.includes('blu-ray')) return '💿';
-            if (lowName.includes('本') || lowName.includes('写真集') || lowName.includes('photo book') || lowName.includes('パンフレット') || lowName.includes('pamphlet') || lowName.includes('カレンダー') || lowName.includes('calendar')) return '📚';
+            if (name.includes('Tシャツ') || name.includes('ロンT') || name.includes('パーカー')) return '👕';
+            if (name.includes('タオル') || name.includes('マフラー')) return '🧣';
+            if (name.includes('チェキ')) return '📸';
+            if (name.includes('バッグ')) return '🛍️';
+            if (name.includes('キーホルダー') || name.includes('アクリルスタンド') || name.includes('ステッカー') || name.includes('スタンド')) return '🧸';
+            if (name.includes('ペンライト') || name.includes('リストバンド')) return '💡';
+            if (name.includes('CD') || name.includes('DVD') || name.includes('Blu-ray')) return '💿';
+            if (name.includes('本') || name.includes('写真集') || name.includes('パンフレット') || name.includes('カレンダー')) return '📚';
             return '🛍️';
         }
 
@@ -2774,191 +2344,15 @@
 
         init();
 
-        // PWA Service Worker Registration with Update Detection
+        // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
-            let swRegistration = null;
-
             window.addEventListener('load', () => {
-                // Cache-busting registration with query string (Safari fix)
-                // Using 2407 to ensure it's different from previous v20
-                navigator.serviceWorker.register('./service-worker.js?v=2700')
-                    .then(registration => {
-                        swRegistration = registration;
-                        console.log('SW registered: ', registration);
-                        
-                        // Check for updates periodically (Safari fix)
-                        setInterval(() => {
-                            registration.update();
-                        }, 60000); // Check every minute
-
-                        // Check on focus
-                        document.addEventListener('visibilitychange', () => {
-                            if (document.visibilityState === 'visible') {
-                                registration.update();
-                            }
-                        });
-
-                        // Initial check
-                        registration.update();
-
-                        // Check for updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                // Removed navigator.serviceWorker.controller check for robustness on Safari
-                                if (newWorker.state === 'installed') {
-                                    // New version is installed and waiting
-                                    showUpdateBanner(registration);
-                                }
-                            });
-                        });
-                        
-                        // If there is already a waiting worker (e.g. from previous load)
-                        if (registration.waiting) {
-                            showUpdateBanner(registration);
-                        }
-                    })
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('SW registered: ', reg))
                     .catch(err => console.log('SW registration failed: ', err));
             });
-            
-            let refreshing = false;
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (!refreshing) {
-                    window.location.reload();
-                    refreshing = true;
-                }
-            });
         }
-
-        function showUpdateBanner(registration) {
-            const banner = document.getElementById('update-banner');
-            const button = document.getElementById('update-button');
-            banner.style.display = 'block';
-            button.onclick = () => {
-                if (registration.waiting) {
-                    registration.waiting.postMessage('SKIP_WAITING');
-                }
-            };
-        }
-
-        function hideUpdateBanner() {
-            document.getElementById('update-banner').style.display = 'none';
-        }
-
-        async function manualUpdateCheck() {
-            showToast('最新版をネットワークから取得中...');
-            
-            // Delete all service worker caches forcefully
-            if ('caches' in window) {
-                try {
-                    const names = await caches.keys();
-                    await Promise.all(names.map(name => caches.delete(name)));
-                } catch(e) {}
-            }
-            
-            // Trigger update just in case
-            if (swRegistration) {
-                try { await swRegistration.update(); } catch(e) {}
-            }
-            
-            // Force browser to reload bypassing standard cache
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 800);
-        }
-        /**
-         * PWA Bridge - SNS内ブラウザ脱出 & インストール誘導
-         */
-        (function() {
-            const ua = navigator.userAgent.toLowerCase();
-            const isLine = ua.indexOf('line') > -1;
-            const isInstagram = ua.indexOf('instagram') > -1;
-            const isFB = ua.indexOf('fban') > -1 || ua.indexOf('fbav') > -1;
-            const isTwitter = ua.indexOf('twitter') > -1 || ua.indexOf('twttr') > -1;
-            
-            const isInApp = isLine || isInstagram || isFB || isTwitter;
-            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-            const isIOS = /iphone|ipad|ipod/.test(ua);
-            
-            function initPwaBridge() {
-                if (isStandalone) return;
-
-                if (isInApp) {
-                    showInAppGuide();
-                } else {
-                    // 通常ブラウザの場合、3秒後にバナー表示
-                    setTimeout(showInstallBanner, 3000);
-                }
-            }
-
-            function showInAppGuide() {
-                const overlay = document.createElement('div');
-                overlay.id = 'pwa-bridge-overlay';
-                overlay.className = 'active';
-                
-                let actionText = isIOS ? "「Safariで開く」" : "「ブラウザで開く」";
-
-                overlay.innerHTML = `
-                    <div class="bridge-guide-box">
-                        <svg class="bridge-arrow" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                        </svg>
-                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff;">ブラウザで開いてください</h2>
-                        <p style="font-size:1rem; line-height:1.7; margin-bottom:20px; color:#eee;">
-                            このアプリを正常に利用するには、<br>
-                            右上のメニューから<br>
-                            <strong style="color:#fff; background:#007bff; padding:4px 10px; border-radius:6px; display:inline-block; margin-top:8px;">${actionText}</strong><br>
-                            を選択してください。
-                        </p>
-                        <p style="font-size:0.85rem; color:#aaa; border-top:1px solid rgba(255,255,255,0.1); pt:15px; margin-top:15px;">
-                            ※ホーム画面に追加すると、<br>次回からアプリとして使えます。
-                        </p>
-                    </div>
-                `;
-                document.body.appendChild(overlay);
-            }
-
-            function showInstallBanner() {
-                if (localStorage.getItem('pwa_banner_dismissed')) return;
-
-                const banner = document.createElement('div');
-                banner.id = 'pwa-install-banner';
-                banner.innerHTML = `
-                    <div class="banner-icon">🛍️</div>
-                    <div class="banner-text">
-                        <span class="banner-title">ホーム画面に追加</span>
-                        <span class="banner-desc">オフライン対応・全画面で使えます</span>
-                    </div>
-                    <button class="banner-close" aria-label="閉じる">✕</button>
-                `;
-                document.body.appendChild(banner);
-
-                setTimeout(() => banner.classList.add('active'), 500);
-
-                banner.querySelector('.banner-close').onclick = () => {
-                    banner.classList.remove('active');
-                    localStorage.setItem('pwa_banner_dismissed', 'true');
-                    setTimeout(() => banner.remove(), 1000);
-                };
-
-                // 15秒後に自動消去
-                setTimeout(() => {
-                    if (banner.parentNode) {
-                        banner.classList.remove('active');
-                        setTimeout(() => banner.remove(), 1000);
-                    }
-                }, 15000);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initPwaBridge);
-            } else {
-                initPwaBridge();
-            }
-        })();
     </script>
-
 </body>
 
 </html>
