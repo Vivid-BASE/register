@@ -874,42 +874,40 @@
 
         .ad-banner {
             display: block;
-            border: 1px solid #e2e8f0;
-            background: linear-gradient(to right, #ffffff, #f8fafc);
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 14px 16px;
             text-decoration: none;
-            color: #333;
+            color: #fff;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             position: relative;
             transition: all 0.2s ease;
         }
-        .ad-banner:active {
-            background: #f1f5f9;
-            transform: scale(0.98);
-        }
+        .ad-banner:active { transform: scale(0.97); }
         .ad-banner-title {
             font-size: 0.75rem;
-            color: var(--primary-color);
+            color: rgba(255,255,255,0.8);
             font-weight: 900;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
         }
         .ad-banner-text {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            color: #1e293b;
+            color: #fff;
         }
         .ad-banner-arrow {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #cbd5e1;
+            color: rgba(255,255,255,0.6);
             font-weight: bold;
             font-size: 1.2rem;
         }
+        .ad-theme-lab { background: linear-gradient(135deg, #1e3a8a, #3b82f6); border: 1px solid #1e3a8a; }
+        .ad-theme-creative { background: linear-gradient(135deg, #020617, #334155); border: 1px solid #0f172a; }
+        .ad-theme-main { background: linear-gradient(135deg, #7f1d1d, #ef4444); border: 1px solid #7f1d1d; }
 
         /* Mobile adjustment for variant row */
         /* Mobile adjustment for variant row */
@@ -1210,9 +1208,9 @@
         <!-- SHOP VIEW -->
         <div id="shopView" class="view-content active">
             <main class="product-area">
-                <a href="https://showtimeboxx.com/lab/" target="_blank" class="ad-banner">
+                <a href="https://showtimeboxx.com/lab/" target="_blank" class="ad-banner ad-theme-lab">
                     <div class="ad-banner-title">SHOWTIMEBOXX LAB</div>
-                    <div class="ad-banner-text">オリジナル業務アプリ・システム開発</div>
+                    <div class="ad-banner-text">超・効率化！オリジナル業務アプリ開発</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -1234,9 +1232,9 @@
 
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
-            <a href="https://showtimeboxx.com/creative/" target="_blank" class="ad-banner">
+            <a href="https://showtimeboxx.com/creative/" target="_blank" class="ad-banner ad-theme-creative">
                 <div class="ad-banner-title">SHOWTIMEBOXX CREATIVE</div>
-                <div class="ad-banner-text">高品質なWEBサイト・HP制作</div>
+                <div class="ad-banner-text">目を引くデザイン・最新システムHP制作</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1250,9 +1248,9 @@
 
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
-            <a href="https://showtimeboxx.com/" target="_blank" class="ad-banner">
+            <a href="https://showtimeboxx.com/" target="_blank" class="ad-banner ad-theme-main">
                 <div class="ad-banner-title">SHOWTIMEBOXX</div>
-                <div class="ad-banner-text">イベント企画・グッズ制作・エンタメ事業</div>
+                <div class="ad-banner-text">オンラインレッスン・各種イベント企画</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1274,12 +1272,16 @@
                 <tbody id="summaryTableBody"></tbody>
             </table>
 
-            <div style="margin-top: 40px; text-align: center; display:flex; flex-direction:column; gap:15px;">
-                <!-- 有料機能: CSV保存・過去売上ボタンを削除 -->
+            <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                 <button onclick="resetSession()"
-                    style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    style="padding: 12px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(255,59,48,0.2);">
                     本日の売上をリセット
                 </button>
+                <div style="font-size: 0.85rem; color: #777; margin-top: 5px;">次回に向けての準備はお済みですか？</div>
+                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                   style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                    📦 不足している備品をチェック (Amazon)
+                </a>
             </div>
 
             <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
@@ -1339,31 +1341,19 @@
     <!-- Daily Startup Modal -->
     <div class="modal-overlay" id="dailyStartModal" style="z-index: 200;">
         <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
-            <h2 style="font-size: 1.5rem; margin-top: 0; color: #333;">おはようございます！</h2>
-            <p style="font-size: 1.1rem; font-weight: bold; color: #555; margin-bottom: 20px;">次回の出店準備は万全ですか？</p>
+            <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;">おはようございます！</h2>
+            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 35px;">準備は万全ですか？</p>
             
-            <div style="text-align: left; background: #fffdf5; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fce8b2; color: #856404; font-size: 0.95rem;">
-                <div style="font-weight: bold; margin-bottom: 8px;">よく買い忘れる備品リスト</div>
-                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                    <li>ガムテープ（黒、透明）</li>
-                    <li>商品小分け用の袋（各サイズ）</li>
-                    <li>お釣りストック（100円玉など）</li>
-                    <li>カードリーダーの予備レシート</li>
-                </ul>
-                <div style="margin-top: 10px; font-size: 0.85rem; color: #a67c00;">
-                    ※ネット注文は到着まで数日かかる場合があります。気付いた時の補充をおすすめします。
-                </div>
-            </div>
-
-            <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
-               style="display: block; width: 100%; padding: 12px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-bottom: 15px; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                不足している備品をAmazonで購入
-            </a>
-
-            <button onclick="closeDailyStartModal()"
-                style="width: 100%; padding: 15px; background: #f0f0f0; color: #333; border: 1px solid #ddd; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer;">
-                準備OK
+            <button onclick="confirmAndOpenAmazon()"
+                style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                📦 備品を確認して開始する
             </button>
+            <script>
+                function confirmAndOpenAmazon() {
+                    window.open("https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22", "_blank");
+                    closeDailyStartModal();
+                }
+            </script>
         </div>
     </div>
     </div>
@@ -2717,36 +2707,25 @@
         }
 
         async function manualUpdateCheck() {
-            if (!swRegistration) {
-                alert('アプリの初期化中です。もう一度お試しください。');
-                return;
-            }
-
-            showToast('更新を確認中...');
+            showToast('最新版をネットワークから取得中...');
             
-            try {
-                // Force check the server for a new Service Worker file
-                await swRegistration.update();
-                
-                // If an update was found and is already waiting
-                if (swRegistration.waiting) {
-                    showUpdateBanner(swRegistration);
-                    showToast('新しいバージョンが見つかりました！');
-                } else {
-                    // Give it a small delay as Safari background download might take a moment
-                    setTimeout(() => {
-                        if (swRegistration.waiting || swRegistration.installing) {
-                            showUpdateBanner(swRegistration);
-                            showToast('新しいバージョンをご利用いただけます');
-                        } else {
-                            showToast('アプリは最新の状態です (v2.5)');
-                        }
-                    }, 2500);
-                }
-            } catch (err) {
-                console.error('Update check failed:', err);
-                showToast('更新チェックに失敗しました');
+            // Delete all service worker caches forcefully
+            if ('caches' in window) {
+                try {
+                    const names = await caches.keys();
+                    await Promise.all(names.map(name => caches.delete(name)));
+                } catch(e) {}
             }
+            
+            // Trigger update just in case
+            if (swRegistration) {
+                try { await swRegistration.update(); } catch(e) {}
+            }
+            
+            // Force browser to reload bypassing standard cache
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 800);
         }
     </script>
 </body>
