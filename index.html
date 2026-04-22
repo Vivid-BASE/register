@@ -1344,15 +1344,15 @@
             <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;">おはようございます！</h2>
             <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 25px;">準備は万全ですか？</p>
             
-            <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 25px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
+            <button onclick="confirmAndOpenAmazon()"
+                style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 25px;">
+                📦 備品を確認して開始する
+            </button>
+
+            <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
                 <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
                 <span>このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
             </div>
-
-            <button onclick="confirmAndOpenAmazon()"
-                style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                📦 備品を確認して開始する
-            </button>
             <script>
                 function confirmAndOpenAmazon() {
                     window.open(getRandomAmazonLink(), "_blank");
