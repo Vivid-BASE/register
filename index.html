@@ -872,17 +872,10 @@
             border-radius: 8px;
         }
 
-        @keyframes pulseAlert {
-            0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(255, 59, 48, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
-        }
-
-        .pulse-btn {
-            animation: pulseAlert 2s infinite;
-            border: 1.5px solid #ff3b30 !important;
-            background: #fff5f5 !important;
-            color: #ff3b30 !important;
+        .ad-btn {
+            background: linear-gradient(135deg, #f0f4ff, #e6eeff) !important;
+            color: #0056b3 !important;
+            border: 1px solid #cce0ff !important;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -891,7 +884,10 @@
             text-decoration: none;
             font-weight: 900;
             font-size: 0.9rem;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,86,179,0.1);
         }
+        .ad-btn:active { transform: scale(0.95); }
 
         /* Mobile adjustment for variant row */
         /* Mobile adjustment for variant row */
@@ -1194,9 +1190,9 @@
             <main class="product-area">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h2 style="margin: 0; font-size: 1.2rem; color: #333;">商品一覧</h2>
-                    <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
-                       class="pulse-btn">
-                       🚨 在庫確認
+                    <a href="https://showtimeboxx.com/creative/" target="_blank"
+                       class="ad-btn">
+                       💡 自社専用レジ・アプリ開発のご相談
                     </a>
                 </div>
                 <div id="productGrid" class="product-grid">
@@ -1217,9 +1213,9 @@
         <div id="settingsView" class="view-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin: 0;">商品登録・編集</h2>
-                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
-                   class="pulse-btn">
-                   🚨 在庫確認
+                <a href="https://showtimeboxx.com/creative/" target="_blank"
+                   class="ad-btn">
+                   🚀 オリジナルWEB開発・制作のご相談
                 </a>
             </div>
             <!-- 有料機能: データ初期化ボタンを削除 -->
@@ -1232,9 +1228,9 @@
         <div id="summaryView" class="view-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 style="margin: 0;">本日の集計</h2>
-                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
-                   class="pulse-btn">
-                   🚨 在庫確認
+                <a href="https://showtimeboxx.com/creative/" target="_blank"
+                   class="ad-btn">
+                   🌐 売上UPのためのシステム開発
                 </a>
             </div>
             <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
@@ -1314,6 +1310,36 @@
 
     <!-- Toast Element -->
     <div id="toast" class="toast">Saved to History</div>
+    
+    <!-- Daily Startup Modal -->
+    <div class="modal-overlay" id="dailyStartModal" style="z-index: 200;">
+        <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
+            <h2 style="font-size: 1.5rem; margin-top: 0; color: #333;">☀️ おはようございます！</h2>
+            <p style="font-size: 1.1rem; font-weight: bold; color: #555; margin-bottom: 20px;">本日の営業準備は万全ですか？</p>
+            
+            <div style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:10px; font-weight:bold; font-size:1.05rem; cursor:pointer;">
+                    <input type="checkbox" style="width:18px; height:18px; cursor:pointer;"> 現金・お釣りの準備
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; margin-bottom:10px; font-weight:bold; font-size:1.05rem; cursor:pointer;">
+                    <input type="checkbox" style="width:18px; height:18px; cursor:pointer;"> 端末類の充電・設定
+                </label>
+                <label style="display:flex; align-items:center; gap:8px; font-weight:bold; font-size:1.05rem; cursor:pointer;">
+                    <input type="checkbox" style="width:18px; height:18px; cursor:pointer;"> 梱包材・テープ等の在庫
+                </label>
+            </div>
+
+            <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+               style="display: block; width: 100%; padding: 12px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-bottom: 15px; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                📦 不足している備品をAmazonで購入
+            </a>
+
+            <button onclick="closeDailyStartModal()"
+                style="width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,123,255,0.3);">
+                ✅ 準備OK！（営業開始）
+            </button>
+        </div>
+    </div>
     </div>
 
     <!-- Payment Modal (Moved to root) -->
@@ -1417,7 +1443,24 @@
             loadData();
             renderProducts();
             updateCartUI();
+            checkDailyStartup();
             // addNewVariantRow(); // This is now handled by renderSettingsList
+        }
+
+        function checkDailyStartup() {
+            const today = new Date().toDateString();
+            const lastCheck = localStorage.getItem('boxx_daily_check');
+            if (lastCheck !== today) {
+                setTimeout(() => {
+                    document.getElementById('dailyStartModal').classList.add('active');
+                }, 500);
+            }
+        }
+
+        function closeDailyStartModal() {
+            const today = new Date().toDateString();
+            localStorage.setItem('boxx_daily_check', today);
+            document.getElementById('dailyStartModal').classList.remove('active');
         }
 
         function loadData() {
