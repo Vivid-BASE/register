@@ -1194,7 +1194,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.6</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.6.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -1342,8 +1342,13 @@
     <div class="modal-overlay" id="dailyStartModal" style="z-index: 200;">
         <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
             <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;">おはようございます！</h2>
-            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 35px;">準備は万全ですか？</p>
+            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 25px;">準備は万全ですか？</p>
             
+            <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 25px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
+                <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
+                <span>このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
+            </div>
+
             <button onclick="confirmAndOpenAmazon()"
                 style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
                 📦 備品を確認して開始する
@@ -2344,6 +2349,10 @@
             const container = document.getElementById('settingsList');
             container.innerHTML = `
                 <div class="settings-container">
+                    <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 20px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
+                        <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
+                        <span>Safariのメニューから<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
+                    </div>
                     <!-- New Product Form -->
                     <div class="settings-card">
                         <h3>商品を登録する</h3>
@@ -2410,7 +2419,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.6</p>
+                        <p>BOXXレジ App v2.6.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
