@@ -1311,7 +1311,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.7.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2781,7 +2781,7 @@
             window.addEventListener('load', () => {
                 // Cache-busting registration with query string (Safari fix)
                 // Using 2407 to ensure it's different from previous v20
-                navigator.serviceWorker.register('./service-worker.js?v=2700')
+                navigator.serviceWorker.register('./service-worker.js?v=2710')
                     .then(registration => {
                         swRegistration = registration;
                         console.log('SW registered: ', registration);
@@ -2896,7 +2896,7 @@
                 overlay.id = 'pwa-bridge-overlay';
                 overlay.className = 'active';
                 
-                let actionText = isIOS ? "「Safariで開く」" : "「ブラウザで開く」";
+                const currentUrl = window.location.href;
 
                 overlay.innerHTML = `
                     <div class="bridge-guide-box">
@@ -2904,19 +2904,41 @@
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
-                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff;">ブラウザで開いてください</h2>
-                        <p style="font-size:1rem; line-height:1.7; margin-bottom:20px; color:#eee;">
-                            このアプリを正常に利用するには、<br>
-                            右上のメニューから<br>
-                            <strong style="color:#fff; background:#007bff; padding:4px 10px; border-radius:6px; display:inline-block; margin-top:8px;">${actionText}</strong><br>
-                            を選択してください。
-                        </p>
-                        <p style="font-size:0.85rem; color:#aaa; border-top:1px solid rgba(255,255,255,0.1); pt:15px; margin-top:15px;">
-                            ※ホーム画面に追加すると、<br>次回からアプリとして使えます。
-                        </p>
+                        
+                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">ブラウザで開いてください</h2>
+                        
+                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.9rem; line-height:1.6;">
+                            <p style="margin-bottom:10px;">① 右上のメニュー <strong>( <span style="font-size:1.2rem; vertical-align:middle;">…</span> )</strong> または <strong>共有ボタン</strong> をタップ</p>
+                            <p>② <strong>「Safariで開く」</strong> または <strong>「デフォルトのブラウザで開く」</strong> を選択してください。</p>
+                        </div>
+
+                        <div style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+                            <p style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">メニューが見つからない場合は：</p>
+                            <button id="copy-url-btn" style="background:#fff; color:#333; border:none; padding:10px 15px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                <span>📋 URLをコピーしてSafariで開く</span>
+                            </button>
+                            <p id="copy-msg" style="font-size:0.75rem; color:#4cd964; margin-top:8px; display:none;">コピーしました！Safariへ貼り付けてください</p>
+                        </div>
                     </div>
                 `;
                 document.body.appendChild(overlay);
+
+                // コピー機能の実装
+                document.getElementById('copy-url-btn').onclick = function() {
+                    navigator.clipboard.writeText(currentUrl).then(() => {
+                        const msg = document.getElementById('copy-msg');
+                        msg.style.display = 'block';
+                        this.style.background = '#4cd964';
+                        this.style.color = '#fff';
+                        this.innerText = '✓ コピー完了';
+                        setTimeout(() => {
+                            msg.style.display = 'none';
+                            this.style.background = '#fff';
+                            this.style.color = '#333';
+                            this.innerHTML = '<span>📋 URLをコピーしてSafariで開く</span>';
+                        }, 3000);
+                    });
+                };
             }
 
             function showInstallBanner() {
