@@ -1171,6 +1171,13 @@
         <!-- SHOP VIEW -->
         <div id="shopView" class="view-content active">
             <main class="product-area">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0; font-size: 1.2rem; color: #333;">商品一覧</h2>
+                    <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                       style="padding: 6px 12px; background: #f8f9fa; color: #555; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid #ddd; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 4px;">
+                       📦 在庫確認
+                    </a>
+                </div>
                 <div id="productGrid" class="product-grid">
                     <!-- Items injected by JS -->
                 </div>
@@ -1187,7 +1194,13 @@
 
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
-            <h2>商品登録・編集</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">商品登録・編集</h2>
+                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                   style="padding: 6px 12px; background: #f8f9fa; color: #555; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid #ddd; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 4px;">
+                   📦 在庫確認
+                </a>
+            </div>
             <!-- 有料機能: データ初期化ボタンを削除 -->
 
 
@@ -1196,7 +1209,13 @@
 
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
-            <h2>本日の集計</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">本日の集計</h2>
+                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
+                   style="padding: 6px 12px; background: #f8f9fa; color: #555; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid #ddd; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 4px;">
+                   📦 在庫確認
+                </a>
+            </div>
             <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
             <table class="summary-table">
@@ -1219,12 +1238,6 @@
                     style="padding: 10px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer;">
                     本日の売上をリセット
                 </button>
-                
-                <!-- Monetization Amazon Affiliate -->
-                <a href="https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22" target="_blank"
-                   style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    📦 アマゾンで物販に必要な備品を補充
-                </a>
             </div>
 
             <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
@@ -2301,6 +2314,9 @@
 
                     <!-- App Info Footer -->
                     <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
+                        <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            🔄 最新バージョンを確認
+                        </button>
                         <p>BOXXレジ App v2.5</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
