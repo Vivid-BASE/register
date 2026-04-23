@@ -1028,6 +1028,29 @@
             cursor: pointer;
         }
 
+        .btn-remove-variant {
+            background: #fff;
+            border: 1px solid #ff3b30;
+            color: #ff3b30;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .btn-remove-variant:active {
+            background: #ff3b30;
+            color: #fff;
+        }
+
         .btn-save-product {
             background: var(--primary-color);
             color: white;
@@ -2226,7 +2249,7 @@
         function finalizeCheckout() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const timestamp = Date.now();
-            const CACHE_NAME = 'boxx-reg-v16'; // Added Sales Cancellation feature
+            const CACHE_NAME = 'boxx-reg-v56'; // Update v2.9.2
 
             cart.forEach(item => {
                 const count = item.count || 1; // Fix: Default to 1 if undefined
@@ -2697,7 +2720,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.9.1</p>
+                        <p>BOXXレジ App v2.9.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2723,7 +2746,7 @@
                 <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
                 <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
                 <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <div style="width:20px;"></div>
+                <button class="btn-remove-variant" onclick="this.parentElement.remove()" title="削除">×</button>
             `;
             container.appendChild(div);
         }
