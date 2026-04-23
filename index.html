@@ -608,6 +608,97 @@
             bottom: 50px;
         }
 
+        /* Beginner Guide Styles */
+        .beginner-guide-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 150;
+            pointer-events: none;
+            display: none;
+        }
+
+        .beginner-guide-overlay.active {
+            display: block;
+        }
+
+        .guide-bubble {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 55px); /* Just below header */
+            right: 15px;
+            pointer-events: auto;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 18px 24px;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0, 123, 255, 0.4);
+            max-width: 280px;
+            animation: guide-bounce 2s infinite ease-in-out;
+            z-index: 151;
+        }
+
+        .guide-arrow {
+            position: absolute;
+            top: -12px;
+            right: 25px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #007bff;
+        }
+
+        .guide-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+        }
+
+        .guide-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .guide-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .guide-text strong {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 900;
+        }
+
+        .guide-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fff;
+            color: #007bff;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        @keyframes guide-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         .btn-batch-add {
             width: 100%;
             background: var(--primary-color);
@@ -1489,6 +1580,19 @@
             </script>
         </div>
     </div>
+    <!-- Beginner Guide Onboarding -->
+    <div id="beginnerGuide" class="beginner-guide-overlay">
+        <div class="guide-bubble">
+            <div class="guide-arrow"></div>
+            <div class="guide-content">
+                <span class="guide-icon">✨</span>
+                <div class="guide-text">
+                    <strong>まずは商品を登録！</strong>
+                    右上の「設定」から商品を登録して、レジを使い始めましょう。
+                </div>
+                <button class="guide-close" onclick="hideBeginnerGuide()">×</button>
+            </div>
+        </div>
     </div>
 
     <!-- Payment Modal (Moved to root) -->
@@ -1606,7 +1710,13 @@
             renderProducts();
             updateCartUI();
             checkDailyStartup();
-            // addNewVariantRow(); // This is now handled by renderSettingsList
+            
+            // If daily modal is NOT shown, check if we need the beginner guide
+            const today = new Date().toDateString();
+            const lastCheck = sessionStorage.getItem('boxx_daily_check');
+            if (lastCheck === today) {
+                setTimeout(checkShowBeginnerGuide, 1000);
+            }
         }
 
         function checkDailyStartup() {
@@ -1623,6 +1733,9 @@
             const today = new Date().toDateString();
             sessionStorage.setItem('boxx_daily_check', today);
             document.getElementById('dailyStartModal').classList.remove('active');
+            
+            // Check for beginner guide after closing startup modal
+            setTimeout(checkShowBeginnerGuide, 500);
         }
 
         function loadData() {
@@ -1687,8 +1800,12 @@
         }
 
         // --- View Switching ---
-        // --- View Switching ---
         function switchView(viewName) {
+            // Hide beginner guide if navigating to settings
+            if (viewName === 'settings') {
+                hideBeginnerGuide();
+            }
+
             // Remove active class and reset inline display style
             document.querySelectorAll('.view-content').forEach(el => {
                 el.classList.remove('active');
@@ -1708,6 +1825,35 @@
                 el.classList.add('active');
                 renderSummary();
             }
+        }
+
+        // --- Beginner Guide Logic ---
+        function checkShowBeginnerGuide() {
+            // 1. Only show if no products are registered
+            if (products && products.length > 0) return;
+
+            // 2. Don't show if any major modal is open
+            if (document.getElementById('dailyStartModal').classList.contains('active')) return;
+            if (document.getElementById('paymentModal').classList.contains('active')) return;
+            if (document.getElementById('variantModal').classList.contains('active')) return;
+
+            // 3. Don't show if in-app browser guide is visible
+            if (document.getElementById('pwa-bridge-overlay')) return;
+
+            // 4. Don't show if already in settings view
+            if (document.getElementById('settingsView').classList.contains('active')) return;
+
+            showBeginnerGuide();
+        }
+
+        function showBeginnerGuide() {
+            const guide = document.getElementById('beginnerGuide');
+            if (guide) guide.classList.add('active');
+        }
+
+        function hideBeginnerGuide() {
+            const guide = document.getElementById('beginnerGuide');
+            if (guide) guide.classList.remove('active');
         }
 
         // --- Shop Logic: Render ---
