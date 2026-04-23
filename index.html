@@ -1127,12 +1127,6 @@
             font-weight: bold;
             animation: slideDown 0.5s ease;
         }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
         #update-banner button {
             background: white;
             color: #1A1A40;
@@ -1240,6 +1234,8 @@
             50% { transform: translateY(-15px) rotate(15deg); }
         }
 
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
         @keyframes bridge-bounce-bottom {
             0%, 100% { transform: translateY(0) rotate(105deg); }
             50% { transform: translateY(15px) rotate(105deg); }
@@ -3035,7 +3031,7 @@
                     setTimeout(() => guide.remove(), 300);
                 };
             }
-\n
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initPwaBridge);
             } else {
