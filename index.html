@@ -1322,7 +1322,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.8.8</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.8.9</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2551,7 +2551,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.8.8</p>
+                        <p>BOXXレジ App v2.8.9</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2792,40 +2792,58 @@
         // PWA Service Worker Registration with Update Detection
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
+            let isUpdating = false;
+
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2880')
+                navigator.serviceWorker.register('./service-worker.js?v=2890')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
                         document.addEventListener('visibilitychange', () => {
                             if (document.visibilityState === 'visible') registration.update();
                         });
-                        registration.update();
+                        
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed') showUpdateBanner(registration);
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    showUpdateBanner(registration);
+                                }
                             });
                         });
-                        if (registration.waiting) showUpdateBanner(registration);
+                        
+                        if (registration.waiting) {
+                            showUpdateBanner(registration);
+                        }
                     })
                     .catch(err => console.log('SW registration failed: ', err));
             });
+
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (!refreshing) { window.location.reload(); refreshing = true; }
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
             });
         }
 
         function showUpdateBanner(registration) {
             const banner = document.getElementById('update-banner');
             const button = document.getElementById('update-button');
-            if (banner) banner.style.display = 'block';
+            if (banner && banner.style.display !== 'block') {
+                banner.style.display = 'block';
+            }
             if (button) {
                 button.onclick = () => {
                     if (banner) banner.style.display = 'none';
+                    // Fallback reload if SW doesn't respond quickly
+                    setTimeout(() => { window.location.reload(); }, 1500);
+                    
                     if (registration.waiting) {
                         registration.waiting.postMessage('SKIP_WAITING');
+                    } else if (registration.installing) {
+                        registration.installing.postMessage('SKIP_WAITING');
                     }
                 };
             }
@@ -2848,7 +2866,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.8.8 (Flash Emphasis)
+         * PWA Bridge - Logic v2.8.9
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
@@ -2897,7 +2915,6 @@
                 const isIosLine = isIOS && isLine;
                 const menuLoc = isIosLine ? "右下" : "右上";
                 
-                // Red Flash Arrow CSS Injection
                 const style = document.createElement('style');
                 style.innerHTML = `
                     .bridge-arrow-flash {
