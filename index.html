@@ -1051,6 +1051,11 @@
             color: #fff;
         }
 
+        /* 1つしかない場合は削除ボタンを隠す */
+        .variant-row:only-child .btn-remove-variant {
+            display: none;
+        }
+
         .btn-save-product {
             background: var(--primary-color);
             color: white;
@@ -1436,7 +1441,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.9.1</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.9.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -3035,7 +3040,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.9.1
+         * PWA Bridge - Logic v2.9.2
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
