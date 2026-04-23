@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v48'; // Update v2.8.4
+const CACHE_NAME = 'boxx-reg-v49'; // Update v2.8.5
 const ASSETS = [
   './',
   './index.html',
