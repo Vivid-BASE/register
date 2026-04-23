@@ -1238,9 +1238,7 @@
 
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
-        @keyframes bridge-bounce-bottom {
-            0%, 100% { transform: translateY(0) rotate(105deg); }
-            50% { transform: translateY(15px) rotate(105deg); }
+        @keyframes bridge-flash { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #ff3b30); } 50% { opacity: 0.2; } }
         }
 
         #pwa-install-banner {
@@ -1324,7 +1322,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.8.7</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.8.8</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2553,7 +2551,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.8.7</p>
+                        <p>BOXXレジ App v2.8.8</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2795,7 +2793,7 @@
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2870')
+                navigator.serviceWorker.register('./service-worker.js?v=2880')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
@@ -2850,7 +2848,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.8.7
+         * PWA Bridge - Logic v2.8.8 (Flash Emphasis)
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
@@ -2898,11 +2896,25 @@
                 overlay.className = 'active';
                 const isIosLine = isIOS && isLine;
                 const menuLoc = isIosLine ? "右下" : "右上";
-                const arrowClass = isIosLine ? "bridge-arrow-bottom" : "bridge-arrow-top";
+                
+                // Red Flash Arrow CSS Injection
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .bridge-arrow-flash {
+                        animation: bridge-flash 0.8s infinite !important;
+                        stroke: #ff3b30 !important;
+                        filter: drop-shadow(0 0 5px #ff3b30);
+                    }
+                    @keyframes bridge-flash { 
+                        0%, 100% { opacity: 1; transform: scale(1.1) rotate(${isIosLine ? '105deg' : '15deg'}); } 
+                        50% { opacity: 0; transform: scale(0.9) rotate(${isIosLine ? '105deg' : '15deg'}); } 
+                    }
+                `;
+                document.head.appendChild(style);
 
                 overlay.innerHTML = `
                     <div class="bridge-guide-box" style="padding: 40px 25px; max-width: 360px; border: 2px solid rgba(255,255,255,0.1);">
-                        <svg class="bridge-arrow ${arrowClass}" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="bridge-arrow bridge-arrow-flash" style="position:absolute; ${isIosLine ? 'bottom:-70px' : 'top:-70px'}; right:10px; width:80px; height:80px;" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
@@ -2910,8 +2922,9 @@
                         <div style="text-align:left; line-height:1.8; color:#fff; font-size:1.2rem; font-weight:bold;">
                             <p style="margin-bottom:20px;">
                                 このアプリはオフラインでもご利用いただけますが、商品データを保存するために<br>
-                                画面${menuLoc} <span style="font-size:1.6rem; vertical-align:middle;">⋮</span> の
-                                <span style="color:#4cd964;">ブラウザで開く</span> からご利用いただくことを推奨いたします。
+                                <span style="color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);">
+                                    画面${menuLoc} <span style="font-size:1.8rem; vertical-align:middle; line-height:0;">⋮</span> の ブラウザで開く
+                                </span> <br>からご利用いただくことを推奨いたします。
                             </p>
                             <p style="border-top:1px solid rgba(255,255,255,0.2); padding-top:20px; color:#fff;">
                                 その後「ホーム画面に追加」していただくと、普通のアプリの様にご利用いただけます。
