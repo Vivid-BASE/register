@@ -1323,7 +1323,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.8.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.8.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2478,7 +2478,7 @@
             const container = document.getElementById('settingsList');
             container.innerHTML = `
                 <div class="settings-container">
-                    <div class="setting-item" style="background:rgba(0,123,255,0.05); border:1px dashed var(--primary-color);">
+                    <div id="pwa-settings-guide" class="setting-item" style="background:rgba(0,123,255,0.05); border:1px dashed var(--primary-color);">
                         <i class="fas fa-mobile-alt"></i>
                         <div style="flex:1; font-size:0.85rem;">
                             <strong>ホーム画面に追加して使う</strong><br>
@@ -2552,7 +2552,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.8.0</p>
+                        <p>BOXXレジ App v2.8.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2794,7 +2794,7 @@
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2800')
+                navigator.serviceWorker.register('./service-worker.js?v=2810')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
@@ -2842,7 +2842,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.8.0 (Final Version)
+         * PWA Bridge - Logic v2.8.1 (PC Compatibility Fix)
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
@@ -2853,22 +2853,32 @@
             const isInApp = isLine || isInstagram || isFB || isTwitter;
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             const isIOS = /iphone|ipad|ipod/.test(ua);
+            // Strict Mobile Detection
             const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(ua);
             
             function initPwaBridge() {
                 const existing = document.getElementById('pwa-bridge-overlay');
                 if (existing) existing.remove();
 
+                if (!isMobile) {
+                    // Desktop Environment: Clean up any mobile-only UI
+                    const settingsGuide = document.getElementById('pwa-settings-guide');
+                    if (settingsGuide) settingsGuide.remove();
+                    
+                    const banner = document.getElementById('pwa-install-banner');
+                    if (banner) banner.remove();
+                    
+                    console.log('Desktop Mode: Cleaning up mobile-only UI.');
+                    return; // No further PWA bridge logic for desktop
+                }
+
                 if (isStandalone) return;
                 
                 if (isInApp) {
                     showInAppGuide();
-                } else if (isMobile) {
+                } else {
                     // Mobile normal browser: Show installation banner
                     setTimeout(showInstallBanner, 3000);
-                } else {
-                    // PC/Desktop: Do nothing, just use normally
-                    console.log('Desktop mode: App ready.');
                 }
             }
 
@@ -2879,7 +2889,7 @@
                 overlay.id = 'pwa-bridge-overlay';
                 overlay.className = 'active';
                 const isIosLine = isIOS && isLine;
-                const menuLoc = isIosLine ? "右下" : "右上"; // iOS LINE is bottom-right, others usually top-right
+                const menuLoc = isIosLine ? "右下" : "右上";
                 const arrowClass = isIosLine ? "bridge-arrow-bottom" : "bridge-arrow-top";
 
                 overlay.innerHTML = `
@@ -2905,6 +2915,9 @@
             }
 
             function showInstallBanner(force = false) {
+                // NEVER show banner on desktop
+                if (!isMobile) return;
+
                 if (!force && localStorage.getItem('pwa_banner_dismissed')) return;
                 if (document.getElementById('pwa-install-banner') || document.getElementById('pwa-install-guide')) return;
                 const banner = document.createElement('div');
