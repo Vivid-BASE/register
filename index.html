@@ -1413,7 +1413,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.9.0</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.9.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2697,7 +2697,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.9.0</p>
+                        <p>BOXXレジ App v2.9.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2941,7 +2941,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2890')
+                navigator.serviceWorker.register('./service-worker.js?v=2900')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
@@ -2958,7 +2958,7 @@
                             });
                         });
                         
-                        if (registration.waiting) {
+                        if (registration.waiting && navigator.serviceWorker.controller) {
                             showUpdateBanner(registration);
                         }
                     })
@@ -3012,7 +3012,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.9.0
+         * PWA Bridge - Logic v2.9.1
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
