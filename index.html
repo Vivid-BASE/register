@@ -1321,7 +1321,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.5</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.7.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2550,7 +2550,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.7.5</p>
+                        <p>BOXXレジ App v2.7.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2792,10 +2792,10 @@
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2751')
+                // Version 2.7.6 with forced cache busting
+                navigator.serviceWorker.register('./service-worker.js?v=2760')
                     .then(registration => {
                         swRegistration = registration;
-                        console.log('SW registered: ', registration);
                         setInterval(() => { registration.update(); }, 60000);
                         document.addEventListener('visibilitychange', () => {
                             if (document.visibilityState === 'visible') registration.update();
@@ -2877,35 +2877,40 @@
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
-                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">まず【ブラウザで開く】</h2>
-                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:15px; font-size:0.95rem; line-height:1.6;">
-                            <p style="margin-bottom:8px;">① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( ⋮ )</strong> をタップ</p>
-                            <p>② <strong>「ブラウザで開く」</strong> を選択してください</p>
-                        </div>
-                        <div style="margin-top:15px; background:rgba(255,255,255,0.1); border-radius:12px; padding:12px; text-align:left;">
-                            <p style="font-size:0.8rem; font-weight:bold; color:#4cd964; margin-bottom:10px; display:flex; align-items:center; gap:5px;">
-                                <i class="fas fa-star"></i> ホーム画面（ブラウザ）で使うメリット
+                        
+                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:20px; border-radius:16px; margin-bottom:15px; font-size:1.1rem; line-height:1.6; font-weight:bold;">
+                            <p style="margin-bottom:15px; color:#fff;">
+                                画面右下 <span style="font-size:1.4rem; vertical-align:middle;">⋮</span> から<br>
+                                <span style="color:#4cd964; font-size:1.3rem;">ブラウザで開く</span> をタップしてください。
                             </p>
-                            <table style="width:100%; border-collapse:collapse; font-size:0.75rem; color:#eee;">
+                            <p style="font-size:0.85rem; color:#ccc; font-weight:normal; line-height:1.5;">
+                                このアプリはブラウザで開いてホーム画面に登録すると次回からデータが保存されオフラインでも利用できます。
+                            </p>
+                        </div>
+
+                        <div style="margin-top:15px; background:rgba(255,255,255,0.08); border-radius:12px; padding:12px; text-align:left;">
+                            <p style="font-size:0.75rem; font-weight:bold; color:#4cd964; margin-bottom:8px;">💡 ホーム画面で使うメリット</p>
+                            <table style="width:100%; border-collapse:collapse; font-size:0.7rem; color:#eee;">
                                 <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
-                                    <th style="padding:6px 4px; text-align:left; color:#999;">機能</th>
-                                    <th style="padding:6px 4px; text-align:center; color:#4cd964; background:rgba(76,217,100,0.1); border-radius:4px 4px 0 0;">ホーム画面</th>
-                                    <th style="padding:6px 4px; text-align:center; color:#aaa;">LINE内</th>
+                                    <th style="padding:4px; text-align:left; color:#999;">機能</th>
+                                    <th style="padding:4px; text-align:center; color:#4cd964;">ホーム画面</th>
+                                    <th style="padding:4px; text-align:center; color:#aaa;">LINE内</th>
                                 </tr>
-                                <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                                <tr>
                                     <td style="padding:6px 4px;">使いやすさ</td>
-                                    <td style="padding:6px 4px; text-align:center; font-weight:bold; color:#fff;">✨ 全画面表示</td>
+                                    <td style="padding:6px 4px; text-align:center; font-weight:bold;">✨ 全画面</td>
                                     <td style="padding:6px 4px; text-align:center; color:#888;">× 狭い</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:6px 4px;">データの安定</td>
-                                    <td style="padding:6px 4px; text-align:center; font-weight:bold; color:#fff;">✅ 消えにくい</td>
-                                    <td style="padding:6px 4px; text-align:center; color:#888;">⚠️ 消える恐れ</td>
+                                    <td style="padding:6px 4px;">データ保存</td>
+                                    <td style="padding:6px 4px; text-align:center; font-weight:bold;">✅ 安定</td>
+                                    <td style="padding:6px 4px; text-align:center; color:#888;">⚠️ 不安定</td>
                                 </tr>
                             </table>
                         </div>
+
                         <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
-                            <button id="copy-url-btn" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); padding:10px; border-radius:8px; font-size:0.8rem; width:100%; cursor:pointer;">
+                            <button id="copy-url-btn" style="background:rgba(255,255,255,0.05); color:#999; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:8px; font-size:0.75rem; width:100%; cursor:pointer;">
                                 <span>📋 URLをコピーして手動でSafariへ</span>
                             </button>
                             <p id="copy-msg" style="font-size:0.7rem; color:#4cd964; margin-top:8px; display:none; text-align:center;">コピーしました！</p>
