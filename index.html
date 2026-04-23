@@ -3029,13 +3029,23 @@
         }
 
         async function manualUpdateCheck() {
-            showToast('最新版をネットワークから取得中...');
+            showToast('強制アップデートを実行中...');
+            // サービスワーカーを解除してキャッシュを完全にクリア
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                } catch (e) {}
+            }
             if ('caches' in window) {
                 try {
                     const names = await caches.keys();
                     await Promise.all(names.map(name => caches.delete(name)));
-                } catch(e) {}
+                } catch (e) {}
             }
+            // 強制リロード
             window.location.reload(true);
         }
 
