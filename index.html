@@ -1325,7 +1325,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.2</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.7.3</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2861,25 +2861,20 @@
 
         async function manualUpdateCheck() {
             showToast('最新版をネットワークから取得中...');
-            
-            // Delete all service worker caches forcefully
             if ('caches' in window) {
                 try {
                     const names = await caches.keys();
                     await Promise.all(names.map(name => caches.delete(name)));
                 } catch(e) {}
             }
-            
-            // Trigger update just in case
             if (swRegistration) {
                 try { await swRegistration.update(); } catch(e) {}
             }
-            
-            // Force browser to reload bypassing standard cache
             setTimeout(() => {
                 window.location.reload(true);
             }, 800);
         }
+
         /**
          * PWA Bridge - SNS内ブラウザ脱出 & インストール誘導
          */
@@ -2911,7 +2906,6 @@
                 overlay.className = 'active';
                 
                 const currentUrl = window.location.href;
-                // iPhone版LINEはメニューが「右下」にあるため判定
                 const isIosLine = isIOS && isLine;
                 const menuLoc = isIosLine ? "右下" : "右上";
                 const arrowClass = isIosLine ? "bridge-arrow-bottom" : "bridge-arrow-top";
@@ -2926,7 +2920,7 @@
                         <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">ブラウザで開いてください</h2>
                         
                         <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
-                            <p style="margin-bottom:12px;">① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( … )</strong> または <strong>共有ボタン</strong> をタップ</p>
+                            <p style="margin-bottom:12px;">① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( ⋮ )</strong> または <strong>共有ボタン</strong> をタップ</p>
                             <p>② <strong>「Safariで開く」</strong> または <strong>「デフォルトのブラウザで開く」</strong> を選択してください。</p>
                         </div>
 
@@ -2941,7 +2935,6 @@
                 `;
                 document.body.appendChild(overlay);
 
-                // コピー機能の実装
                 document.getElementById('copy-url-btn').onclick = function() {
                     navigator.clipboard.writeText(currentUrl).then(() => {
                         const msg = document.getElementById('copy-msg');
@@ -2964,16 +2957,34 @@
 
                 const banner = document.createElement('div');
                 banner.id = 'pwa-install-banner';
-                banner.innerHTML = `
-                    <div class="banner-icon">🛍️</div>
-                    <div class="banner-text">
-                        <span class="banner-title">ホーム画面に追加</span>
-                        <span class="banner-desc">オフライン対応・全画面で使えます</span>
-                    </div>
-                    <button class="banner-close" aria-label="閉じる">✕</button>
-                `;
-                document.body.appendChild(banner);
+                
+                if (isIOS) {
+                    banner.innerHTML = `
+                        <div style="width:100%">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <span style="font-weight:900; font-size:1rem; color:var(--primary-color);">📱 ホーム画面に追加する方法</span>
+                                <button class="banner-close" style="background:none; border:none; font-size:1.2rem; color:#999; cursor:pointer;">✕</button>
+                            </div>
+                            <div style="font-size:0.85rem; line-height:1.6; color:#333;">
+                                <p>① 下にある <strong>共有ボタン</strong> ( <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; display:inline-block;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> ) をタップ</p>
+                                <p>② メニューをスクロールして <strong>「ホーム画面に追加」</strong> を選択</p>
+                            </div>
+                            <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:12px solid rgba(255,255,255,0.95);"></div>
+                        </div>
+                    `;
+                    banner.style.bottom = '80px';
+                } else {
+                    banner.innerHTML = `
+                        <div class="banner-icon">🛍️</div>
+                        <div class="banner-text">
+                            <span class="banner-title">ホーム画面に追加</span>
+                            <span class="banner-desc">メニューから「アプリをインストール」を選択</span>
+                        </div>
+                        <button class="banner-close">✕</button>
+                    `;
+                }
 
+                document.body.appendChild(banner);
                 setTimeout(() => banner.classList.add('active'), 500);
 
                 banner.querySelector('.banner-close').onclick = () => {
@@ -2981,14 +2992,6 @@
                     localStorage.setItem('pwa_banner_dismissed', 'true');
                     setTimeout(() => banner.remove(), 1000);
                 };
-
-                // 15秒後に自動消去
-                setTimeout(() => {
-                    if (banner.parentNode) {
-                        banner.classList.remove('active');
-                        setTimeout(() => banner.remove(), 1000);
-                    }
-                }, 15000);
             }
 
             if (document.readyState === 'loading') {
@@ -2998,7 +3001,5 @@
             }
         })();
     </script>
-
 </body>
-
 </html>
