@@ -1321,7 +1321,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.4</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.7.5</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2550,7 +2550,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.7.4</p>
+                        <p>BOXXレジ App v2.7.5</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2791,72 +2791,42 @@
         // PWA Service Worker Registration with Update Detection
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
-
             window.addEventListener('load', () => {
-                // Cache-busting registration with query string (Safari fix)
-                // Using 2407 to ensure it's different from previous v20
-                navigator.serviceWorker.register('./service-worker.js?v=2720')
+                navigator.serviceWorker.register('./service-worker.js?v=2751')
                     .then(registration => {
                         swRegistration = registration;
                         console.log('SW registered: ', registration);
-                        
-                        // Check for updates periodically (Safari fix)
-                        setInterval(() => {
-                            registration.update();
-                        }, 60000); // Check every minute
-
-                        // Check on focus
+                        setInterval(() => { registration.update(); }, 60000);
                         document.addEventListener('visibilitychange', () => {
-                            if (document.visibilityState === 'visible') {
-                                registration.update();
-                            }
+                            if (document.visibilityState === 'visible') registration.update();
                         });
-
-                        // Initial check
                         registration.update();
-
-                        // Check for updates
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
-                                // Removed navigator.serviceWorker.controller check for robustness on Safari
-                                if (newWorker.state === 'installed') {
-                                    // New version is installed and waiting
-                                    showUpdateBanner(registration);
-                                }
+                                if (newWorker.state === 'installed') showUpdateBanner(registration);
                             });
                         });
-                        
-                        // If there is already a waiting worker (e.g. from previous load)
-                        if (registration.waiting) {
-                            showUpdateBanner(registration);
-                        }
+                        if (registration.waiting) showUpdateBanner(registration);
                     })
                     .catch(err => console.log('SW registration failed: ', err));
             });
-            
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (!refreshing) {
-                    window.location.reload();
-                    refreshing = true;
-                }
+                if (!refreshing) { window.location.reload(); refreshing = true; }
             });
         }
 
         function showUpdateBanner(registration) {
             const banner = document.getElementById('update-banner');
             const button = document.getElementById('update-button');
-            banner.style.display = 'block';
-            button.onclick = () => {
-                if (registration.waiting) {
-                    registration.waiting.postMessage('SKIP_WAITING');
-                }
-            };
+            if (banner) banner.style.display = 'block';
+            if (button) button.onclick = () => { if (registration.waiting) registration.waiting.postMessage('SKIP_WAITING'); };
         }
 
         function hideUpdateBanner() {
-            document.getElementById('update-banner').style.display = 'none';
+            const banner = document.getElementById('update-banner');
+            if (banner) banner.style.display = 'none';
         }
 
         async function manualUpdateCheck() {
@@ -2867,12 +2837,7 @@
                     await Promise.all(names.map(name => caches.delete(name)));
                 } catch(e) {}
             }
-            if (swRegistration) {
-                try { await swRegistration.update(); } catch(e) {}
-            }
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 800);
+            window.location.reload(true);
         }
 
         /**
@@ -2884,18 +2849,15 @@
             const isInstagram = ua.indexOf('instagram') > -1;
             const isFB = ua.indexOf('fban') > -1 || ua.indexOf('fbav') > -1;
             const isTwitter = ua.indexOf('twitter') > -1 || ua.indexOf('twttr') > -1;
-            
             const isInApp = isLine || isInstagram || isFB || isTwitter;
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             const isIOS = /iphone|ipad|ipod/.test(ua);
             
             function initPwaBridge() {
                 if (isStandalone) return;
-
                 if (isInApp) {
                     showInAppGuide();
                 } else {
-                    // 通常ブラウザの場合、3秒後にバナー表示
                     setTimeout(showInstallBanner, 3000);
                 }
             }
@@ -2904,7 +2866,6 @@
                 const overlay = document.createElement('div');
                 overlay.id = 'pwa-bridge-overlay';
                 overlay.className = 'active';
-                
                 const currentUrl = window.location.href;
                 const isIosLine = isIOS && isLine;
                 const menuLoc = isIosLine ? "右下" : "右上";
@@ -2916,40 +2877,49 @@
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
-                        
-                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">Safariで開くことを推奨します</h2>
-                        
-                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:20px; font-size:0.95rem; line-height:1.6;">
-                            <p style="margin-bottom:12px; color:#4cd964; font-weight:bold;">💡 正しく動作させるために</p>
-                            <p style="margin-bottom:12px;">現在アプリ内のブラウザで開かれています。以下の手順でSafariへ切り替えると、ホーム画面への追加が可能になります。</p>
-                            <p>① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( ⋮ )</strong> をタップ</p>
-                            <p>② <strong>「Safariで開く」</strong> を選択してください。</p>
+                        <h2 style="font-weight:900; margin-bottom:15px; color:#fff; font-size:1.4rem;">まず【ブラウザで開く】</h2>
+                        <div style="text-align:left; background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:15px; font-size:0.95rem; line-height:1.6;">
+                            <p style="margin-bottom:8px;">① 画面の<strong>【${menuLoc}】</strong>にあるメニュー <strong>( ⋮ )</strong> をタップ</p>
+                            <p>② <strong>「ブラウザで開く」</strong> を選択してください</p>
                         </div>
-
-                        <div style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
-                            <p style="font-size:0.8rem; color:#aaa; margin-bottom:10px;">うまく開けない場合はこちら：</p>
-                            <button id="copy-url-btn" style="background:#fff; color:#333; border:none; padding:12px 15px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                                <span>📋 URLをコピーしてSafariへ貼り付け</span>
+                        <div style="margin-top:15px; background:rgba(255,255,255,0.1); border-radius:12px; padding:12px; text-align:left;">
+                            <p style="font-size:0.8rem; font-weight:bold; color:#4cd964; margin-bottom:10px; display:flex; align-items:center; gap:5px;">
+                                <i class="fas fa-star"></i> ホーム画面（ブラウザ）で使うメリット
+                            </p>
+                            <table style="width:100%; border-collapse:collapse; font-size:0.75rem; color:#eee;">
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                                    <th style="padding:6px 4px; text-align:left; color:#999;">機能</th>
+                                    <th style="padding:6px 4px; text-align:center; color:#4cd964; background:rgba(76,217,100,0.1); border-radius:4px 4px 0 0;">ホーム画面</th>
+                                    <th style="padding:6px 4px; text-align:center; color:#aaa;">LINE内</th>
+                                </tr>
+                                <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                                    <td style="padding:6px 4px;">使いやすさ</td>
+                                    <td style="padding:6px 4px; text-align:center; font-weight:bold; color:#fff;">✨ 全画面表示</td>
+                                    <td style="padding:6px 4px; text-align:center; color:#888;">× 狭い</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 4px;">データの安定</td>
+                                    <td style="padding:6px 4px; text-align:center; font-weight:bold; color:#fff;">✅ 消えにくい</td>
+                                    <td style="padding:6px 4px; text-align:center; color:#888;">⚠️ 消える恐れ</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
+                            <button id="copy-url-btn" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); padding:10px; border-radius:8px; font-size:0.8rem; width:100%; cursor:pointer;">
+                                <span>📋 URLをコピーして手動でSafariへ</span>
                             </button>
-                            <p id="copy-msg" style="font-size:0.75rem; color:#4cd964; margin-top:8px; display:none;">コピーしました！</p>
+                            <p id="copy-msg" style="font-size:0.7rem; color:#4cd964; margin-top:8px; display:none; text-align:center;">コピーしました！</p>
                         </div>
                     </div>
                 `;
                 document.body.appendChild(overlay);
-
                 document.getElementById('copy-url-btn').onclick = function() {
                     navigator.clipboard.writeText(currentUrl).then(() => {
                         const msg = document.getElementById('copy-msg');
-                        msg.style.display = 'block';
-                        this.style.background = '#4cd964';
-                        this.style.color = '#fff';
-                        this.innerText = '✓ コピー完了';
-                        setTimeout(() => {
-                            msg.style.display = 'none';
-                            this.style.background = '#fff';
-                            this.style.color = '#333';
-                            this.innerHTML = '<span>📋 URLをコピーしてSafariへ貼り付け</span>';
-                        }, 3000);
+                        if (msg) {
+                            msg.style.display = 'block';
+                            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+                        }
                     });
                 };
             }
@@ -2957,10 +2927,8 @@
             function showInstallBanner(force = false) {
                 if (!force && localStorage.getItem('pwa_banner_dismissed')) return;
                 if (document.getElementById('pwa-install-banner') || document.getElementById('pwa-install-guide')) return;
-
                 const banner = document.createElement('div');
                 banner.id = 'pwa-install-banner';
-                
                 if (isIOS) {
                     banner.innerHTML = `
                         <div style="display:flex; align-items:center; gap:12px; width:100%;">
@@ -2986,24 +2954,17 @@
                         <button class="banner-close">✕</button>
                     `;
                 }
-
                 document.body.appendChild(banner);
                 setTimeout(() => banner.classList.add('active'), 500);
-
                 const closeBanner = () => {
                     banner.classList.remove('active');
                     if (!force) localStorage.setItem('pwa_banner_dismissed', 'true');
                     setTimeout(() => banner.remove(), 1000);
                 };
-
                 banner.querySelector('.banner-close').onclick = closeBanner;
-
                 const showGuideBtn = banner.querySelector('#pwa-show-guide');
                 if (showGuideBtn) {
-                    showGuideBtn.onclick = () => {
-                        banner.remove();
-                        showActualInstallSteps();
-                    };
+                    showGuideBtn.onclick = () => { banner.remove(); showActualInstallSteps(); };
                 }
                 if (force) showActualInstallSteps();
             }
