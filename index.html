@@ -1323,7 +1323,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.7.9</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.8.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2552,7 +2552,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.7.9</p>
+                        <p>BOXXレジ App v2.8.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2794,8 +2794,7 @@
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
             window.addEventListener('load', () => {
-                // Version 2.7.9 with forced cache busting
-                navigator.serviceWorker.register('./service-worker.js?v=2790')
+                navigator.serviceWorker.register('./service-worker.js?v=2800')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
@@ -2843,7 +2842,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.7.9 (Strict Anti-Blocking)
+         * PWA Bridge - Logic v2.8.0 (Final Version)
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
@@ -2854,6 +2853,7 @@
             const isInApp = isLine || isInstagram || isFB || isTwitter;
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             const isIOS = /iphone|ipad|ipod/.test(ua);
+            const isMobile = /android|iphone|ipad|ipod|windows phone/i.test(ua);
             
             function initPwaBridge() {
                 const existing = document.getElementById('pwa-bridge-overlay');
@@ -2863,9 +2863,12 @@
                 
                 if (isInApp) {
                     showInAppGuide();
-                } else {
-                    document.body.style.pointerEvents = 'auto';
+                } else if (isMobile) {
+                    // Mobile normal browser: Show installation banner
                     setTimeout(showInstallBanner, 3000);
+                } else {
+                    // PC/Desktop: Do nothing, just use normally
+                    console.log('Desktop mode: App ready.');
                 }
             }
 
@@ -2876,29 +2879,26 @@
                 overlay.id = 'pwa-bridge-overlay';
                 overlay.className = 'active';
                 const isIosLine = isIOS && isLine;
+                const menuLoc = isIosLine ? "右下" : "右上"; // iOS LINE is bottom-right, others usually top-right
                 const arrowClass = isIosLine ? "bridge-arrow-bottom" : "bridge-arrow-top";
 
                 overlay.innerHTML = `
-                    <div class="bridge-guide-box" style="padding: 30px 20px; max-width: 320px;">
-                        <button onclick="document.getElementById('pwa-bridge-overlay').remove()" style="position:absolute; top:10px; right:10px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:1.2rem; cursor:pointer;">✕</button>
+                    <div class="bridge-guide-box" style="padding: 35px 25px; max-width: 340px; border: 2px solid rgba(255,255,255,0.1);">
                         <svg class="bridge-arrow ${arrowClass}" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>
                         
-                        <div style="text-align:left; font-size:1.05rem; line-height:1.6; font-weight:bold; color:#fff;">
-                            <p style="margin-bottom:20px;">
-                                画面右下 <span style="font-size:1.4rem; vertical-align:middle;">⋮</span> から<br>
-                                <span style="color:#4cd964; font-size:1.25rem;">ブラウザで開く</span> をタップしてください。
+                        <div style="text-align:left; line-height:1.6; color:#fff;">
+                            <p style="font-size:0.95rem; color:#4cd964; font-weight:bold; margin-bottom:10px;">電波が不安定な場所でも安心して使うために</p>
+                            <p style="font-size:1.15rem; font-weight:900; margin-bottom:20px;">
+                                画面${menuLoc} <span style="font-size:1.5rem; vertical-align:middle;">⋮</span> から<br>
+                                <span style="color:#4cd964; border-bottom:2px solid #4cd964;">ブラウザで開く</span> からお使いください。
                             </p>
                             <p style="font-size:0.85rem; color:#ccc; font-weight:normal; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
-                                このアプリはブラウザで開いてホーム画面に登録すると次回からデータが保存されオフラインでも利用できます。
+                                「ホーム画面に追加」すれば、次回からオフラインでも売上データが保存されます。
                             </p>
                         </div>
-                        
-                        <button onclick="document.getElementById('pwa-bridge-overlay').remove()" style="margin-top:25px; background:none; border:1px solid rgba(255,255,255,0.2); color:#999; padding:8px 20px; border-radius:20px; font-size:0.75rem; cursor:pointer;">
-                            閉じてアプリを使用する
-                        </button>
                     </div>
                 `;
                 document.body.appendChild(overlay);
