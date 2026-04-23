@@ -1324,7 +1324,7 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.8.5</span></h1>
+        <h1>BOXXレジ <span class="version-badge">v2.8.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')">レジ</button>
             <button class="header-btn" onclick="switchView('summary')">集計</button>
@@ -2553,7 +2553,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.8.5</p>
+                        <p>BOXXレジ App v2.8.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -2795,7 +2795,7 @@
         if ('serviceWorker' in navigator) {
             let swRegistration = null;
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=2850')
+                navigator.serviceWorker.register('./service-worker.js?v=2860')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
@@ -2850,7 +2850,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.8.5 (Final Polish)
+         * PWA Bridge - Logic v2.8.6
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
@@ -2908,11 +2908,9 @@
                         </svg>
                         
                         <div style="text-align:left; line-height:1.7; color:#fff; font-size:1rem; font-weight:normal;">
-                            <p style="margin-bottom:15px; color:#ccc;">
-                                このアプリはオフラインでもご利用いただけますが、
-                            </p>
                             <p style="margin-bottom:15px; color:#fff;">
-                                商品データを保存するために画面${menuLoc} <span style="font-size:1.3rem; vertical-align:middle;">⋮</span> の<br>
+                                このアプリはオフラインでもご利用いただけますが、商品データを保存するために<br>
+                                画面${menuLoc} <span style="font-size:1.3rem; vertical-align:middle;">⋮</span> の
                                 <span style="color:#4cd964; font-weight:bold;">ブラウザで開く</span> からご利用いただくことを推奨いたします。
                             </p>
                             <p style="border-top:1px solid rgba(255,255,255,0.1); padding-top:15px; color:#ccc; font-size:0.9rem;">
