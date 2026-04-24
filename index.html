@@ -1441,7 +1441,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v2.9.2</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1472,7 +1472,7 @@
                 <div id="cartItems" class="cart-items">
                     <div style="text-align: center; color: #999; margin-top: 20px;" data-i18n="emptyCart">カートは空です</div>
                 </div>
-                <div class="cart-total"><span data-i18n="total">合計</span>: <span id="currencySymbol">¥</span><span id="cartTotal">0</span></div>
+                <div class="cart-total"><span data-i18n="total">合計</span>: <span id="cartTotal">0</span></div>
                 <button class="btn-checkout" onclick="checkout()" data-i18n="checkoutBtn">会計する</button>
             </aside>
         </div>
@@ -1636,7 +1636,7 @@
 
             <div style="text-align: center; margin-bottom: 5px;">
                 <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;" data-i18n="total">Total</div>
-                <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;">¥0</div>
+                <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;"><span class="currencySymbol">¥</span>0</div>
             </div>
 
             <div class="payment-methods" style="margin-bottom: 10px;">
@@ -1657,7 +1657,7 @@
                     <div style="display: flex; gap: 10px; margin-top: 0px; justify-content: center; margin-bottom: 8px;">
                         <input type="number" id="amountReceived" class="form-control"
                             style="font-size: 1.8rem; text-align: center; padding: 10px; font-weight:900; background:#fff; border:2px solid var(--primary-color); height: auto; margin-bottom: 0;" 
-                            placeholder="¥0" oninput="updateChange()">
+                            placeholder="0" oninput="updateChange()">
                     </div>
 
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
@@ -1679,7 +1679,7 @@
 
                 <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 4px; padding: 8px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
                     <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;" data-i18n="changeAmount">Change</div>
-                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
+                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);"><span class="currencySymbol">¥</span>0</div>
                 </div>
             </div>
 
@@ -1763,6 +1763,9 @@
                 resetSales: "Reset Daily Sales",
                 checkSupplies: "📦 Check Supplies (Amazon)",
                 amazonBtn: "Check Stock",
+                globalSettings: "Global Settings",
+                displayLanguage: "Display Language",
+                currencyRegion: "Currency & Region",
                 morning: "Good Morning!",
                 ready: "Ready to start?",
                 startWithSupplies: "📦 Check Supplies & Start",
@@ -2119,7 +2122,8 @@
             pt: { symbol: "€", domain: "www.amazon.pt", kw: "Fita+Gaffer+Preta" }
         };
 
-        let currentLocale = 'ja';
+        let currentLanguage = 'ja';
+        let currentRegion = 'ja';
 
         function getSystemLanguage() {
             const lang = (navigator.language || navigator.userLanguage).toLowerCase();
@@ -2134,7 +2138,7 @@
         }
 
         function t(key) {
-            return I18N[currentLocale][key] || I18N['en'][key] || key;
+            return I18N[currentLanguage][key] || I18N['en'][key] || key;
         }
 
         function applyTranslations() {
@@ -2152,17 +2156,27 @@
         }
 
         function getCurrencySymbol() {
-            return (CURRENCY_CONFIG[currentLocale] || CURRENCY_CONFIG['en']).symbol;
+            return (CURRENCY_CONFIG[currentRegion] || CURRENCY_CONFIG['en']).symbol;
         }
 
         function getRandomAmazonLink() {
-            const config = CURRENCY_CONFIG[currentLocale] || CURRENCY_CONFIG['en'];
+            const config = CURRENCY_CONFIG[currentRegion] || CURRENCY_CONFIG['en'];
             const tag = "jackpotrash-22";
             return `https://${config.domain}/s?k=${config.kw}&tag=${tag}`;
         }
 
-        // Initialize Locale
-        currentLocale = getSystemLanguage();
+        function updateCurrencyUI() {
+            const symbol = getCurrencySymbol();
+            document.querySelectorAll('.currencySymbol').forEach(el => {
+                el.textContent = symbol;
+            });
+            const input = document.getElementById('amountReceived');
+            if (input) input.placeholder = `${symbol}0`;
+        }
+
+        // Initialize Settings (will be overridden by loadData)
+        currentLanguage = getSystemLanguage();
+        currentRegion = getSystemLanguage();
 
         // --- Default Data ---
         const DEFAULT_PRODUCTS = [];
@@ -2225,6 +2239,12 @@
         }
 
         function loadData() {
+            // Load Settings
+            const savedLang = localStorage.getItem('pos_language');
+            if (savedLang) currentLanguage = savedLang;
+            const savedReg = localStorage.getItem('pos_region');
+            if (savedReg) currentRegion = savedReg;
+
             const savedProds = localStorage.getItem('pos_products');
             if (savedProds) {
                 products = JSON.parse(savedProds);
@@ -2258,6 +2278,9 @@
                 sessionStartTime = now.getTime();
                 saveSession();
             }
+
+            applyTranslations(); // Apply loaded language
+            updateCurrencyUI();   // Apply loaded currency
         }
 
         function saveProducts() {
@@ -2270,6 +2293,39 @@
 
         function saveSession() {
             localStorage.setItem('pos_session_start', sessionStartTime.toString());
+        }
+
+        function saveSettings() {
+            localStorage.setItem('pos_language', currentLanguage);
+            localStorage.setItem('pos_region', currentRegion);
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            saveSettings();
+            applyTranslations();
+            renderProducts();
+            updateCartUI();
+            if (document.getElementById('summaryView').classList.contains('active')) {
+                renderSummary();
+            }
+            if (document.getElementById('settingsView').classList.contains('active')) {
+                renderSettingsList();
+            }
+        }
+
+        function changeRegion(reg) {
+            currentRegion = reg;
+            saveSettings();
+            updateCurrencyUI();
+            renderProducts();
+            updateCartUI();
+            if (document.getElementById('summaryView').classList.contains('active')) {
+                renderSummary();
+            }
+            if (document.getElementById('settingsView').classList.contains('active')) {
+                renderSettingsList();
+            }
         }
 
         function resetToDefaultData() {
@@ -2591,7 +2647,7 @@
                     cartItemsContainer.appendChild(el);
                 });
             }
-            cartTotalEl.textContent = total.toLocaleString();
+            cartTotalEl.textContent = `${getCurrencySymbol()}${total.toLocaleString()}`;
         }
 
         // Global Payment State
@@ -2625,6 +2681,7 @@
             document.getElementById('paymentTotal').textContent = `${getCurrencySymbol()}${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
             document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}0`;
+            updatePaymentUI();
 
             const btn = document.getElementById('btnCompletePayment');
             btn.disabled = true;
@@ -2716,7 +2773,7 @@
         function finalizeCheckout() {
             const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
             const timestamp = Date.now();
-            const CACHE_NAME = 'boxx-reg-v56'; // Update v2.9.2
+            const CACHE_NAME = 'boxx-reg-v57'; // Update v3.0.0
 
             cart.forEach(item => {
                 const count = item.count || 1; // Fix: Default to 1 if undefined
@@ -2910,7 +2967,7 @@
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
 
-            const dayNames = currentLocale === 'ja' ? ['日', '月', '火', '水', '木', '金', '土'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const dayNames = currentLanguage === 'ja' ? ['日', '月', '火', '水', '木', '金', '土'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             dayNames.forEach(d => {
                 const div = document.createElement('div');
                 div.className = 'calendar-day-header';
@@ -2927,10 +2984,10 @@
 
             for (let d = 1; d <= lastDay.getDate(); d++) {
                 const dateObj = new Date(year, month, d);
-                const dateStr = dateObj.toLocaleDateString(currentLocale);
+                const dateStr = dateObj.toLocaleDateString(currentLanguage);
 
-                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString(currentLocale) === dateStr);
-                const isToday = new Date().toLocaleDateString(currentLocale) === dateStr;
+                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString(currentLanguage) === dateStr);
+                const isToday = new Date().toLocaleDateString(currentLanguage) === dateStr;
 
                 const cell = document.createElement('div');
                 cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
@@ -2952,7 +3009,7 @@
             title.textContent = `${dateStr} ${t('salesToday')}`;
             content.innerHTML = '';
 
-            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString(currentLocale) === dateStr);
+            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString(currentLanguage) === dateStr);
 
             if (logs.length === 0) {
                 content.innerHTML = `<div style="color:#999; text-align:center; margin-top:50px;">${t('noProducts')}</div>`;
@@ -3011,7 +3068,7 @@
 
             salesLog.forEach(log => {
                 const date = new Date(log.timestamp);
-                const dateStr = date.toLocaleString(currentLocale);
+                const dateStr = date.toLocaleString(currentLanguage);
                 const method = log.paymentMethod === 'credit' ? t('credit') : t('cash');
                 csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price},"${method}"\n`;
             });
@@ -3073,6 +3130,37 @@
                             <span style="color:#666; font-size:0.75rem;">全画面表示になり、より本物のレジのように使いやすくなります。</span>
                         </div>
                         <button onclick="showInstallBanner(true)" style="background:var(--primary-color); color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">ガイドを表示</button>
+                    </div>
+
+                    <!-- Global Settings Card -->
+                    <div class="settings-card">
+                        <h3 data-i18n="globalSettings">全体設定</h3>
+                        <div class="form-group">
+                            <label data-i18n="displayLanguage">表示言語</label>
+                            <select class="form-control" onchange="changeLanguage(this.value)">
+                                <option value="ja" ${currentLanguage === 'ja' ? 'selected' : ''}>日本語</option>
+                                <option value="en" ${currentLanguage === 'en' ? 'selected' : ''}>English</option>
+                                <option value="zh" ${currentLanguage === 'zh' ? 'selected' : ''}>中国語 (簡体字)</option>
+                                <option value="tw" ${currentLanguage === 'tw' ? 'selected' : ''}>中国語 (繁体字)</option>
+                                <option value="es" ${currentLanguage === 'es' ? 'selected' : ''}>Español</option>
+                                <option value="fr" ${currentLanguage === 'fr' ? 'selected' : ''}>Français</option>
+                                <option value="de" ${currentLanguage === 'de' ? 'selected' : ''}>Deutsch</option>
+                                <option value="pt" ${currentLanguage === 'pt' ? 'selected' : ''}>Português</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="currencyRegion">通貨・地域</label>
+                            <select class="form-control" onchange="changeRegion(this.value)">
+                                <option value="ja" ${currentRegion === 'ja' ? 'selected' : ''}>日本 (¥ / amazon.co.jp)</option>
+                                <option value="en" ${currentRegion === 'en' ? 'selected' : ''}>US ($ / amazon.com)</option>
+                                <option value="zh" ${currentRegion === 'zh' ? 'selected' : ''}>China (¥ / amazon.cn)</option>
+                                <option value="tw" ${currentRegion === 'tw' ? 'selected' : ''}>Taiwan ($ / amazon.com)</option>
+                                <option value="es" ${currentRegion === 'es' ? 'selected' : ''}>Spain (€ / amazon.es)</option>
+                                <option value="fr" ${currentRegion === 'fr' ? 'selected' : ''}>France (€ / amazon.fr)</option>
+                                <option value="de" ${currentRegion === 'de' ? 'selected' : ''}>Germany (€ / amazon.de)</option>
+                                <option value="pt" ${currentRegion === 'pt' ? 'selected' : ''}>Portugal (€ / amazon.pt)</option>
+                            </select>
+                        </div>
                     </div>
                     <!-- New Product Form -->
                     <div class="settings-card">
@@ -3140,7 +3228,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v2.9.2</p>
+                        <p>BOXXレジ App v3.0.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3465,7 +3553,7 @@
         }
 
         /**
-         * PWA Bridge - Logic v2.9.2
+         * PWA Bridge - Logic v3.0.0
          */
         (function() {
             const ua = navigator.userAgent.toLowerCase();
