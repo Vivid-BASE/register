@@ -2124,6 +2124,26 @@
 
         let currentLanguage = 'ja';
         let currentRegion = 'ja';
+        let currentCheckoutTotal = 0; // Track total numerically
+
+        function formatCurrency(amount) {
+            const localeMap = {
+                ja: 'ja-JP', en: 'en-US', zh: 'zh-CN', tw: 'zh-TW',
+                es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT'
+            };
+            const currencyMap = {
+                ja: 'JPY', en: 'USD', zh: 'CNY', tw: 'TWD',
+                es: 'EUR', fr: 'EUR', de: 'EUR', pt: 'EUR'
+            };
+            const locale = localeMap[currentRegion] || 'en-US';
+            const currency = currencyMap[currentRegion] || 'USD';
+            
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: (currency === 'JPY') ? 0 : 2
+            }).format(amount);
+        }
 
         function getSystemLanguage() {
             const lang = (navigator.language || navigator.userLanguage).toLowerCase();
@@ -2678,6 +2698,7 @@
             });
 
             const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
+            currentCheckoutTotal = total; 
             document.getElementById('paymentTotal').textContent = `${formatCurrency(total)}`;
             document.getElementById('amountReceived').value = '';
             document.getElementById('paymentChange').textContent = `${formatCurrency(0)}`;
@@ -2727,8 +2748,7 @@
                 input.style.color = '#777';
 
                 // Auto-fill amount received for cashless
-                const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
-                input.value = totalText;
+                input.value = currentCheckoutTotal;
             }
         }
 
@@ -2743,8 +2763,7 @@
         }
 
         function setExactAmount() {
-            const totalText = document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, '');
-            const total = parseInt(totalText);
+            const total = currentCheckoutTotal;
             if (!isNaN(total)) {
                 document.getElementById('amountReceived').value = total;
                 updateChange();
@@ -2752,8 +2771,7 @@
         }
 
         function updateChange() {
-            const totalText = document.getElementById('paymentTotal').textContent.replace(/[^-0-9]/g, '');
-            const total = parseInt(totalText);
+            const total = currentCheckoutTotal;
             const received = parseInt(document.getElementById('amountReceived').value);
             const btn = document.getElementById('btnCompletePayment');
 
@@ -2771,7 +2789,7 @@
         }
 
         function finalizeCheckout() {
-            const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
+            const total = currentCheckoutTotal;
             const timestamp = Date.now();
             const CACHE_NAME = 'boxx-reg-v57'; // Update v3.0.0
 
@@ -3206,7 +3224,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.0.0</p>
+                        <p>BOXXレジ App v3.0.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>

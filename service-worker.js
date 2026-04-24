@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v58'; // v3.0.0 globalization
+const CACHE_NAME = 'boxx-reg-v59'; // v3.0.1 globalization fix
 const ASSETS = [
   './',
   './index.html',
