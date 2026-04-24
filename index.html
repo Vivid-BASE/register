@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BOXXレジ</title>
-    <meta name="apple-mobile-web-app-title" content="BOXXレジ">
+    <title data-i18n="appName">BOXX Register</title>
+    <meta name="apple-mobile-web-app-title" content="BOXX Register">
     
     <!-- LINE / SNS Sharing (OGP) -->
-    <meta property="og:title" content="BOXXレジ | シンプル物販管理">
-    <meta property="og:description" content="SHOWTIMEBOXXが提供する、オフライン対応の「BOXXレジ」アプリ。在庫管理から売上集計まで、その場で完結。">
-    <meta name="description" content="SHOWTIMEBOXXが提供する、オフライン対応の「BOXXレジ」アプリ。在庫管理から売上集計まで、その場ですぐに完結。">
+    <meta property="og:title" content="BOXX Register | Simple Sales Management">
+    <meta property="og:description" content="Simple sales management app provided by SHOWTIMEBOXX.">
+    <meta name="description" content="Simple sales management app provided by SHOWTIMEBOXX.">
     <meta property="og:image" content="https://register-492.pages.dev/icon-v11.png?v=11">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://register-492.pages.dev/">
@@ -1441,11 +1441,11 @@
     </div>
 
     <header>
-        <h1>BOXXレジ <span class="version-badge">v2.9.2</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v2.9.2</span></h1>
         <div class="header-buttons">
-            <button class="header-btn" onclick="switchView('shop')">レジ</button>
-            <button class="header-btn" onclick="switchView('summary')">集計</button>
-            <button class="header-btn" onclick="switchView('settings')">設定</button>
+            <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
+            <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
+            <button class="header-btn" onclick="switchView('settings')" data-i18n="settings">設定</button>
         </div>
     </header>
 
@@ -1457,23 +1457,23 @@
             <main class="product-area">
                 <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=shop_view" target="_blank" class="ad-banner ad-theme-lab">
                     <div class="ad-banner-title">SHOWTIMEBOXX LAB</div>
-                    <div class="ad-banner-text">業務効率化！オリジナルアプリ開発</div>
+                    <div class="ad-banner-text" data-i18n="adLab">業務効率化！オリジナルアプリ開発</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="margin: 0; font-size: 1.2rem; color: #333;">商品一覧</h2>
+                    <h2 style="margin: 0; font-size: 1.2rem; color: #333;" data-i18n="productList">商品一覧</h2>
                 </div>
                 <div id="productGrid" class="product-grid">
                     <!-- Items injected by JS -->
                 </div>
             </main>
             <aside class="cart-area">
-                <h2 class="cart-title">カート</h2>
+                <h2 class="cart-title" data-i18n="cart">カート</h2>
                 <div id="cartItems" class="cart-items">
-                    <div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>
+                    <div style="text-align: center; color: #999; margin-top: 20px;" data-i18n="emptyCart">カートは空です</div>
                 </div>
-                <div class="cart-total">合計: ¥<span id="cartTotal">0</span></div>
-                <button class="btn-checkout" onclick="checkout()">会計する</button>
+                <div class="cart-total"><span data-i18n="total">合計</span>: <span id="currencySymbol">¥</span><span id="cartTotal">0</span></div>
+                <button class="btn-checkout" onclick="checkout()" data-i18n="checkoutBtn">会計する</button>
             </aside>
         </div>
 
@@ -1481,11 +1481,11 @@
         <div id="settingsView" class="view-content">
             <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
                 <div class="ad-banner-title">SHOWTIMEBOXX CREATIVE</div>
-                <div class="ad-banner-text">HP制作ならおまかせ</div>
+                <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">商品登録・編集</h2>
+                <h2 style="margin: 0;" data-i18n="productEntry">商品登録・編集</h2>
             </div>
             <!-- 有料機能: データ初期化ボタンを削除 -->
 
@@ -1497,35 +1497,35 @@
         <div id="summaryView" class="view-content">
             <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
                 <div class="ad-banner-title">SHOWTIMEBOXX</div>
-                <div class="ad-banner-text">オンラインレッスン・イベント企画</div>
+                <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">本日の集計</h2>
+                <h2 style="margin: 0;" data-i18n="todaySummary">本日の集計</h2>
             </div>
             <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
             <table class="summary-table">
                 <thead>
                     <tr>
-                        <th style="text-align: left;">商品名 - バリエーション</th>
-                        <th>単価</th>
-                        <th>本日売れた数</th>
-                        <th>残り在庫</th>
-                        <th>決済</th>
-                        <th style="width: 50px;">取消</th>
+                        <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
+                        <th data-i18n="unitPrice">単価</th>
+                        <th data-i18n="soldCount">本日売れた数</th>
+                        <th data-i18n="stockCount">残り在庫</th>
+                        <th data-i18n="paymentMethod">決済</th>
+                        <th style="width: 50px;" data-i18n="remove">取消</th>
                     </tr>
                 </thead>
                 <tbody id="summaryTableBody"></tbody>
             </table>
 
             <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                <button onclick="resetSession()"
+                <button onclick="resetSession()" data-i18n="resetSales"
                     style="padding: 12px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(255,59,48,0.2);">
                     本日の売上をリセット
                 </button>
-                <div style="font-size: 0.85rem; color: #777; margin-top: 5px;">次回に向けての準備はお済みですか？</div>
-                <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;"
+                <div style="font-size: 0.85rem; color: #777; margin-top: 5px;" data-i18n="readyDesc">次回に向けての準備はお済みですか？</div>
+                <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;" data-i18n="checkSupplies"
                    style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                     📦 不足している備品をチェック (Amazon)
                 </a>
@@ -1545,7 +1545,7 @@
             </div>
 
             <div id="quickButtonsArea" class="variant-section">
-                <span class="variant-label">よく使う項目 (タップで追加)</span>
+                <span class="variant-label" data-i18n="variantLabel">よく使う項目 (タップで追加)</span>
                 <div id="quickButtonsGrid" class="quick-buttons"></div>
             </div>
 
@@ -1563,7 +1563,7 @@
             <div id="calendarGridView" style="flex: 1; overflow-y: auto;">
                 <div class="calendar-header">
                     <button onclick="changeMonth(-1)" style="background:none; border:none; font-size:1.2rem;">◀</button>
-                    <h3 id="calendarTitle" style="margin:0;">2026年 1月</h3>
+                    <h3 id="calendarMonthTitle" style="margin:0;">2026年 1月</h3>
                     <button onclick="changeMonth(1)" style="background:none; border:none; font-size:1.2rem;">▶</button>
                 </div>
                 <div class="calendar-grid" id="calendarGrid">
@@ -1572,7 +1572,7 @@
             </div>
 
             <div id="calendarDetailView" style="display:none; flex: 1; flex-direction: column; overflow-y: auto;">
-                <button onclick="showCalendarGrid()"
+                <button onclick="showCalendarGrid()" data-i18n="backToCalendar"
                     style="margin-bottom: 15px; background:none; border:none; color:var(--primary-color); font-size:1rem; cursor:pointer;">◀
                     カレンダーに戻る</button>
                 <h3 id="calendarDetailTitle"
@@ -1588,10 +1588,10 @@
     <!-- Daily Startup Modal -->
     <div class="modal-overlay" id="dailyStartModal" style="z-index: 200;">
         <div class="modal-content" style="max-width: 350px; text-align: center; padding: 30px 20px;">
-            <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;">おはようございます！</h2>
-            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 25px;">準備は万全ですか？</p>
+            <h2 style="font-size: 1.7rem; margin-top: 0; color: #333; margin-bottom: 10px;" data-i18n="morning">おはようございます！</h2>
+            <p style="font-size: 1.25rem; font-weight: bold; color: #555; margin-bottom: 25px;" data-i18n="ready">準備は万全ですか？</p>
             
-            <button onclick="confirmAndOpenAmazon()"
+            <button onclick="confirmAndOpenAmazon()" data-i18n="startWithSupplies"
                 style="display: block; width: 100%; padding: 18px; background: #232f3e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.15rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin-bottom: 25px;">
                 📦 備品を確認して開始する
             </button>
@@ -1627,7 +1627,7 @@
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
-                <h2 style="font-size: 1.5rem;">お会計</h2>
+                <h2 style="font-size: 1.5rem;" data-i18n="paymentTitle">Payment</h2>
                 <button class="close-btn" onclick="closePaymentModal()">×</button>
             </div>
             
@@ -1635,23 +1635,23 @@
             </div>
 
             <div style="text-align: center; margin-bottom: 5px;">
-                <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;">合計</div>
+                <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;" data-i18n="total">Total</div>
                 <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;">¥0</div>
             </div>
 
             <div class="payment-methods" style="margin-bottom: 10px;">
-                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash">現金</button>
+                <button class="payment-method-btn active" onclick="setPaymentMethod('cash')" id="pm-cash" data-i18n="cash">Cash</button>
                 <button class="payment-method-btn" onclick="setPaymentMethod('paypay')" id="pm-paypay">PayPay</button>
-                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit">クレジット</button>
+                <button class="payment-method-btn" onclick="setPaymentMethod('credit')" id="pm-credit" data-i18n="credit">Credit</button>
             </div>
 
             <!-- Cash Input Area -->
             <div id="cashInputArea">
                 <div class="form-group" style="margin-bottom: 5px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <label style="font-size:1.1rem; font-weight:bold; color:#555; margin:0;">お預かり金額</label>
+                        <label style="font-size:1.1rem; font-weight:bold; color:#555; margin:0;" data-i18n="receivedAmount">Amount Received</label>
                         <button onclick="document.getElementById('amountReceived').value=''; updateChange();" 
-                                style="padding: 4px 12px; background: #fff; color: #ff3b30; border: 1px solid #ff3b30; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer;">クリア</button>
+                                style="padding: 4px 12px; background: #fff; color: #ff3b30; border: 1px solid #ff3b30; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer;" data-i18n="cancel">Clear</button>
                     </div>
                     
                     <div style="display: flex; gap: 10px; margin-top: 0px; justify-content: center; margin-bottom: 8px;">
@@ -1662,23 +1662,23 @@
 
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px;">
                         <button onclick="setReceivedAmount(100)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥100</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">100</button>
                         <button onclick="setReceivedAmount(500)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥500</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">500</button>
                         <button onclick="setReceivedAmount(1000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1,000</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">1,000</button>
                         
                         <button onclick="setReceivedAmount(5000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥5,000</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">5,000</button>
                         <button onclick="setReceivedAmount(10000)"
-                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">¥1万</button>
+                            style="padding:10px 2px; background:#e9ecef; border:1px solid #ccc; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">10,000</button>
                         <button onclick="setExactAmount()"
-                            style="padding:10px 2px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;">ピッタリ</button>
+                            style="padding:10px 2px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;" data-i18n="complete">Exact</button>
                     </div>
                 </div>
 
                 <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 4px; padding: 8px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
-                    <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;">お釣り</div>
+                    <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;" data-i18n="changeAmount">Change</div>
                     <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">¥0</div>
                 </div>
             </div>
@@ -1705,6 +1705,464 @@
         function getRandomAmazonLink() {
             return AMAZON_LINKS[Math.floor(Math.random() * AMAZON_LINKS.length)];
         }
+
+        // --- Global I18N Configuration (8 Languages / 88 Countries) ---
+        const I18N = {
+            ja: {
+                appName: "BOXXレジ",
+                tagline: "シンプル物販管理",
+                shop: "レジ",
+                settings: "設定",
+                summary: "集計",
+                cart: "カート",
+                total: "合計",
+                checkout: "決済",
+                emptyCart: "カートは空です",
+                productEntry: "商品登録・編集",
+                todaySummary: "本日の集計",
+                resetSales: "本日の売上をリセット",
+                checkSupplies: "📦 不足している備品をチェック (Amazon)",
+                amazonBtn: "在庫確認",
+                morning: "おはようございます！",
+                ready: "準備は万全ですか？",
+                startWithSupplies: "📦 備品を確認して開始する",
+                jan: "1月", feb: "2月", mar: "3月", apr: "4月", may: "5月", jun: "6月",
+                jul: "7月", aug: "8月", sep: "9月", oct: "10月", nov: "11月", dec: "12月",
+                year: "年",
+                edit: "編集",
+                delete: "削除",
+                variantsCount: "バリエーション",
+                updateOverride: "更新する (上書き)",
+                editProductTitle: "商品を編集する",
+                enterProductName: "商品名を入力してください",
+                enterAtLeastOneVariant: "少なくとも1つのバリエーションを入力してください",
+                confirmDeleteProduct: "本当に削除しますか？",
+                updating: "強制アップデートを実行中...",
+                menuLocRightBottom: "右下",
+                menuLocRightTop: "右上",
+                inAppGuideLong: "このアプリはオフラインでもご利用いただけますが、商品データを保存するために<br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">画面{menuLoc} <span style=\"font-size:1.8rem; vertical-align:middle; line-height:0;\">⋮</span> の ブラウザで開く</span> <br>からご利用いただくことを推奨いたします。",
+                afterInAppGuide: "その後「ホーム画面に追加」していただくと、普通のアプリの様にご利用いただけます。",
+                regular: "通常",
+                pwaInstallGuideTitle: "📱 ホーム画面に追加する手順",
+                pwaStep1Long: "① Safari下の <strong>共有ボタン</strong> ( <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" style=\"vertical-align:middle; display:inline-block;\"><path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"></path><polyline points=\"16 6 12 2 8 6\"></polyline><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"15\"></line></svg> ) をタップ",
+                pwaStep2Long: "② メニューにある <strong>「ホーム画面に追加」</strong> を選択してください。",
+                noStock: "在庫が足りません"
+            },
+            en: {
+                appName: "BOXX Register",
+                tagline: "Simple Sales Management",
+                shop: "Shop",
+                settings: "Settings",
+                summary: "Sales",
+                cart: "Cart",
+                total: "Total",
+                checkout: "Checkout",
+                emptyCart: "Cart is empty",
+                productEntry: "Register Products",
+                todaySummary: "Daily Summary",
+                resetSales: "Reset Daily Sales",
+                checkSupplies: "📦 Check Supplies (Amazon)",
+                amazonBtn: "Check Stock",
+                morning: "Good Morning!",
+                ready: "Ready to start?",
+                startWithSupplies: "📦 Check Supplies & Start",
+                calendarTitle: "Sales Calendar",
+                backToCalendar: "◀ Back to Calendar",
+                noProducts: "No products registered",
+                guideText: "First, let's register products in <strong>Settings</strong>!",
+                addInSettings: "Add in Settings",
+                pwaBannerTitle: "Add to Home Screen",
+                pwaBannerDesc: "Experience it like a native app",
+                pwaGuideBtn: "How to",
+                inAppGuide: "Open in Browser",
+                inAppDesc: "This app works offline, but we recommend opening it in a browser to save data correctly.",
+                pwaStepsTitle: "📱 Add to Home Screen",
+                step1: "① Tap the <strong>Share button</strong> in Safari",
+                step2: "② Select <strong>'Add to Home Screen'</strong> from the menu.",
+                cancel: "Cancel",
+                confirmReset: "Are you sure you want to reset today's sales?",
+                confirmDelete: "Delete this product/variant?",
+                saveToHistory: "Saved to History",
+                removedFromHistory: "Removed from History",
+                paymentTitle: "Payment",
+                receivedAmount: "Amount Received",
+                changeAmount: "Change",
+                complete: "Done",
+                variantLabel: "Common Items (Tap to Add)",
+                stockPrefix: "Stock",
+                priceSuffix: "~",
+                verTitle: "Version",
+                updateNow: "Update",
+                productList: "Product List",
+                adLab: "Business efficiency! App development",
+                adCreative: "Web production & design",
+                adMain: "Online lessons & events",
+                productNameVar: "Product - Variant",
+                unitPrice: "Price",
+                soldCount: "Sold Today",
+                stockCount: "Stock",
+                paymentMethod: "Method",
+                remove: "Del",
+                readyDesc: "Ready for the next event?",
+                checkoutBtn: "Checkout",
+                cash: "Cash",
+                credit: "Credit",
+                salesToday: "Sales",
+                jan: "Jan", feb: "Feb", mar: "Mar", apr: "Apr", may: "May", jun: "Jun",
+                jul: "Jul", aug: "Aug", sep: "Sep", oct: "Oct", nov: "Nov", dec: "Dec",
+                year: "",
+                edit: "Edit",
+                delete: "Delete",
+                variantsCount: "Variants",
+                updateOverride: "Update (Overwrite)",
+                editProductTitle: "Edit Product",
+                enterProductName: "Please enter product name",
+                enterAtLeastOneVariant: "Please enter at least one variant",
+                confirmDeleteProduct: "Are you sure you want to delete this?",
+                updating: "Force updating...",
+                menuLocRightBottom: "bottom-right",
+                menuLocRightTop: "top-right",
+                inAppGuideLong: "This app works offline, but to save product data, we recommend opening it in a <br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">browser via the {menuLoc} <span style=\"font-size:1.8rem; vertical-align:middle; line-height:0;\">⋮</span> menu</span>.",
+                afterInAppGuide: "Then use 'Add to Home Screen' to use it like a native app.",
+                regular: "Regular",
+                pwaInstallGuideTitle: "📱 How to Add to Home Screen",
+                pwaStep1Long: "① Tap the <strong>Share button</strong> ( <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" style=\"vertical-align:middle; display:inline-block;\"><path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"></path><polyline points=\"16 6 12 2 8 6\"></polyline><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"15\"></line></svg> ) at the bottom of Safari",
+                pwaStep2Long: "② Select <strong>'Add to Home Screen'</strong> from the menu.",
+                noStock: "Not enough stock"
+            },
+            zh: { // Simplified Chinese
+                appName: "BOXX收银台",
+                tagline: "简易销售管理",
+                shop: "收银",
+                settings: "设置",
+                summary: "统计",
+                cart: "购物车",
+                total: "总计",
+                checkout: "结账",
+                emptyCart: "购物车为空",
+                productEntry: "商品登记・编辑",
+                todaySummary: "今日统计",
+                resetSales: "重置今日销售额",
+                checkSupplies: "📦 检查物资 (Amazon)",
+                amazonBtn: "检查库存",
+                morning: "早上好！",
+                ready: "准备好了吗？",
+                startWithSupplies: "📦 检查物资并开始",
+                calendarTitle: "销售日历",
+                backToCalendar: "◀ 返回日历",
+                noProducts: "未登记商品",
+                guideText: "首先，请在<strong>设置</strong>中登记商品！",
+                addInSettings: "在设置中添加",
+                pwaBannerTitle: "添加到主屏幕",
+                pwaBannerDesc: "像原生应用一样使用",
+                pwaGuideBtn: "设置方法",
+                inAppGuide: "在浏览器中打开",
+                inAppDesc: "此应用可离线使用，但建议在浏览器中打开以正确保存数据。",
+                pwaStepsTitle: "📱 添加到主屏幕步骤",
+                step1: "① 点击 Safari 下方的 <strong>分享按钮</strong>",
+                step2: "② 在菜单中选择 <strong>“添加到主屏幕”</strong>。",
+                cancel: "取消",
+                confirmReset: "确定要重置今日销售额吗？",
+                confirmDelete: "确定要删除此商品吗？",
+                saveToHistory: "已保存到历史记录",
+                removedFromHistory: "已从历史记录中删除",
+                paymentTitle: "结账",
+                receivedAmount: "收款金额",
+                changeAmount: "找零",
+                complete: "完成",
+                variantLabel: "常用项目 (点击添加)",
+                stockPrefix: "存",
+                priceSuffix: "~",
+                verTitle: "版本",
+                updateNow: "更新"
+            },
+            tw: { // Traditional Chinese
+                appName: "BOXX收銀台",
+                tagline: "簡易銷售管理",
+                shop: "收銀",
+                settings: "設置",
+                summary: "統計",
+                cart: "購物車",
+                total: "總計",
+                checkout: "結帳",
+                emptyCart: "購物車為空",
+                productEntry: "商品登記・編輯",
+                todaySummary: "今日統計",
+                resetSales: "重置今日銷售額",
+                checkSupplies: "📦 檢查物資 (Amazon)",
+                amazonBtn: "檢查庫存",
+                morning: "早上好！",
+                ready: "準備好了嗎？",
+                startWithSupplies: "📦 檢查物資並開始",
+                calendarTitle: "銷售日曆",
+                backToCalendar: "◀ 返回日曆",
+                noProducts: "未登記商品",
+                guideText: "首先，請在<strong>設置</strong>中登記商品！",
+                addInSettings: "在設置中添加",
+                pwaBannerTitle: "添加到主螢幕",
+                pwaBannerDesc: "像原生應用一樣使用",
+                pwaGuideBtn: "設置方法",
+                inAppGuide: "在瀏覽器中打開",
+                inAppDesc: "此應用可離線使用，但建議在瀏覽器中打開以正確保存數據。",
+                pwaStepsTitle: "📱 添加到主螢幕步驟",
+                step1: "① 點擊 Safari 下方的 <strong>分享按鈕</strong>",
+                step2: "② 在菜單中選擇 <strong>「添加到主螢幕」</strong>。",
+                cancel: "取消",
+                confirmReset: "確定要重置今日銷售額嗎？",
+                confirmDelete: "確定要刪除此商品嗎？",
+                saveToHistory: "已保存到歷史記錄",
+                removedFromHistory: "已從歷史記錄中刪除",
+                paymentTitle: "結帳",
+                receivedAmount: "收款金額",
+                changeAmount: "找零",
+                complete: "完成",
+                variantLabel: "常用項目 (點擊添加)",
+                stockPrefix: "存",
+                priceSuffix: "~",
+                verTitle: "版本",
+                updateNow: "更新"
+            },
+            es: {
+                appName: "Caja BOXX",
+                tagline: "Gestión de Ventas Simple",
+                shop: "Tienda",
+                settings: "Ajustes",
+                summary: "Ventas",
+                cart: "Carrito",
+                total: "Total",
+                checkout: "Pagar",
+                emptyCart: "Carrito vacío",
+                productEntry: "Registro de Productos",
+                todaySummary: "Resumen Diario",
+                resetSales: "Reiniciar Ventas Diarias",
+                checkSupplies: "📦 Revisar Suministros (Amazon)",
+                amazonBtn: "Ver Stock",
+                morning: "¡Buenos días!",
+                ready: "¿Listo para empezar?",
+                startWithSupplies: "📦 Revisar y Empezar",
+                calendarTitle: "Calendario de Ventas",
+                backToCalendar: "◀ Volver al Calendario",
+                noProducts: "No hay productos",
+                guideText: "¡Primero, registra productos en <strong>Ajustes</strong>!",
+                addInSettings: "Añadir en Ajustes",
+                pwaBannerTitle: "Añadir a Inicio",
+                pwaBannerDesc: "Úsalo como una app nativa",
+                pwaGuideBtn: "Cómo hacerlo",
+                inAppGuide: "Abrir en Navegador",
+                inAppDesc: "Esta app funciona offline, pero se recomienda abrir en el navegador para guardar datos.",
+                pwaStepsTitle: "📱 Añadir a Pantalla de Inicio",
+                step1: "① Toca el <strong>botón Compartir</strong> en Safari",
+                step2: "② Selecciona <strong>'Añadir a pantalla de inicio'</strong>.",
+                cancel: "Cancelar",
+                confirmReset: "¿Reiniciar las ventas de hoy?",
+                confirmDelete: "¿Eliminar este producto?",
+                saveToHistory: "Guardado en Historial",
+                removedFromHistory: "Eliminado del Historial",
+                paymentTitle: "Pago",
+                receivedAmount: "Recibido",
+                changeAmount: "Cambio",
+                complete: "Listo",
+                variantLabel: "Ítems Comunes",
+                stockPrefix: "Stock",
+                priceSuffix: "~",
+                verTitle: "Versión",
+                updateNow: "Actualizar"
+            },
+            fr: {
+                appName: "Caisse BOXX",
+                tagline: "Gestion de Vente Simple",
+                shop: "Boutique",
+                settings: "Réglages",
+                summary: "Ventes",
+                cart: "Panier",
+                total: "Total",
+                checkout: "Payer",
+                emptyCart: "Panier vide",
+                productEntry: "Gestion Produits",
+                todaySummary: "Résumé Quotidien",
+                resetSales: "Réinitialiser les Ventes",
+                checkSupplies: "📦 Suministros (Amazon)",
+                amazonBtn: "Vérifier Stock",
+                morning: "Bonjour !",
+                ready: "Prêt à commencer ?",
+                startWithSupplies: "📦 Vérifier et Commencer",
+                calendarTitle: "Calendrier des Ventes",
+                backToCalendar: "◀ Retour au Calendrier",
+                noProducts: "Aucun produit",
+                guideText: "Commencez par ajouter des produits dans les <strong>Réglages</strong> !",
+                addInSettings: "Ajouter",
+                pwaBannerTitle: "Ajouter à l'écran d'accueil",
+                pwaBannerDesc: "Utilisez-le comme une application",
+                pwaGuideBtn: "Comment",
+                inAppGuide: "Ouvrir Navigateur",
+                inAppDesc: "Cette application fonctionne hors ligne, mais ouvrez-la dans Safari pour enregistrer les données.",
+                pwaStepsTitle: "📱 Ajouter à l'écran d'accueil",
+                step1: "① Appuyez sur le <strong>bouton Partager</strong>",
+                step2: "② Choisissez <strong>'Sur l'écran d'accueil'</strong>.",
+                cancel: "Annuler",
+                confirmReset: "Réinitialiser les ventes ?",
+                confirmDelete: "Supprimer ce produit ?",
+                saveToHistory: "Enregistré",
+                removedFromHistory: "Supprimé",
+                paymentTitle: "Paiement",
+                receivedAmount: "Montant Reçu",
+                changeAmount: "Monnaie",
+                complete: "Terminé",
+                variantLabel: "Articles Courants",
+                stockPrefix: "Stock",
+                priceSuffix: "~",
+                verTitle: "Version",
+                updateNow: "Mettre à jour"
+            },
+            de: {
+                appName: "BOXX Kasse",
+                tagline: "Einfache Verkaufsverwaltung",
+                shop: "Shop",
+                settings: "Einstellungen",
+                summary: "Umsatz",
+                cart: "Warenkorb",
+                total: "Gesamt",
+                checkout: "Bezahlen",
+                emptyCart: "Warenkorb leer",
+                productEntry: "Produkte verwalten",
+                todaySummary: "Tagesübersicht",
+                resetSales: "Umsatz zurücksetzen",
+                checkSupplies: "📦 Zubehör (Amazon)",
+                amazonBtn: "Bestand prüfen",
+                morning: "Guten Morgen!",
+                ready: "Bereit?",
+                startWithSupplies: "📦 Prüfen & Starten",
+                calendarTitle: "Verkaufskalender",
+                backToCalendar: "◀ Zurück zum Kalender",
+                noProducts: "Keine Produkte",
+                guideText: "Zuerst Produkte in den <strong>Einstellungen</strong> anlegen!",
+                addInSettings: "Hinzufügen",
+                pwaBannerTitle: "Zum Home-Bildschirm",
+                pwaBannerDesc: "Wie eine echte App nutzen",
+                pwaGuideBtn: "Anleitung",
+                inAppGuide: "Im Browser öffnen",
+                inAppDesc: "Diese App funktioniert offline, aber bitte im Browser öffnen für Daten-Sync.",
+                pwaStepsTitle: "📱 Zum Home-Bildschirm",
+                step1: "① Tippen Sie auf <strong>Teilen</strong>",
+                step2: "② Wählen Sie <strong>'Zum Home-Bildschirm'</strong>.",
+                cancel: "Abbrechen",
+                confirmReset: "Umsatz zurücksetzen?",
+                confirmDelete: "Produkt löschen?",
+                saveToHistory: "Gespeichert",
+                removedFromHistory: "Gelöscht",
+                paymentTitle: "Zahlung",
+                receivedAmount: "Erhalten",
+                changeAmount: "Wechselgeld",
+                complete: "Fertig",
+                variantLabel: "Häufige Artikel",
+                stockPrefix: "Bestand",
+                priceSuffix: "~",
+                verTitle: "Version",
+                updateNow: "Update"
+            },
+            pt: {
+                appName: "Caixa BOXX",
+                tagline: "Gestão de Vendas Simples",
+                shop: "Loja",
+                settings: "Ajustes",
+                summary: "Vendas",
+                cart: "Carrinho",
+                total: "Total",
+                checkout: "Pagar",
+                emptyCart: "Carrinho vazio",
+                productEntry: "Registo de Produtos",
+                todaySummary: "Resumo Diário",
+                resetSales: "Reiniciar Vendas",
+                checkSupplies: "📦 Suministros (Amazon)",
+                amazonBtn: "Ver Stock",
+                morning: "Bom dia!",
+                ready: "Pronto para começar?",
+                startWithSupplies: "📦 Verificar e Começar",
+                calendarTitle: "Calendário de Vendas",
+                backToCalendar: "◀ Voltar ao Calendário",
+                noProducts: "Sem produtos",
+                guideText: "Primeiro, registe os produtos nos <strong>Ajustes</strong>!",
+                addInSettings: "Adicionar",
+                pwaBannerTitle: "Adicionar ao Ecrã",
+                pwaBannerDesc: "Use como uma app nativa",
+                pwaGuideBtn: "Como fazer",
+                inAppGuide: "Abrir Navegador",
+                inAppDesc: "Esta app funciona offline, mas use o navegador para salvar dados.",
+                pwaStepsTitle: "📱 Adicionar ao Ecrã Principal",
+                step1: "① Toque no <strong>botão Partilhar</strong>",
+                step2: "② Selecione <strong>'Ecrã Principal'</strong>.",
+                cancel: "Cancelar",
+                confirmReset: "Reiniciar vendas de hoje?",
+                confirmDelete: "Apagar este produto?",
+                saveToHistory: "Guardado",
+                removedFromHistory: "Apagado",
+                paymentTitle: "Pagamento",
+                receivedAmount: "Recebido",
+                changeAmount: "Troco",
+                complete: "Concluído",
+                variantLabel: "Itens Comuns",
+                stockPrefix: "Stock",
+                priceSuffix: "~",
+                verTitle: "Versão",
+                updateNow: "Atualizar"
+            }
+        };
+
+        const CURRENCY_CONFIG = {
+            ja: { symbol: "¥", domain: "www.amazon.co.jp", kw: "TERAOKA+145+黒+50mmX25M" },
+            en: { symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black+2-inch" },
+            zh: { symbol: "¥", domain: "www.amazon.cn", kw: "Gaffer+Tape+Black" },
+            tw: { symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black" },
+            es: { symbol: "€", domain: "www.amazon.es", kw: "Cinta+Americana+Negra" },
+            fr: { symbol: "€", domain: "www.amazon.fr", kw: "Ruban+Gaffer+Noir" },
+            de: { symbol: "€", domain: "www.amazon.de", kw: "Gewebeband+Schwarz" },
+            pt: { symbol: "€", domain: "www.amazon.pt", kw: "Fita+Gaffer+Preta" }
+        };
+
+        let currentLocale = 'ja';
+
+        function getSystemLanguage() {
+            const lang = (navigator.language || navigator.userLanguage).toLowerCase();
+            if (lang.startsWith('ja')) return 'ja';
+            if (lang.startsWith('zh-cn')) return 'zh';
+            if (lang.startsWith('zh')) return 'tw';
+            if (lang.startsWith('es')) return 'es';
+            if (lang.startsWith('fr')) return 'fr';
+            if (lang.startsWith('de')) return 'de';
+            if (lang.startsWith('pt')) return 'pt';
+            return 'en';
+        }
+
+        function t(key) {
+            return I18N[currentLocale][key] || I18N['en'][key] || key;
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                    el.placeholder = t(key);
+                } else {
+                    el.innerHTML = t(key);
+                }
+            });
+            document.title = t('appName');
+            const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+            if (appleTitle) appleTitle.setAttribute('content', t('appName'));
+        }
+
+        function getCurrencySymbol() {
+            return (CURRENCY_CONFIG[currentLocale] || CURRENCY_CONFIG['en']).symbol;
+        }
+
+        function getRandomAmazonLink() {
+            const config = CURRENCY_CONFIG[currentLocale] || CURRENCY_CONFIG['en'];
+            const tag = "jackpotrash-22";
+            return `https://${config.domain}/s?k=${config.kw}&tag=${tag}`;
+        }
+
+        // Initialize Locale
+        currentLocale = getSystemLanguage();
 
         // --- Default Data ---
         const DEFAULT_PRODUCTS = [];
@@ -1896,6 +2354,13 @@
                 cartCounts[item.productId] = (cartCounts[item.productId] || 0) + 1;
             });
 
+            if (products.length === 0) {
+                checkShowBeginnerGuide();
+                return;
+            } else {
+                hideBeginnerGuide();
+            }
+
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -1910,11 +2375,11 @@
                     <span class="product-icon" style="font-size: 2rem;">${product.icon || '📦'}</span>
                     <div class="product-info-left">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">¥${minPrice.toLocaleString()}〜</div>
+                        <div class="product-price">${getCurrencySymbol()}${minPrice.toLocaleString()}${t('priceSuffix')}</div>
                     </div>
                     <div class="product-info-right">
-                        ${inCartCount > 0 ? `<div class="in-cart-badge">済 ${inCartCount}点</div>` : ''}
-                        <div class="stock-badge">残 ${totalStock}</div>
+                        ${inCartCount > 0 ? `<div class="in-cart-badge">${inCartCount}</div>` : ''}
+                        <div class="stock-badge">${t('stockPrefix')}: ${totalStock}</div>
                     </div>
                     <div style="margin-left: 10px; color: var(--primary-color); font-size: 1.5rem;">▶︎</div>
                 `;
@@ -1928,7 +2393,7 @@
             currentBatchSelections = {}; // Reset batch selections
             document.getElementById('modalProductName').textContent = product.name;
             // Update instruction text to be clearer
-            document.querySelector('#quickButtonsArea .variant-label').textContent = '個数を選択してください';
+            document.querySelector('#quickButtonsArea .variant-label').textContent = t('variantLabel');
             refreshModalContent();
             modal.classList.add('active');
         }
@@ -1944,52 +2409,50 @@
             table.innerHTML = `
                 <thead>
                     <tr>
-                        <th style="white-space:nowrap;">バリエーション</th>
-                        <th style="text-align:right; white-space:nowrap;">在庫</th>
-                        <th style="text-align:right; white-space:nowrap;">数量</th>
+                        <th style="white-space:nowrap;" data-i18n="variant">バリエーション</th>
+                        <th style="text-align:right; white-space:nowrap;" data-i18n="stockCount">在庫</th>
+                        <th style="text-align:right; white-space:nowrap;" data-i18n="quantity">数量</th>
                     </tr>
                 </thead>
                 <tbody id="variantTableBody"></tbody>
             `;
             container.appendChild(table);
             const tbody = table.querySelector('tbody');
+            
+            // Re-apply translation to header
+            tbody.parentElement.querySelectorAll('[data-i18n]').forEach(el => {
+                el.innerText = t(el.getAttribute('data-i18n'));
+            });
 
             let totalQty = 0;
             let totalAmount = 0;
 
             currentSelectedProduct.variants.forEach(variant => {
                 const stock = parseInt(variant.stock) || 0;
-                // Currently in cart for this specific product/variant
                 const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
-
-                // Current batch selection
                 const batchQty = currentBatchSelections[variant.name] || 0;
-
-                // Max addable is stock
                 const remainingStock = stock - inCart - batchQty;
 
                 totalQty += batchQty;
                 totalAmount += batchQty * variant.price;
 
                 const tr = document.createElement('tr');
-                // Make row clickable
                 tr.onclick = (e) => {
-                    // Prevent double trigger if button clicked
                     if (e.target.tagName === 'BUTTON') return;
                     updateBatch(variant.name, 1);
                 };
-                tr.style.cursor = 'pointer'; // Visual cue
+                tr.style.cursor = 'pointer';
 
                 tr.innerHTML = `
                     <td>
                         <div style="font-weight:bold;">${variant.name}</div>
-                        <div style="font-size:0.8rem; color:#666;">¥${variant.price.toLocaleString()}</div>
+                        <div style="font-size:0.8rem; color:#666;">${getCurrencySymbol()}${variant.price.toLocaleString()}</div>
                     </td>
                     <td style="text-align:right; font-family:monospace;">${stock}</td>
                     <td>
                         <div class="batch-qty-control">
                             <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
-                            <span class="batch-val" style="${batchQty > 0 ? 'color:val(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
+                            <span class="batch-val" style="${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
                             <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${remainingStock <= 0 ? 'disabled style="opacity:0.5"' : ''}>＋</button>
                         </div>
                     </td>
@@ -2009,11 +2472,11 @@
 
             footer.innerHTML = `
                 <div class="batch-total-info">
-                    <span>選択合計: ${totalQty}点</span>
-                    <span>¥${totalAmount.toLocaleString()}</span>
+                    <span>${t('total')}: ${totalQty}</span>
+                    <span>${getCurrencySymbol()}${totalAmount.toLocaleString()}</span>
                 </div>
                 <button class="btn-batch-add" onclick="commitBatchToCart()" ${totalQty === 0 ? 'disabled' : ''}>
-                    カートに入れる
+                    ${t('cart')}
                 </button>
             `;
         }
@@ -2072,7 +2535,7 @@
                 addToCart(product, variant);
                 refreshModalContent();
             } else {
-                alert('在庫が足りません');
+                alert(t('noStock') || 'No stock available');
             }
         }
 
@@ -2111,7 +2574,7 @@
             const displayCart = [...cart].reverse();
 
             if (displayCart.length === 0) {
-                cartItemsContainer.innerHTML = '<div style="text-align: center; color: #999; margin-top: 20px;">カートは空です</div>';
+                cartItemsContainer.innerHTML = `<div style="text-align: center; color: #999; margin-top: 20px;" data-i18n="emptyCart">${t('emptyCart')}</div>`;
             } else {
                 displayCart.forEach(item => {
                     total += item.price;
@@ -2122,7 +2585,7 @@
                         <div class="cart-item-name">${item.productName}</div>
                         <div class="cart-item-variant">${item.variantName}</div>
                     </div>
-                    <div class="cart-item-price">¥${item.price.toLocaleString()}</div>
+                    <div class="cart-item-price">${getCurrencySymbol()}${item.price.toLocaleString()}</div>
                     <button class="btn-remove-item" onclick="removeFromCart(${item.id})">×</button>
                 `;
                     cartItemsContainer.appendChild(el);
@@ -2136,7 +2599,7 @@
 
         function checkout() {
             if (cart.length === 0) {
-                alert('カートは空です');
+                alert(t('emptyCart'));
                 return;
             }
 
@@ -2159,9 +2622,9 @@
             });
 
             const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
-            document.getElementById('paymentTotal').textContent = `¥${total.toLocaleString()}`;
+            document.getElementById('paymentTotal').textContent = `${getCurrencySymbol()}${total.toLocaleString()}`;
             document.getElementById('amountReceived').value = '';
-            document.getElementById('paymentChange').textContent = '¥0';
+            document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}0`;
 
             const btn = document.getElementById('btnCompletePayment');
             btn.disabled = true;
@@ -2198,7 +2661,7 @@
                 input.readOnly = false;
                 input.style.background = '#fff';
                 input.style.color = '#333';
-                input.placeholder = '¥0';
+                input.placeholder = `${getCurrencySymbol()}0`;
                 if (!input.value) input.focus();
             } else {
                 // Cashless: Lock input, fill with total
@@ -2232,20 +2695,19 @@
         }
 
         function updateChange() {
-            const total = parseInt(document.getElementById('paymentTotal').textContent.replace(/[^0-9]/g, ''));
+            const totalText = document.getElementById('paymentTotal').textContent.replace(/[^-0-9]/g, '');
+            const total = parseInt(totalText);
             const received = parseInt(document.getElementById('amountReceived').value);
             const btn = document.getElementById('btnCompletePayment');
 
-            // Logic for Cashless: received is auto-filled to equal total, so change is 0.
-
             if (!isNaN(received) && received >= total) {
                 const change = received - total;
-                document.getElementById('paymentChange').textContent = `¥${change.toLocaleString()}`;
+                document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}${change.toLocaleString()}`;
                 document.getElementById('paymentChange').style.color = 'var(--primary-color)';
                 btn.disabled = false;
                 btn.style.opacity = '1';
             } else {
-                document.getElementById('paymentChange').textContent = '¥0';
+                document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}0`;
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
             }
@@ -2300,7 +2762,7 @@
         function renderSummary() {
             summaryTableBody.innerHTML = '';
             let total = 0;
-            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
+            const paymentTotals = { cash: 0, credit: 0 };
 
             // Filter for SESSION only (since last reset)
             const sessionLogs = salesLog.filter(log => log.timestamp >= sessionStartTime);
@@ -2309,7 +2771,7 @@
             const aggregation = {};
 
             sessionLogs.forEach(log => {
-                const method = log.paymentMethod || 'cash'; // Default safe
+                const method = log.paymentMethod || 'cash';
                 const key = `${log.productName} - ${log.variantName} - ${method}`;
 
                 if (!aggregation[key]) {
@@ -2323,16 +2785,12 @@
                 aggregation[key].count++;
                 total += log.price;
 
-                // Payment Method Total
-                if (method === 'paypay') paymentTotals.paypay += log.price;
-                else if (method === 'credit') paymentTotals.credit += log.price;
+                if (method === 'credit') paymentTotals.credit += log.price;
                 else paymentTotals.cash += log.price;
             });
 
             Object.values(aggregation).forEach(item => {
                 const tr = document.createElement('tr');
-
-                // Find current stock
                 let stock = '-';
                 const p = products.find(prod => prod.name === item.name.split(' - ')[0]);
                 if (p) {
@@ -2340,41 +2798,35 @@
                     if (v) stock = v.stock;
                 }
 
-                const methodIcon = item.method === 'paypay' ? 'P' : (item.method === 'credit' ? 'ク' : '現');
+                const methodLabel = item.method === 'credit' ? t('credit') : t('cash');
 
                 tr.innerHTML = `
                     <td>${item.name}</td>
-                    <td>¥${item.price.toLocaleString()}</td>
+                    <td>${getCurrencySymbol()}${item.price.toLocaleString()}</td>
                     <td>${item.count}</td>
                     <td>${stock}</td>
-                    <td style="text-align:center; font-weight:bold;">${methodIcon}</td>
+                    <td style="text-align:center; font-weight:bold; font-size:0.75rem;">${methodLabel}</td>
                     <td>
-                        <button class="btn-cancel-sale" title="この売上を取り消す" 
-                            onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
+                        <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
                     </td>
                 `;
                 summaryTableBody.appendChild(tr);
             });
 
-            // Display Total with Detailed Payment Breakdown
             const container = document.getElementById('summaryTotalAmount');
             container.innerHTML = `
                 <div style="background:#fff; border:2px solid #eee; border-radius:15px; padding:25px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-                    <div style="font-size:1.4rem; color:#666; font-weight:bold; margin-bottom:10px;">本日の売上合計</div>
-                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">¥${total.toLocaleString()}</div>
+                    <div style="font-size:1.4rem; color:#666; font-weight:bold; margin-bottom:10px;" data-i18n="todaySummary">${t('todaySummary')}</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">${getCurrencySymbol()}${total.toLocaleString()}</div>
                     
                     <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:12px; text-align:left;">
                         <div style="background:#f0f7ff; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#0056b3;">現金 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.cash.toLocaleString()}</span>
-                        </div>
-                        <div style="background:#fff0f0; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ffcccc;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#b02a37;">PayPay 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.paypay.toLocaleString()}</span>
+                            <span style="font-size:1.2rem; font-weight:bold; color:#0056b3;">${t('cash')}</span>
+                            <span style="font-size:1.8rem; font-weight:900;">${getCurrencySymbol()}${paymentTotals.cash.toLocaleString()}</span>
                         </div>
                         <div style="background:#f8f9fa; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
-                            <span style="font-size:1.2rem; font-weight:bold; color:#333;">クレジット 合計</span>
-                            <span style="font-size:1.8rem; font-weight:900;">¥${paymentTotals.credit.toLocaleString()}</span>
+                            <span style="font-size:1.2rem; font-weight:bold; color:#333;">${t('credit')}</span>
+                            <span style="font-size:1.8rem; font-weight:900;">${getCurrencySymbol()}${paymentTotals.credit.toLocaleString()}</span>
                         </div>
                     </div>
                 </div>
@@ -2382,9 +2834,8 @@
         }
 
         function cancelSale(prodName, varName, method) {
-            if (!confirm(`「${prodName} (${varName})」の売上（決済：${method === 'paypay' ? 'PayPay' : (method === 'credit' ? 'クレジット' : '現金')}）を取り消しますか？\n（在庫は1点分復元されます）`)) return;
+            if (!confirm(t('confirmReset'))) return;
 
-            // Find matching index from the end (LIFO - latest sale first)
             const index = salesLog.findLastIndex(log => 
                 log.productName === prodName && 
                 log.variantName === varName && 
@@ -2394,8 +2845,6 @@
 
             if (index !== -1) {
                 const item = salesLog[index];
-                
-                // 1. Restore Stock
                 const product = products.find(p => p.id === item.productId);
                 if (product) {
                     const variant = product.variants.find(v => v.name === item.variantName);
@@ -2403,31 +2852,21 @@
                         variant.stock = (parseInt(variant.stock) || 0) + 1;
                     }
                 }
-
-                // 2. Remove from Log
                 salesLog.splice(index, 1);
-
-                // 3. Save
                 saveSales();
                 saveProducts();
-
-                // 4. Refresh UI
                 renderSummary();
-                renderProducts(); // Update shop view stock badges
-                
-                showToast('売上が取り消されました');
-            } else {
-                alert('取り消し可能なデータが見つかりませんでした');
+                renderProducts();
+                showToast(t('removedFromHistory'));
             }
         }
 
         function resetSession() {
-            // 誤操作防止の確認ダイアログを追加
-            if (!confirm('本日の売上をリセットします。\n宜しいですか？')) return;
+            if (!confirm(t('confirmReset'))) return;
             sessionStartTime = Date.now();
             saveSession();
             renderSummary();
-            showToast('本日の売上をリセットしました');
+            showToast(t('complete'));
         }
 
         function showToast(message) {
@@ -2467,36 +2906,31 @@
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
 
-            document.getElementById('calendarTitle').textContent = `${year}年 ${month + 1}月`;
+            document.getElementById('calendarMonthTitle').textContent = `${year}${t('year')} ${t(['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][month])}`;
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
 
-            // Headers
-            const days = ['日', '月', '火', '水', '木', '金', '土'];
-            days.forEach(d => {
+            const dayNames = currentLocale === 'ja' ? ['日', '月', '火', '水', '木', '金', '土'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(d => {
                 const div = document.createElement('div');
                 div.className = 'calendar-day-header';
                 div.textContent = d;
                 grid.appendChild(div);
             });
 
-            // Days
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
 
-            // Padding for start
             for (let i = 0; i < firstDay.getDay(); i++) {
                 grid.appendChild(document.createElement('div'));
             }
 
-            // Dates
             for (let d = 1; d <= lastDay.getDate(); d++) {
                 const dateObj = new Date(year, month, d);
-                const dateStr = dateObj.toLocaleDateString('ja-JP');
+                const dateStr = dateObj.toLocaleDateString(currentLocale);
 
-                // Check data
-                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
-                const isToday = new Date().toLocaleDateString('ja-JP') === dateStr;
+                const hasData = salesLog.some(log => new Date(log.timestamp).toLocaleDateString(currentLocale) === dateStr);
+                const isToday = new Date().toLocaleDateString(currentLocale) === dateStr;
 
                 const cell = document.createElement('div');
                 cell.className = `calendar-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}`;
@@ -2512,22 +2946,21 @@
             const content = document.getElementById('calendarDetailContent');
             const title = document.getElementById('calendarDetailTitle');
 
-            // Switch views
             gridView.style.display = 'none';
             detailView.style.display = 'flex';
 
-            title.textContent = `${dateStr} の売上詳細`;
+            title.textContent = `${dateStr} ${t('salesToday')}`;
             content.innerHTML = '';
 
-            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString('ja-JP') === dateStr);
+            const logs = salesLog.filter(log => new Date(log.timestamp).toLocaleDateString(currentLocale) === dateStr);
 
             if (logs.length === 0) {
-                content.innerHTML = '<div style="color:#999; text-align:center; margin-top:50px;">データはありません</div>';
+                content.innerHTML = `<div style="color:#999; text-align:center; margin-top:50px;">${t('noProducts')}</div>`;
                 return;
             }
 
             let total = 0;
-            const paymentTotals = { cash: 0, paypay: 0, credit: 0 };
+            const paymentTotals = { cash: 0, credit: 0 };
             const agg = {};
             logs.forEach(l => {
                 const k = `${l.productName} ${l.variantName}`;
@@ -2535,37 +2968,23 @@
                 agg[k].count++;
                 total += l.price;
 
-                // Payment Method Total
-                if (l.paymentMethod === 'paypay') paymentTotals.paypay += l.price;
-                else if (l.paymentMethod === 'credit') paymentTotals.credit += l.price;
+                if (l.paymentMethod === 'credit') paymentTotals.credit += l.price;
                 else paymentTotals.cash += l.price;
             });
 
-            // Total Header
             const totalDiv = document.createElement('div');
-            totalDiv.style.fontWeight = 'bold';
-            totalDiv.style.fontSize = '1.8rem';
-            totalDiv.style.color = '#333';
-            totalDiv.style.marginBottom = '20px';
-            totalDiv.style.textAlign = 'center';
-            totalDiv.style.padding = '10px';
-            totalDiv.style.background = '#f9f9f9';
-            totalDiv.style.borderRadius = '8px';
+            totalDiv.style = "font-weight:bold; font-size:1.8rem; color:#333; margin-bottom:20px; text-align:center; padding:10px; background:#f9f9f9; border-radius:8px;";
 
             totalDiv.innerHTML = `
-                合計: ¥${total.toLocaleString()}
-                <div style="font-size:0.9rem; margin-top:5px; color:#555; font-weight:normal;">
-                    (現: ¥${paymentTotals.cash.toLocaleString()} / P: ¥${paymentTotals.paypay.toLocaleString()} / ク: ¥${paymentTotals.credit.toLocaleString()})
+                ${t('total')}: ${getCurrencySymbol()}${total.toLocaleString()}
+                <div style="font-size:0.85rem; margin-top:5px; color:#555; font-weight:normal;">
+                    (${t('cash')}: ${getCurrencySymbol()}${paymentTotals.cash.toLocaleString()} / ${t('credit')}: ${getCurrencySymbol()}${paymentTotals.credit.toLocaleString()})
                 </div>
             `;
             content.appendChild(totalDiv);
 
-            // List
             const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.fontSize = '1rem';
-            // table styling
-            table.style.borderCollapse = 'collapse';
+            table.style = "width:100%; font-size:1rem; border-collapse:collapse;";
 
             Object.values(agg).forEach(item => {
                 const tr = document.createElement('tr');
@@ -2573,8 +2992,7 @@
                 tr.innerHTML = `
                     <td style="padding:10px 5px;">${item.name}</td>
                     <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
-                    <td style="text-align:right; font-weight:bold; width:80px;">¥${(item.price * item.count).toLocaleString()}</td>
-                    <td style="text-align:right; font-size:0.8rem; color:#666; white-space:nowrap; padding-left:10px;">${item.price.toLocaleString()}</td>
+                    <td style="text-align:right; font-weight:bold; width:80px;">${getCurrencySymbol()}${(item.price * item.count).toLocaleString()}</td>
                 `;
                 table.appendChild(tr);
             });
@@ -2585,19 +3003,16 @@
 
         async function downloadSalesCSV() {
             if (salesLog.length === 0) {
-                alert('データがありません');
+                alert(t('noProducts'));
                 return;
             }
 
-            // CSV Header
-            let csvContent = "日時,商品名,種類,価格,支払い方法\n";
+            let csvContent = `${t('productList')},${t('productNameVar')},${t('unitPrice')},${t('paymentMethod')}\n`;
 
-            // CSV Rows
             salesLog.forEach(log => {
                 const date = new Date(log.timestamp);
-                const dateStr = date.toLocaleString('ja-JP');
-                const method = log.paymentMethod === 'paypay' ? 'PayPay' :
-                    log.paymentMethod === 'credit' ? 'クレカ' : '現金';
+                const dateStr = date.toLocaleString(currentLocale);
+                const method = log.paymentMethod === 'credit' ? t('credit') : t('cash');
                 csvContent += `"${dateStr}","${log.productName}","${log.variantName}",${log.price},"${method}"\n`;
             });
 
@@ -2816,12 +3231,12 @@
                     <div style="flex:1">
                         <div style="font-weight:bold; font-size:1.1rem;">${p.name}</div>
                         <div style="color:#666; font-size:0.9rem;">
-                            ${p.variants.length} バリエーション
+                            ${p.variants.length} ${t('variantsCount')}
                         </div>
                     </div>
                     <div>
-                        <button onclick="editProduct(${index})" style="padding:8px 15px; border:1px solid #ddd; background:white; border-radius:6px;">編集</button>
-                        <button onclick="deleteProduct(${index})" style="padding:8px 15px; margin-left:5px; color:red; border:1px solid red; background:white; border-radius:6px;">削除</button>
+                        <button onclick="editProduct(${index})" style="padding:8px 15px; border:1px solid #ddd; background:white; border-radius:6px;">${t('edit')}</button>
+                        <button onclick="deleteProduct(${index})" style="padding:8px 15px; margin-left:5px; color:red; border:1px solid red; background:white; border-radius:6px;">${t('delete')}</button>
                     </div>
                 `;
                 list.appendChild(item);
@@ -2851,24 +3266,24 @@
 
             // Change Button State
             const saveBtn = document.querySelector('.btn-save-product');
-            saveBtn.textContent = '更新する (上書き)';
+            saveBtn.textContent = t('updateOverride');
             saveBtn.onclick = saveUpdatedProduct;
             saveBtn.style.background = 'var(--accent-color)';
 
             // Change Title
-            document.querySelector('.settings-card h3').textContent = '商品を編集する';
+            document.querySelector('.settings-card h3').textContent = t('editProductTitle');
         }
 
         function saveNewProduct() {
             const name = document.getElementById('newProdName').value;
-            if (!name) { alert('商品名を入力してください'); return; }
+            if (!name) { alert(t('enterProductName')); return; }
 
             const variantRows = document.getElementById('newProdVariants').children;
             const variants = [];
             for (let row of variantRows) {
                 const inputs = row.querySelectorAll('input');
                 // Allow empty name if price is set
-                const vName = inputs[0].value.trim() || '通常';
+                const vName = inputs[0].value.trim() || t('regular');
                 const vPrice = parseInt(inputs[1].value);
 
                 if (vPrice >= 0 || inputs[2].value) {
@@ -2880,7 +3295,7 @@
                 }
             }
 
-            if (variants.length === 0) { alert('少なくとも1つのバリエーションを入力してください'); return; }
+            if (variants.length === 0) { alert(t('enterAtLeastOneVariant')); return; }
 
             const newProduct = {
                 id: Date.now(),
@@ -2915,14 +3330,14 @@
             if (editingProductIndex === -1) return;
 
             const name = document.getElementById('newProdName').value;
-            if (!name) { alert('商品名を入力してください'); return; }
+            if (!name) { alert(t('enterProductName')); return; }
 
             const variantRows = document.getElementById('newProdVariants').children;
             const variants = [];
             for (let row of variantRows) {
                 const inputs = row.querySelectorAll('input');
                 // Allow empty name
-                const vName = inputs[0].value.trim() || '通常';
+                const vName = inputs[0].value.trim() || t('regular');
                 const vPrice = parseInt(inputs[1].value);
 
                 if (vPrice >= 0 || inputs[2].value) {
@@ -2949,7 +3364,7 @@
         }
 
         function deleteProduct(index) {
-            if (confirm('本当に削除しますか？')) {
+            if (confirm(t('confirmDeleteProduct'))) {
                 products.splice(index, 1);
                 saveProducts();
                 renderSettingsList();
@@ -3029,7 +3444,7 @@
         }
 
         async function manualUpdateCheck() {
-            showToast('強制アップデートを実行中...');
+            showToast(t('updating'));
             // サービスワーカーを解除してキャッシュを完全にクリア
             if ('serviceWorker' in navigator) {
                 try {
@@ -3097,7 +3512,7 @@
                 overlay.id = 'pwa-bridge-overlay';
                 overlay.className = 'active';
                 const isIosLine = isIOS && isLine;
-                const menuLoc = isIosLine ? "右下" : "右上";
+                const menuLoc = isIosLine ? t('menuLocRightBottom') : t('menuLocRightTop');
                 
                 const style = document.createElement('style');
                 style.innerHTML = `
@@ -3122,13 +3537,10 @@
                         
                         <div style="text-align:left; line-height:1.8; color:#fff; font-size:1.2rem; font-weight:bold;">
                             <p style="margin-bottom:20px;">
-                                このアプリはオフラインでもご利用いただけますが、商品データを保存するために<br>
-                                <span style="color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);">
-                                    画面${menuLoc} <span style="font-size:1.8rem; vertical-align:middle; line-height:0;">⋮</span> の ブラウザで開く
-                                </span> <br>からご利用いただくことを推奨いたします。
+                                ${t('inAppGuideLong').replace('{menuLoc}', menuLoc)}
                             </p>
                             <p style="border-top:1px solid rgba(255,255,255,0.2); padding-top:20px; color:#fff;">
-                                その後「ホーム画面に追加」していただくと、普通のアプリの様にご利用いただけます。
+                                ${t('afterInAppGuide')}
                             </p>
                         </div>
                     </div>
@@ -3148,11 +3560,11 @@
                         <div style="display:flex; align-items:center; gap:12px; width:100%;">
                             <div style="font-size:1.4rem;">📱</div>
                             <div style="flex:1;">
-                                <div style="font-weight:900; font-size:0.85rem; color:#333;">ホーム画面に追加して快適に</div>
-                                <div style="font-size:0.75rem; color:#666;">全画面で本物のように使いやすくなります</div>
+                                <div style="font-weight:900; font-size:0.85rem; color:#333;">${t('pwaBannerTitle')}</div>
+                                <div style="font-size:0.75rem; color:#666;">${t('pwaBannerDesc')}</div>
                             </div>
                             <div style="display:flex; gap:8px;">
-                                <button id="pwa-show-guide" style="background:var(--primary-color); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:bold; cursor:pointer;">設定方法</button>
+                                <button id="pwa-show-guide" style="background:var(--primary-color); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:0.75rem; font-weight:bold; cursor:pointer;">${t('pwaGuideBtn')}</button>
                                 <button class="banner-close" style="background:none; border:none; color:#ccc; font-size:1.2rem; cursor:pointer; padding:0 5px;">✕</button>
                             </div>
                         </div>
@@ -3162,8 +3574,8 @@
                     banner.innerHTML = `
                         <div class="banner-icon">🛍️</div>
                         <div class="banner-text">
-                            <span class="banner-title">ホーム画面に追加</span>
-                            <span class="banner-desc">メニューから「アプリをインストール」を選択</span>
+                            <span class="banner-title">${t('pwaBannerTitle')}</span>
+                            <span class="banner-desc">${t('pwaBannerDesc')}</span>
                         </div>
                         <button class="banner-close">✕</button>
                     `;
@@ -3190,12 +3602,12 @@
                 guide.innerHTML = `
                     <div style="width:100%">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <span style="font-weight:900; font-size:1rem; color:var(--primary-color);">📱 ホーム画面に追加する手順</span>
+                            <span style="font-weight:900; font-size:1rem; color:var(--primary-color);">${t('pwaInstallGuideTitle')}</span>
                             <button id="guide-close" style="background:none; border:none; font-size:1.2rem; color:#999; cursor:pointer;">✕</button>
                         </div>
                         <div style="font-size:0.9rem; line-height:1.7; color:#333; text-align:left;">
-                            <p style="margin-bottom:10px;">① Safari下の <strong>共有ボタン</strong> ( <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; display:inline-block;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> ) をタップ</p>
-                            <p>② メニューにある <strong>「ホーム画面に追加」</strong> を選択してください。</p>
+                            <p style="margin-bottom:10px;">${t('pwaStep1Long')}</p>
+                            <p>${t('pwaStep2Long')}</p>
                         </div>
                         <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:12px solid var(--primary-color);"></div>
                     </div>
