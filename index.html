@@ -2171,7 +2171,7 @@
                 el.textContent = symbol;
             });
             const input = document.getElementById('amountReceived');
-            if (input) input.placeholder = `${symbol}0`;
+            if (input) input.placeholder = formatCurrency(0);
         }
 
         // Initialize Settings (will be overridden by loadData)
@@ -2431,7 +2431,7 @@
                     <span class="product-icon" style="font-size: 2rem;">${product.icon || '📦'}</span>
                     <div class="product-info-left">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">${getCurrencySymbol()}${minPrice.toLocaleString()}${t('priceSuffix')}</div>
+                        <div class="product-price">${formatCurrency(minPrice)}${t('priceSuffix')}</div>
                     </div>
                     <div class="product-info-right">
                         ${inCartCount > 0 ? `<div class="in-cart-badge">${inCartCount}</div>` : ''}
@@ -2502,7 +2502,7 @@
                 tr.innerHTML = `
                     <td>
                         <div style="font-weight:bold;">${variant.name}</div>
-                        <div style="font-size:0.8rem; color:#666;">${getCurrencySymbol()}${variant.price.toLocaleString()}</div>
+                        <div style="font-size:0.8rem; color:#666;">${formatCurrency(variant.price)}</div>
                     </td>
                     <td style="text-align:right; font-family:monospace;">${stock}</td>
                     <td>
@@ -2529,7 +2529,7 @@
             footer.innerHTML = `
                 <div class="batch-total-info">
                     <span>${t('total')}: ${totalQty}</span>
-                    <span>${getCurrencySymbol()}${totalAmount.toLocaleString()}</span>
+                    <span>${formatCurrency(totalAmount)}</span>
                 </div>
                 <button class="btn-batch-add" onclick="commitBatchToCart()" ${totalQty === 0 ? 'disabled' : ''}>
                     ${t('cart')}
@@ -2641,13 +2641,13 @@
                         <div class="cart-item-name">${item.productName}</div>
                         <div class="cart-item-variant">${item.variantName}</div>
                     </div>
-                    <div class="cart-item-price">${getCurrencySymbol()}${item.price.toLocaleString()}</div>
+                    <div class="cart-item-price">${formatCurrency(item.price)}</div>
                     <button class="btn-remove-item" onclick="removeFromCart(${item.id})">×</button>
                 `;
                     cartItemsContainer.appendChild(el);
                 });
             }
-            cartTotalEl.textContent = `${getCurrencySymbol()}${total.toLocaleString()}`;
+            cartTotalEl.textContent = `${formatCurrency(total)}`;
         }
 
         // Global Payment State
@@ -2678,9 +2678,9 @@
             });
 
             const total = cart.reduce((sum, item) => sum + (item.price * (item.count || 1)), 0);
-            document.getElementById('paymentTotal').textContent = `${getCurrencySymbol()}${total.toLocaleString()}`;
+            document.getElementById('paymentTotal').textContent = `${formatCurrency(total)}`;
             document.getElementById('amountReceived').value = '';
-            document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}0`;
+            document.getElementById('paymentChange').textContent = `${formatCurrency(0)}`;
             updatePaymentUI();
 
             const btn = document.getElementById('btnCompletePayment');
@@ -2718,7 +2718,7 @@
                 input.readOnly = false;
                 input.style.background = '#fff';
                 input.style.color = '#333';
-                input.placeholder = `${getCurrencySymbol()}0`;
+                input.placeholder = `${formatCurrency(0)}`;
                 if (!input.value) input.focus();
             } else {
                 // Cashless: Lock input, fill with total
@@ -2759,12 +2759,12 @@
 
             if (!isNaN(received) && received >= total) {
                 const change = received - total;
-                document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}${change.toLocaleString()}`;
+                document.getElementById('paymentChange').textContent = `${formatCurrency(change)}`;
                 document.getElementById('paymentChange').style.color = 'var(--primary-color)';
                 btn.disabled = false;
                 btn.style.opacity = '1';
             } else {
-                document.getElementById('paymentChange').textContent = `${getCurrencySymbol()}0`;
+                document.getElementById('paymentChange').textContent = `${formatCurrency(0)}`;
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
             }
@@ -2859,7 +2859,7 @@
 
                 tr.innerHTML = `
                     <td>${item.name}</td>
-                    <td>${getCurrencySymbol()}${item.price.toLocaleString()}</td>
+                    <td>${formatCurrency(item.price)}</td>
                     <td>${item.count}</td>
                     <td>${stock}</td>
                     <td style="text-align:center; font-weight:bold; font-size:0.75rem;">${methodLabel}</td>
@@ -2874,16 +2874,16 @@
             container.innerHTML = `
                 <div style="background:#fff; border:2px solid #eee; border-radius:15px; padding:25px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
                     <div style="font-size:1.4rem; color:#666; font-weight:bold; margin-bottom:10px;" data-i18n="todaySummary">${t('todaySummary')}</div>
-                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">${getCurrencySymbol()}${total.toLocaleString()}</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--primary-color);">${formatCurrency(total)}</div>
                     
                     <div style="margin-top:25px; display:grid; grid-template-columns: 1fr; gap:12px; text-align:left;">
                         <div style="background:#f0f7ff; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #cce5ff;">
                             <span style="font-size:1.2rem; font-weight:bold; color:#0056b3;">${t('cash')}</span>
-                            <span style="font-size:1.8rem; font-weight:900;">${getCurrencySymbol()}${paymentTotals.cash.toLocaleString()}</span>
+                            <span style="font-size:1.8rem; font-weight:900;">${formatCurrency(paymentTotals.cash)}</span>
                         </div>
                         <div style="background:#f8f9fa; padding:15px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ddd;">
                             <span style="font-size:1.2rem; font-weight:bold; color:#333;">${t('credit')}</span>
-                            <span style="font-size:1.8rem; font-weight:900;">${getCurrencySymbol()}${paymentTotals.credit.toLocaleString()}</span>
+                            <span style="font-size:1.8rem; font-weight:900;">${formatCurrency(paymentTotals.credit)}</span>
                         </div>
                     </div>
                 </div>
@@ -3033,9 +3033,9 @@
             totalDiv.style = "font-weight:bold; font-size:1.8rem; color:#333; margin-bottom:20px; text-align:center; padding:10px; background:#f9f9f9; border-radius:8px;";
 
             totalDiv.innerHTML = `
-                ${t('total')}: ${getCurrencySymbol()}${total.toLocaleString()}
+                ${t('total')}: ${formatCurrency(total)}
                 <div style="font-size:0.85rem; margin-top:5px; color:#555; font-weight:normal;">
-                    (${t('cash')}: ${getCurrencySymbol()}${paymentTotals.cash.toLocaleString()} / ${t('credit')}: ${getCurrencySymbol()}${paymentTotals.credit.toLocaleString()})
+                    (${t('cash')}: ${formatCurrency(paymentTotals.cash)} / ${t('credit')}: ${formatCurrency(paymentTotals.credit)})
                 </div>
             `;
             content.appendChild(totalDiv);
@@ -3049,7 +3049,7 @@
                 tr.innerHTML = `
                     <td style="padding:10px 5px;">${item.name}</td>
                     <td style="text-align:right; white-space:nowrap;">x${item.count}</td>
-                    <td style="text-align:right; font-weight:bold; width:80px;">${getCurrencySymbol()}${(item.price * item.count).toLocaleString()}</td>
+                    <td style="text-align:right; font-weight:bold; width:80px;">${formatCurrency((item.price * item.count))}</td>
                 `;
                 table.appendChild(tr);
             });
@@ -3121,15 +3121,27 @@
         // --- Settings Logic ---
         function renderSettingsList() {
             const container = document.getElementById('settingsList');
+            
+            const productKeys = [
+                'tshirt', 'longT', 'towel', 'muffler', 'cheki', 'sticker', 'hoodie', 'tote', 
+                'acrylic', 'keyholder', 'postcard', 'pamphlet', 'cd', 'dvd', 'bluray', 
+                'calendar', 'photobook', 'penlight', 'wristband'
+            ];
+            const variantKeys = [
+                'sizeS', 'sizeM', 'sizeL', 'sizeXL', 'sizeXS', 'sizeXXL', 'freeSize', 
+                'ladies', 'red', 'blue', 'yellow', 'green', 'white', 'black', 'normal', 
+                'signed', 'set'
+            ];
+
             container.innerHTML = `
                 <div class="settings-container">
                     <div id="pwa-settings-guide" class="setting-item" style="background:rgba(0,123,255,0.05); border:1px dashed var(--primary-color);">
                         <i class="fas fa-mobile-alt"></i>
                         <div style="flex:1; font-size:0.85rem;">
-                            <strong>ホーム画面に追加して使う</strong><br>
-                            <span style="color:#666; font-size:0.75rem;">全画面表示になり、より本物のレジのように使いやすくなります。</span>
+                            <strong data-i18n="pwaBannerTitle">ホーム画面に追加して使う</strong><br>
+                            <span style="color:#666; font-size:0.75rem;" data-i18n="pwaBannerDesc">全画面表示になり、より本物のレジのように使いやすくなります。</span>
                         </div>
-                        <button onclick="showInstallBanner(true)" style="background:var(--primary-color); color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;">ガイドを表示</button>
+                        <button onclick="showInstallBanner(true)" style="background:var(--primary-color); color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;" data-i18n="pwaGuideBtn">ガイドを表示</button>
                     </div>
 
                     <!-- Global Settings Card -->
@@ -3164,68 +3176,34 @@
                     </div>
                     <!-- New Product Form -->
                     <div class="settings-card">
-                        <h3>商品を登録する</h3>
+                        <h3 data-i18n="addProductTitle">商品を登録する</h3>
                         <div class="form-group">
-                            <label>商品名</label>
+                            <label data-i18n="productNameLabel">商品名</label>
                             <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ" list="commonProductNames">
                             <datalist id="commonProductNames">
-                                <option value="Tシャツ">
-                                <option value="タオル">
-                                <option value="チェキ">
-                                <option value="マフラータオル">
-                                <option value="パーカー">
-                                <option value="ロンT">
-                                <option value="トートバッグ">
-                                <option value="アクリルスタンド">
-                                <option value="キーホルダー">
-                                <option value="ステッカー">
-                                <option value="ポストカード">
-                                <option value="パンフレット">
-                                <option value="CD">
-                                <option value="DVD">
-                                <option value="Blu-ray">
-                                <option value="カレンダー">
-                                <option value="写真集">
-                                <option value="ペンライト">
-                                <option value="リストバンド">
+                                ${productKeys.map(k => `<option value="${t(k)}">`).join('')}
                             </datalist>
                         </div>
                         <div class="form-group">
-                            <label>バリエーション (サイズ/色)</label>
+                            <label data-i18n="variantsLabel">バリエーション (サイズ/色)</label>
                             <datalist id="commonVariantNames">
-                                <option value="S">
-                                <option value="M">
-                                <option value="L">
-                                <option value="XL">
-                                <option value="XS">
-                                <option value="XXL">
-                                <option value="Free">
-                                <option value="レディース">
-                                <option value="赤">
-                                <option value="青">
-                                <option value="黄">
-                                <option value="緑">
-                                <option value="白">
-                                <option value="黒">
-                                <option value="通常">
-                                <option value="サイン入り">
-                                <option value="セット">
+                                ${variantKeys.map(k => `<option value="${t(k)}">`).join('')}
                             </datalist>
                             <div id="newProdVariants"></div>
-                            <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ バリエーションを追加</button>
+                            <button class="btn-add-variant" onclick="addVariantRow('newProdVariants')">＋ ${t('variantLabel')}</button>
                         </div>
-                        <button class="btn-save-product" onclick="saveNewProduct()">保存する</button>
+                        <button class="btn-save-product" onclick="saveNewProduct()" data-i18n="saveButton">保存する</button>
                     </div>
 
                     <!-- Existing Products List -->
                     <div class="settings-card">
-                        <h3>登録済み商品一覧</h3>
+                        <h3 data-i18n="registeredProductsTitle">登録済み商品一覧</h3>
                         <div id="existingProductsList"></div>
                     </div>
 
                     <!-- App Info Footer -->
                     <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
-                        <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
                         <p>BOXXレジ App v3.0.0</p>
@@ -3234,7 +3212,7 @@
                 </div>
             `;
 
-            // Initialize with one empty variant row
+            applyTranslations(); 
             addVariantRow('newProdVariants');
             renderExistingProducts();
         }
@@ -3266,41 +3244,36 @@
             const container = document.getElementById('newProdVariants');
             container.innerHTML = ''; // Clear existing
 
-            // Auto-set Icon if possible (optional refinement)
-            // nameInput.value could be set too
-
             let variants = [];
+            const freeVal = t('freeSize');
+            const signVal = t('signed');
+            const normalVal = t('normal');
 
             if (type === 'tshirt') {
-                nameInput.value = 'Tシャツ';
-                variants = ['S', 'M', 'L', 'XL'];
+                nameInput.value = t('tshirt');
+                variants = [t('sizeS'), t('sizeM'), t('sizeL'), t('sizeXL')];
             } else if (type === 'longT') {
-                nameInput.value = 'ロンT';
-                variants = ['S', 'M', 'L', 'XL'];
+                nameInput.value = t('longT');
+                variants = [t('sizeS'), t('sizeM'), t('sizeL'), t('sizeXL')];
             } else if (type === 'towel') {
-                nameInput.value = 'フェイスタオル';
-                // Single generic variant or color
-                addVariantRow('newProdVariants', { name: 'Free', price: '', stock: '' });
+                nameInput.value = t('towel');
+                addVariantRow('newProdVariants', { name: freeVal, price: '', stock: '' });
                 return;
             } else if (type === 'muffler') {
-                nameInput.value = 'マフラータオル';
-                variants = ['赤', '青'];
+                nameInput.value = t('muffler');
+                variants = [t('red'), t('blue')];
             } else if (type === 'cheki') {
-                nameInput.value = 'チェキ';
-                addVariantRow('newProdVariants', { name: 'Normal', price: '1000', stock: '' });
-                addVariantRow('newProdVariants', { name: 'Sign', price: '2000', stock: '' });
+                nameInput.value = t('cheki');
+                addVariantRow('newProdVariants', { name: normalVal, price: '1000', stock: '' });
+                addVariantRow('newProdVariants', { name: signVal, price: '2000', stock: '' });
                 return;
             } else if (type === 'adult') {
-                // Keep backward compatibility for presets logic if needed, but UI replaced
-                variants = ['S', 'M', 'L', 'XL'];
+                variants = [t('sizeS'), t('sizeM'), t('sizeL'), t('sizeXL')];
             }
 
             variants.forEach(v => {
                 addVariantRow('newProdVariants', { name: v, price: '', stock: '' });
             });
-
-            // Reset select?
-            // document.getElementById('productTemplateSelect').value = ''; 
         }
 
         function renderExistingProducts() {
