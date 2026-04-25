@@ -3756,28 +3756,6 @@
                         <button onclick="showInstallBanner(true)" style="background:var(--primary-color); color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;" data-i18n="pwaGuideBtn">ガイドを表示</button>
                     </div>
 
-                    <div class="settings-card">
-                        <h3 data-i18n="globalSettings">設定</h3>
-                        <div class="form-group">
-                            <label data-i18n="displayLanguage">表示言語</label>
-                            <select class="form-control" onchange="changeLanguage(this.value)">
-                                <option value="ja" ${currentLanguage === 'ja' ? 'selected' : ''}>日本語</option>
-                                <option value="en" ${currentLanguage === 'en' ? 'selected' : ''}>English</option>
-                                <option value="zh" ${currentLanguage === 'zh' ? 'selected' : ''}>中国語 (簡体字)</option>
-                                <option value="tw" ${currentLanguage === 'tw' ? 'selected' : ''}>中国語 (繁体字)</option>
-                                <option value="es" ${currentLanguage === 'es' ? 'selected' : ''}>Español</option>
-                                <option value="fr" ${currentLanguage === 'fr' ? 'selected' : ''}>Français</option>
-                                <option value="de" ${currentLanguage === 'de' ? 'selected' : ''}>Deutsch</option>
-                                <option value="pt" ${currentLanguage === 'pt' ? 'selected' : ''}>Português</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label data-i18n="currencyRegion">通貨・地域</label>
-                            <select id="regionSelect" class="form-control" onchange="changeRegion(this.value)">
-                                <!-- Options populated by applyTranslations() -->
-                            </select>
-                        </div>
-                    </div>
                     <!-- New Product Form -->
                     <div class="settings-card">
                         <h3 data-i18n="addProductTitle">商品を登録する</h3>
@@ -3805,6 +3783,29 @@
                         <div id="existingProductsList"></div>
                     </div>
 
+                    <div class="settings-card">
+                        <h3 data-i18n="globalSettings">全体設定</h3>
+                        <div class="form-group">
+                            <label data-i18n="displayLanguage">表示言語</label>
+                            <select class="form-control" onchange="changeLanguage(this.value)">
+                                <option value="ja" ${currentLanguage === 'ja' ? 'selected' : ''}>日本語</option>
+                                <option value="en" ${currentLanguage === 'en' ? 'selected' : ''}>English</option>
+                                <option value="zh" ${currentLanguage === 'zh' ? 'selected' : ''}>中国語 (簡体字)</option>
+                                <option value="tw" ${currentLanguage === 'tw' ? 'selected' : ''}>中国語 (繁体字)</option>
+                                <option value="es" ${currentLanguage === 'es' ? 'selected' : ''}>Español</option>
+                                <option value="fr" ${currentLanguage === 'fr' ? 'selected' : ''}>Français</option>
+                                <option value="de" ${currentLanguage === 'de' ? 'selected' : ''}>Deutsch</option>
+                                <option value="pt" ${currentLanguage === 'pt' ? 'selected' : ''}>Português</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="currencyRegion">通貨・地域</label>
+                            <select id="regionSelect" class="form-control" onchange="changeRegion(this.value)">
+                                <!-- Options populated by applyTranslations() -->
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- App Info Footer -->
                     <div style="margin-top: 40px; text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 20px;">
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
@@ -3813,7 +3814,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.7.5</p>
+                        <p>BOXXレジ App v3.7.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
