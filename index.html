@@ -1482,7 +1482,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.3</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.4</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1922,7 +1922,7 @@
                 sizeS: "Sサイズ", sizeM: "Mサイズ", sizeL: "Lサイズ", sizeXL: "XLサイズ", sizeXS: "XSサイズ", sizeXXL: "XXLサイズ",
                 freeSize: "フリーサイズ", ladies: "レディース", red: "赤", blue: "青", yellow: "黄", green: "緑", white: "白", black: "黒",
                 normal: "通常", signed: "サイン入り", set: "セット",
-                variant: "バリエーション", quantity: "数量", complete: "完了"
+                variant: "バリエーション", quantity: "数量", complete: "完了", exact: "ピッタリ"
             },
             en: {
                 appName: "BOXX Register",
@@ -2038,7 +2038,7 @@
                 sizeS: "Size S", sizeM: "Size M", sizeL: "Size L", sizeXL: "Size XL", sizeXS: "Size XS", sizeXXL: "Size XXL",
                 freeSize: "Free Size", ladies: "Ladies", red: "Red", blue: "Blue", yellow: "Yellow", green: "Green", white: "White", black: "Black",
                 normal: "Normal", signed: "Signed", set: "Set",
-                variant: "Variant", quantity: "Quantity", complete: "Done"
+                variant: "Variant", quantity: "Quantity", complete: "Done", exact: "Exact"
             },
             zh: { // Simplified Chinese
                 appName: "BOXX收银台",
@@ -2106,7 +2106,8 @@
                 displayLanguage: "显示语言",
                 currencyRegion: "货币与地区",
                 newVersionAvailable: "有新版本可用",
-                updateNowBtn: "立即更新"
+                updateNowBtn: "立即更新",
+                exact: "刚好"
             },
             tw: { // Traditional Chinese
                 appName: "BOXX收銀台",
@@ -2174,7 +2175,8 @@
                 displayLanguage: "顯示語言",
                 currencyRegion: "貨幣與地區",
                 newVersionAvailable: "有新版本可用",
-                updateNowBtn: "立即更新"
+                updateNowBtn: "立即更新",
+                exact: "剛好"
             },
             es: {
                 appName: "Caja BOXX",
@@ -2242,7 +2244,8 @@
                 displayLanguage: "Idioma",
                 currencyRegion: "Moneda y Región",
                 newVersionAvailable: "Nueva versión disponible",
-                updateNowBtn: "Actualizar ahora"
+                updateNowBtn: "Actualizar ahora",
+                exact: "Exacto"
             },
             fr: {
                 appName: "Caisse BOXX",
@@ -2310,7 +2313,8 @@
                 displayLanguage: "Langue",
                 currencyRegion: "Monnaie et Région",
                 newVersionAvailable: "Nouvelle version disponible",
-                updateNowBtn: "Mettre à jour"
+                updateNowBtn: "Mettre à jour",
+                exact: "Juste"
             },
             de: {
                 appName: "BOXX Kasse",
@@ -2378,7 +2382,8 @@
                 displayLanguage: "Sprache",
                 currencyRegion: "Währung & Region",
                 newVersionAvailable: "Neue Version verfügbar",
-                updateNowBtn: "Jetzt aktualisieren"
+                updateNowBtn: "Jetzt aktualisieren",
+                exact: "Passend"
             },
             pt: {
                 appName: "Caixa BOXX",
@@ -2423,7 +2428,7 @@
                 variantLabel: "Adicionar Variante",
                 stockPrefix: "Stock",
                 priceSuffix: "~",
-                verTitle: "Versão",
+                verTitle: "Versión",
                 updateNow: "Atualizar",
                 adLabTitle: "SHOWTIMEBOXX LAB",
                 adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
@@ -2446,7 +2451,8 @@
                 displayLanguage: "Idioma",
                 currencyRegion: "Moeda e Região",
                 newVersionAvailable: "Nova versão disponível",
-                updateNowBtn: "Atualizar agora"
+                updateNowBtn: "Atualizar agora",
+                exact: "Exato"
             }
         };
         const CURRENCY_CONFIG = {
@@ -2567,8 +2573,8 @@
             const exactBtn = document.createElement('button');
             exactBtn.onclick = setExactAmount;
             exactBtn.style.cssText = 'padding:10px 2px; background:#fff3cd; border:1px solid #ffeeba; color:#856404; border-radius:10px; font-weight:bold; font-size:1.1rem; cursor:pointer;';
-            exactBtn.setAttribute('data-i18n', 'complete');
-            exactBtn.textContent = t('complete');
+            exactBtn.setAttribute('data-i18n', 'exact');
+            exactBtn.textContent = t('exact');
             container.appendChild(exactBtn);
         }
 
@@ -2899,7 +2905,10 @@
                 const stock = parseInt(variant.stock) || 0;
                 const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
                 const batchQty = currentBatchSelections[variant.name] || 0;
-                const remainingStock = stock - inCart - batchQty;
+                
+                // If stock is not set (empty string or 0 in some cases), treat as infinite
+                const isInfinite = variant.stock === "" || variant.stock === null || variant.stock === undefined;
+                const remainingStock = isInfinite ? 999999 : (stock - inCart - batchQty);
 
                 totalQty += batchQty;
                 totalAmount += batchQty * variant.price;
@@ -2959,8 +2968,9 @@
             const variant = currentSelectedProduct.variants.find(v => v.name === variantName);
             const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variantName).length;
             const stock = parseInt(variant.stock) || 0;
+            const isInfinite = variant.stock === "" || variant.stock === null || variant.stock === undefined;
 
-            if (newQty + inCart > stock) {
+            if (!isInfinite && newQty + inCart > stock) {
                 // Prevent going over stock
                 return;
             }
@@ -3607,7 +3617,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.5.3</p>
+                        <p>BOXXレジ App v3.5.4</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3854,7 +3864,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3503')
+                navigator.serviceWorker.register('./service-worker.js?v=3504')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

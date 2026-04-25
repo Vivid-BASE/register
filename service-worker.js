@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v92'; // v3.5.3 full localization fix
+const CACHE_NAME = 'boxx-reg-v93'; // v3.5.4 exact button & + button fix
 const ASSETS = [
   './',
   './index.html',
