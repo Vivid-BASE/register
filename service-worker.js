@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v91'; // v3.5.2 template & icon fix
+const CACHE_NAME = 'boxx-reg-v92'; // v3.5.3 full localization fix
 const ASSETS = [
   './',
   './index.html',
