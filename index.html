@@ -72,9 +72,10 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
+            height: 100dvh;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
         }
 
         /* Views */
@@ -95,31 +96,55 @@
 
         /* Mobile override for Shop View */
         @media (max-width: 767px) {
-            #shopView.active {
-                display: block;
-                /* Force block for absolute positioning */
+            .container {
+                flex-direction: column;
+                overflow-y: auto; /* Essential: The container scrolls on mobile */
+                -webkit-overflow-scrolling: touch;
+            }
+            .product-area, .cart-area, .view-body, .view-content {
+                height: auto !important;
+                overflow: visible !important;
+                min-height: 0;
+            }
+            .cart-area {
+                border-left: none;
+                border-top: 1px solid #ddd;
+                padding-bottom: 80px; /* Space for footer/safe area */
             }
         }
 
         /* Layout */
         .container {
-            display: block;
+            display: flex;
             width: 100%;
-            overflow: visible;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .view-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            flex-direction: row;
+        }
+
+        .view-content.active {
+            display: flex;
         }
 
         .view-body {
+            flex: 1;
             padding: var(--spacing-unit);
-            display: block;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
             width: 100%;
+            min-height: 0;
         }
         
         #summaryView, #settingsView {
-            display: none;
-        }
-        
-        #summaryView.active, #settingsView.active {
-            display: block;
+            flex-direction: column;
         }
 
         .product-area {
@@ -1475,7 +1500,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.1.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.2.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3499,7 +3524,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.1.5</p>
+                        <p>BOXXレジ App v3.2.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3738,7 +3763,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3105')
+                navigator.serviceWorker.register('./service-worker.js?v=3200')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v71'; // v3.1.5 emergency rescue fix
+const CACHE_NAME = 'boxx-reg-v72'; // v3.2.0 Grid & Responsive fix
 const ASSETS = [
   './',
   './index.html',
