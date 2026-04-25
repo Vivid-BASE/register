@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v87'; // v3.4.2 Canada support
+const CACHE_NAME = 'boxx-reg-v88'; // v3.4.3 EU Amazon support
 const ASSETS = [
   './',
   './index.html',
