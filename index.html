@@ -1862,8 +1862,8 @@
         // アプリが動き出したら、すぐに「どこの国かな？」と調べ始めるよ
         initAmazonAffiliateOptimization();
 
-        // 備品リスト（イベントや物販の現場で「本当に使うもの」だけを集めたよ）
-        const AMAZON_KEYWORDS = [
+        // 備品リスト（現場で本当に使うものだけを厳選）
+        const AMAZON_KEYWORDS_JP = [
             "TERAOKA+145+黒+50mmX25M", // 養生テープ（設営の必須アイテム）
             "梱包資材+プチプチ",        // 割れ物用
             "コインケース+釣銭",        // 現金管理
@@ -1871,16 +1871,28 @@
             "ポップスタンド+卓上",      // 商品説明・価格表示用
             "モバイルバッテリー+大容量", // スマホレジの命綱
             "レジ袋+手提げ+セット",     // お持ち帰り用
-            "養生テープ",
-            "プチプチ",
-            "コインケース",
-            "台車",
-            "ポップスタンド",
-            "モバイルバッテリー",
-            "レジ袋",
-            "値札シール",
-            "ブラックボード",
-            "ポスカ"
+            "チェキ+フィルム",          // 現場の生命線
+            "チェキ+本体",              // 予備用
+            "チェキ+電池",              // 忘れがちなCR2など
+            "チェキ+セール",            // お得なまとめ買い
+            "養生テープ", "プチプチ", "コインケース", "台車", "ポップスタンド",
+            "モバイルバッテリー", "レジ袋", "値札シール", "ポスカ"
+        ];
+
+        const AMAZON_KEYWORDS_EN = [
+            "Gaffer+Tape+Black",
+            "Bubble+Wrap+Packaging",
+            "Coin+Case+Tray",
+            "Folding+Hand+Truck",
+            "Tabletop+Sign+Holder",
+            "Power+Bank+High+Capacity",
+            "Plastic+Shopping+Bags",
+            "Instax+Film",
+            "Instax+Camera",
+            "CR2+Batteries+for+Instax",
+            "Instax+Film+Sale",
+            "Price+Stickers",
+            "Posca+Markers"
         ];
 
         // Googleアナリティクスに「何が起きたか」を報告する関数です
@@ -1921,7 +1933,9 @@
             // タグ決定 (日本なら jackpotrash-22, 海外なら showtimeboxx-20)
             const tag = isJP ? 'jackpotrash-22' : 'showtimeboxx-20';
             
-            const kw = AMAZON_KEYWORDS[Math.floor(Math.random() * AMAZON_KEYWORDS.length)];
+            // キーワード決定 (地域に合わせて言語を切り替え)
+            const list = isJP ? AMAZON_KEYWORDS_JP : AMAZON_KEYWORDS_EN;
+            const kw = list[Math.floor(Math.random() * list.length)];
             trackEvent('amazon_click', 'affiliate', `${domain} | ${kw}`);
             
             let url = `https://${domain}/s?k=${kw}&tag=${tag}`;
@@ -3796,7 +3810,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.7.3</p>
+                        <p>BOXXレジ App v3.7.4</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
