@@ -999,6 +999,9 @@
         .ad-theme-lab { background: linear-gradient(135deg, #1e3a8a, #3b82f6); border: 1px solid #1e3a8a; }
         .ad-theme-creative { background: linear-gradient(135deg, #581c87, #9333ea); border: 1px solid #581c87; }
         .ad-theme-main { background: linear-gradient(135deg, #7f1d1d, #ef4444); border: 1px solid #7f1d1d; }
+        .ad-theme-coffee { background: linear-gradient(135deg, #FFDD00 0%, #FBB03B 100%); color: #000; border: 1px solid #D69700; }
+        .ad-theme-coffee .ad-banner-title, .ad-theme-coffee .ad-banner-text { color: #000; font-weight: 800; }
+        .ad-theme-coffee .ad-banner-arrow { color: #000; }
 
         /* Mobile adjustment for variant row */
         /* Mobile adjustment for variant row */
@@ -1452,12 +1455,16 @@
     <div class="container">
 
         <!-- SHOP VIEW -->
-        <!-- SHOP VIEW -->
         <div id="shopView" class="view-content active">
             <main class="product-area">
                 <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=shop_view" target="_blank" class="ad-banner ad-theme-lab">
-                    <div class="ad-banner-title">SHOWTIMEBOXX LAB</div>
+                    <div class="ad-banner-title" data-i18n="adLabTitle">SHOWTIMEBOXX LAB</div>
                     <div class="ad-banner-text" data-i18n="adLab">業務効率化！オリジナルアプリ開発</div>
+                    <div class="ad-banner-arrow">〉</div>
+                </a>
+                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                    <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
+                    <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -1480,8 +1487,13 @@
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
             <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
-                <div class="ad-banner-title">SHOWTIMEBOXX CREATIVE</div>
+                <div class="ad-banner-title" data-i18n="adCreativeTitle">SHOWTIMEBOXX CREATIVE</div>
                 <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
+                <div class="ad-banner-arrow">〉</div>
+            </a>
+            <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
+                <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1496,8 +1508,13 @@
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
             <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
-                <div class="ad-banner-title">SHOWTIMEBOXX</div>
+                <div class="ad-banner-title" data-i18n="adMainTitle">SHOWTIMEBOXX</div>
                 <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
+                <div class="ad-banner-arrow">〉</div>
+            </a>
+            <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
+                <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                 <div class="ad-banner-arrow">〉</div>
             </a>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -1598,7 +1615,7 @@
 
             <div style="background: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; text-align: left; display: flex; align-items: center; gap: 10px; border: 1px solid #bbdefb;">
                 <span style="font-size: 1.5rem; flex-shrink: 0;">📱</span>
-                <span>このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
+                <span data-i18n="pwaBannerDescLong">このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。</span>
             </div>
             <script>
                 function confirmAndOpenAmazon() {
@@ -1706,7 +1723,6 @@
             return AMAZON_LINKS[Math.floor(Math.random() * AMAZON_LINKS.length)];
         }
 
-        // --- Global I18N Configuration (8 Languages / 88 Countries) ---
         const I18N = {
             ja: {
                 appName: "BOXXレジ",
@@ -1740,13 +1756,48 @@
                 updating: "強制アップデートを実行中...",
                 menuLocRightBottom: "右下",
                 menuLocRightTop: "右上",
-                inAppGuideLong: "このアプリはオフラインでもご利用いただけますが、商品データを保存するために<br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">画面{menuLoc} <span style=\"font-size:1.8rem; vertical-align:middle; line-height:0;\">⋮</span> の ブラウザで開く</span> <br>からご利用いただくことを推奨いたします。",
+                inAppGuideLong: "このアプリはオフラインでもご利用いただけますが、データを安全に保存するために<br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">画面{menuLoc}の ( ⋮ ) メニューから<br>「ブラウザで開く」</span>を選択してください。",
                 afterInAppGuide: "その後「ホーム画面に追加」していただくと、普通のアプリの様にご利用いただけます。",
                 regular: "通常",
                 pwaInstallGuideTitle: "📱 ホーム画面に追加する手順",
                 pwaStep1Long: "① Safari下の <strong>共有ボタン</strong> ( <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" style=\"vertical-align:middle; display:inline-block;\"><path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"></path><polyline points=\"16 6 12 2 8 6\"></polyline><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"15\"></line></svg> ) をタップ",
                 pwaStep2Long: "② メニューにある <strong>「ホーム画面に追加」</strong> を選択してください。",
-                noStock: "在庫が足りません"
+                noStock: "在庫が足りません",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "商品を登録する",
+                productNameLabel: "商品名",
+                variantsLabel: "バリエーション (サイズ/色)",
+                saveButton: "保存する",
+                registeredProductsTitle: "登録済み商品一覧",
+                guideTitle: "まずは商品を登録！",
+                guideDesc: "右上の「設定」から商品を登録して、レジを使い始めましょう。",
+                placeholderName: "例: Tシャツ",
+                placeholderVariant: "種類名 (空欄可)",
+                placeholderPrice: "価格",
+                placeholderStock: "在庫",
+                pwaBannerDescLong: "このアプリを<strong>「ホーム画面に追加」</strong>すると、全画面表示でより使いやすくなります。",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "開発を支援する（寄付）",
+                globalSettings: "全体設定",
+                displayLanguage: "表示言語",
+                currencyRegion: "通貨・地域",
+                cash: "現金",
+                credit: "クレカ",
+                remove: "取消",
+                productList: "商品一覧",
+                unitPrice: "単価",
+                soldCount: "本日売れた数",
+                stockCount: "残り在庫",
+                paymentMethod: "決済",
+                productNameVar: "商品名 - バリエーション",
+                readyDesc: "次回に向けての準備はお済みですか？",
+                checkoutBtn: "会計する",
+                total: "合計",
+                verTitle: "バージョン",
+                updateNow: "更新",
+                variantLabel: "バリエーション追加"
             },
             en: {
                 appName: "BOXX Register",
@@ -1791,7 +1842,7 @@
                 receivedAmount: "Amount Received",
                 changeAmount: "Change",
                 complete: "Done",
-                variantLabel: "Common Items (Tap to Add)",
+                variantLabel: "Add Variant",
                 stockPrefix: "Stock",
                 priceSuffix: "~",
                 verTitle: "Version",
@@ -1825,13 +1876,30 @@
                 updating: "Force updating...",
                 menuLocRightBottom: "bottom-right",
                 menuLocRightTop: "top-right",
-                inAppGuideLong: "This app works offline, but to save product data, we recommend opening it in a <br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">browser via the {menuLoc} <span style=\"font-size:1.8rem; vertical-align:middle; line-height:0;\">⋮</span> menu</span>.",
+                inAppGuideLong: "This app works offline, but to save data correctly, please open it in a <br><span style=\"color:#ffcc00; font-size:1.3rem; border:1px solid rgba(255,204,0,0.3); padding:2px 5px; border-radius:4px; background:rgba(255,204,0,0.1);\">browser via the {menuLoc} ( ⋮ ) menu<br>and select 'Open in browser'</span>.",
                 afterInAppGuide: "Then use 'Add to Home Screen' to use it like a native app.",
                 regular: "Regular",
                 pwaInstallGuideTitle: "📱 How to Add to Home Screen",
                 pwaStep1Long: "① Tap the <strong>Share button</strong> ( <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" style=\"vertical-align:middle; display:inline-block;\"><path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"></path><polyline points=\"16 6 12 2 8 6\"></polyline><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"15\"></line></svg> ) at the bottom of Safari",
                 pwaStep2Long: "② Select <strong>'Add to Home Screen'</strong> from the menu.",
-                noStock: "Not enough stock"
+                noStock: "Not enough stock",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "Register Products",
+                productNameLabel: "Product Name",
+                variantsLabel: "Variants (Size/Color)",
+                saveButton: "Save Product",
+                registeredProductsTitle: "Registered Products",
+                guideTitle: "Register Products First!",
+                guideDesc: "Add products from 'Settings' in the top right to start using the register.",
+                placeholderName: "e.g. T-shirt",
+                placeholderVariant: "Variant Name (Optional)",
+                placeholderPrice: "Price",
+                placeholderStock: "Stock",
+                pwaBannerDescLong: "Add this app to your <strong>'Home Screen'</strong> for a full-screen experience.",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "Support this project with a donation"
             },
             zh: { // Simplified Chinese
                 appName: "BOXX收银台",
@@ -1877,7 +1945,27 @@
                 stockPrefix: "存",
                 priceSuffix: "~",
                 verTitle: "版本",
-                updateNow: "更新"
+                updateNow: "更新",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "商品登记",
+                productNameLabel: "商品名称",
+                variantsLabel: "规格 (尺寸/颜色)",
+                saveButton: "保存商品",
+                registeredProductsTitle: "已登记商品",
+                guideTitle: "请先登记商品！",
+                guideDesc: "从右上角的“设置”中添加商品以开始使用收银台。",
+                placeholderName: "例如：T恤",
+                placeholderVariant: "规格名称 (可选)",
+                placeholderPrice: "价格",
+                placeholderStock: "库存",
+                pwaBannerDescLong: "将此应用添加到“主屏幕”以获得全屏体验。",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "支持此项目 (捐赠)",
+                globalSettings: "全局设置",
+                displayLanguage: "显示语言",
+                currencyRegion: "货币与地区"
             },
             tw: { // Traditional Chinese
                 appName: "BOXX收銀台",
@@ -1923,7 +2011,27 @@
                 stockPrefix: "存",
                 priceSuffix: "~",
                 verTitle: "版本",
-                updateNow: "更新"
+                updateNow: "更新",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "商品登記",
+                productNameLabel: "商品名稱",
+                variantsLabel: "規格 (尺寸/顏色)",
+                saveButton: "保存商品",
+                registeredProductsTitle: "已登記商品",
+                guideTitle: "請先登記商品！",
+                guideDesc: "從右上角的「設置」中添加商品以開始使用收銀台。",
+                placeholderName: "例如：T恤",
+                placeholderVariant: "規格名稱 (可選)",
+                placeholderPrice: "價格",
+                placeholderStock: "庫存",
+                pwaBannerDescLong: "將此應用添加到「主螢幕」以獲得全屏體驗。",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "支持此項目 (捐贈)",
+                globalSettings: "全局設置",
+                displayLanguage: "顯示語言",
+                currencyRegion: "貨幣與地區"
             },
             es: {
                 appName: "Caja BOXX",
@@ -1937,7 +2045,7 @@
                 emptyCart: "Carrito vacío",
                 productEntry: "Registro de Productos",
                 todaySummary: "Resumen Diario",
-                resetSales: "Reiniciar Ventas Diarias",
+                resetSales: "Reiniciar Ventas",
                 checkSupplies: "📦 Revisar Suministros (Amazon)",
                 amazonBtn: "Ver Stock",
                 morning: "¡Buenos días!",
@@ -1947,29 +2055,49 @@
                 backToCalendar: "◀ Volver al Calendario",
                 noProducts: "No hay productos",
                 guideText: "¡Primero, registra productos en <strong>Ajustes</strong>!",
-                addInSettings: "Añadir en Ajustes",
+                addInSettings: "Añadir",
                 pwaBannerTitle: "Añadir a Inicio",
                 pwaBannerDesc: "Úsalo como una app nativa",
-                pwaGuideBtn: "Cómo hacerlo",
+                pwaGuideBtn: "Cómo",
                 inAppGuide: "Abrir en Navegador",
-                inAppDesc: "Esta app funciona offline, pero se recomienda abrir en el navegador para guardar datos.",
+                inAppDesc: "Esta app funciona offline, abre en el navegador para guardar datos.",
                 pwaStepsTitle: "📱 Añadir a Pantalla de Inicio",
-                step1: "① Toca el <strong>botón Compartir</strong> en Safari",
+                step1: "① Toca el <strong>botón Compartir</strong>",
                 step2: "② Selecciona <strong>'Añadir a pantalla de inicio'</strong>.",
                 cancel: "Cancelar",
-                confirmReset: "¿Reiniciar las ventas de hoy?",
+                confirmReset: "¿Reiniciar ventas?",
                 confirmDelete: "¿Eliminar este producto?",
-                saveToHistory: "Guardado en Historial",
-                removedFromHistory: "Eliminado del Historial",
+                saveToHistory: "Guardado",
+                removedFromHistory: "Eliminado",
                 paymentTitle: "Pago",
                 receivedAmount: "Recibido",
                 changeAmount: "Cambio",
                 complete: "Listo",
-                variantLabel: "Ítems Comunes",
+                variantLabel: "Añadir Variante",
                 stockPrefix: "Stock",
                 priceSuffix: "~",
                 verTitle: "Versión",
-                updateNow: "Actualizar"
+                updateNow: "Actualizar",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "Registrar Producto",
+                productNameLabel: "Nombre del Producto",
+                variantsLabel: "Variantes (Talla/Color)",
+                saveButton: "Guardar Producto",
+                registeredProductsTitle: "Productos Registrados",
+                guideTitle: "¡Registra productos primero!",
+                guideDesc: "Añade productos desde 'Ajustes' para empezar.",
+                placeholderName: "Ej: Camiseta",
+                placeholderVariant: "Nombre de variante (Opcional)",
+                placeholderPrice: "Precio",
+                placeholderStock: "Stock",
+                pwaBannerDescLong: "Añade esta app a tu pantalla de inicio para una mejor experiencia.",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "Apoya este proyecto (Donación)",
+                globalSettings: "Ajustes Globales",
+                displayLanguage: "Idioma",
+                currencyRegion: "Moneda y Región"
             },
             fr: {
                 appName: "Caisse BOXX",
@@ -1998,24 +2126,44 @@
                 pwaBannerDesc: "Utilisez-le comme une application",
                 pwaGuideBtn: "Comment",
                 inAppGuide: "Ouvrir Navigateur",
-                inAppDesc: "Cette application fonctionne hors ligne, mais ouvrez-la dans Safari pour enregistrer les données.",
+                inAppDesc: "Cette application fonctionne hors ligne, ouvrez-la dans Safari.",
                 pwaStepsTitle: "📱 Ajouter à l'écran d'accueil",
                 step1: "① Appuyez sur le <strong>bouton Partager</strong>",
                 step2: "② Choisissez <strong>'Sur l'écran d'accueil'</strong>.",
                 cancel: "Annuler",
-                confirmReset: "Réinitialiser les ventes ?",
-                confirmDelete: "Supprimer ce produit ?",
+                confirmReset: "Réinitialiser ?",
+                confirmDelete: "Supprimer ?",
                 saveToHistory: "Enregistré",
                 removedFromHistory: "Supprimé",
                 paymentTitle: "Paiement",
                 receivedAmount: "Montant Reçu",
                 changeAmount: "Monnaie",
                 complete: "Terminé",
-                variantLabel: "Articles Courants",
+                variantLabel: "Ajouter Variante",
                 stockPrefix: "Stock",
                 priceSuffix: "~",
                 verTitle: "Version",
-                updateNow: "Mettre à jour"
+                updateNow: "Mettre à jour",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "Enregistrer Produit",
+                productNameLabel: "Nom du Produit",
+                variantsLabel: "Variantes (Taille/Couleur)",
+                saveButton: "Enregistrer",
+                registeredProductsTitle: "Produits Enregistrés",
+                guideTitle: "Enregistrez des produits !",
+                guideDesc: "Ajoutez des produits dans les 'Réglages' pour commencer.",
+                placeholderName: "Ex: T-shirt",
+                placeholderVariant: "Nom de variante (Optionnel)",
+                placeholderPrice: "Prix",
+                placeholderStock: "Stock",
+                pwaBannerDescLong: "Ajoutez cette app à l'écran d'accueil pour une expérience plein écran.",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "Soutenir ce projet (Donation)",
+                globalSettings: "Réglages Globaux",
+                displayLanguage: "Langue",
+                currencyRegion: "Monnaie et Région"
             },
             de: {
                 appName: "BOXX Kasse",
@@ -2044,7 +2192,7 @@
                 pwaBannerDesc: "Wie eine echte App nutzen",
                 pwaGuideBtn: "Anleitung",
                 inAppGuide: "Im Browser öffnen",
-                inAppDesc: "Diese App funktioniert offline, aber bitte im Browser öffnen für Daten-Sync.",
+                inAppDesc: "Diese App funktioniert offline, bitte im Browser öffnen.",
                 pwaStepsTitle: "📱 Zum Home-Bildschirm",
                 step1: "① Tippen Sie auf <strong>Teilen</strong>",
                 step2: "② Wählen Sie <strong>'Zum Home-Bildschirm'</strong>.",
@@ -2057,11 +2205,31 @@
                 receivedAmount: "Erhalten",
                 changeAmount: "Wechselgeld",
                 complete: "Fertig",
-                variantLabel: "Häufige Artikel",
+                variantLabel: "Variante hinzufügen",
                 stockPrefix: "Bestand",
                 priceSuffix: "~",
                 verTitle: "Version",
-                updateNow: "Update"
+                updateNow: "Update",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "Produkt registrieren",
+                productNameLabel: "Produktname",
+                variantsLabel: "Varianten (Größe/Farbe)",
+                saveButton: "Speichern",
+                registeredProductsTitle: "Registrierte Produkte",
+                guideTitle: "Produkte anlegen!",
+                guideDesc: "Legen Sie Produkte in den 'Einstellungen' an, um zu starten.",
+                placeholderName: "z.B. T-Shirt",
+                placeholderVariant: "Variantenname (Optional)",
+                placeholderPrice: "Preis",
+                placeholderStock: "Bestand",
+                pwaBannerDescLong: "Zum Home-Bildschirm hinzufügen für Vollbild-Erlebnis.",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "Dieses Projekt unterstützen (Spende)",
+                globalSettings: "Globale Einstellungen",
+                displayLanguage: "Sprache",
+                currencyRegion: "Währung & Region"
             },
             pt: {
                 appName: "Caixa BOXX",
@@ -2088,29 +2256,48 @@
                 addInSettings: "Adicionar",
                 pwaBannerTitle: "Adicionar ao Ecrã",
                 pwaBannerDesc: "Use como uma app nativa",
-                pwaGuideBtn: "Como fazer",
+                pwaGuideBtn: "Como",
                 inAppGuide: "Abrir Navegador",
-                inAppDesc: "Esta app funciona offline, mas use o navegador para salvar dados.",
+                inAppDesc: "Esta app funciona offline, use o navegador.",
                 pwaStepsTitle: "📱 Adicionar ao Ecrã Principal",
                 step1: "① Toque no <strong>botão Partilhar</strong>",
                 step2: "② Selecione <strong>'Ecrã Principal'</strong>.",
                 cancel: "Cancelar",
-                confirmReset: "Reiniciar vendas de hoje?",
-                confirmDelete: "Apagar este produto?",
+                confirmReset: "Reiniciar vendas?",
+                confirmDelete: "Apagar produto?",
                 saveToHistory: "Guardado",
                 removedFromHistory: "Apagado",
                 paymentTitle: "Pagamento",
                 receivedAmount: "Recebido",
                 changeAmount: "Troco",
                 complete: "Concluído",
-                variantLabel: "Itens Comuns",
+                variantLabel: "Adicionar Variante",
                 stockPrefix: "Stock",
                 priceSuffix: "~",
                 verTitle: "Versão",
-                updateNow: "Atualizar"
+                updateNow: "Atualizar",
+                adLabTitle: "SHOWTIMEBOXX LAB",
+                adCreativeTitle: "SHOWTIMEBOXX CREATIVE",
+                adMainTitle: "SHOWTIMEBOXX",
+                addProductTitle: "Registar Produto",
+                productNameLabel: "Nome do Produto",
+                variantsLabel: "Variantes (Tamanho/Cor)",
+                saveButton: "Guardar",
+                registeredProductsTitle: "Produtos Registados",
+                guideTitle: "Registe produtos!",
+                guideDesc: "Adicione produtos nos 'Ajustes' para começar.",
+                placeholderName: "Ex: T-shirt",
+                placeholderVariant: "Nome da variante (Opcional)",
+                placeholderPrice: "Preço",
+                placeholderStock: "Stock",
+                pwaBannerDescLong: "Adicione ao ecrã principal para experiência em ecrã total.",
+                coffeeTitle: "BUY ME A COFFEE",
+                coffeeText: "Apoie este projeto (Doação)",
+                globalSettings: "Ajustes Globais",
+                displayLanguage: "Idioma",
+                currencyRegion: "Moeda e Região"
             }
         };
-
         const CURRENCY_CONFIG = {
             ja: { symbol: "¥", domain: "www.amazon.co.jp", kw: "TERAOKA+145+黒+50mmX25M" },
             en: { symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black+2-inch" },
@@ -2162,14 +2349,35 @@
         }
 
         function applyTranslations() {
+            const isNonJa = currentLanguage !== 'ja';
+            
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
+                let text = t(key);
+                
+                // Special handling for In-App guide (inject menu location)
+                if (key === 'inAppGuideLong') {
+                    const isBottomMenu = /Line|FBAV|Instagram/i.test(navigator.userAgent);
+                    const locKey = isBottomMenu ? 'menuLocRightBottom' : 'menuLocRightTop';
+                    text = text.replace('{menuLoc}', t(locKey));
+                }
+
                 if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
-                    el.placeholder = t(key);
+                    el.placeholder = text;
                 } else {
-                    el.innerHTML = t(key);
+                    el.innerHTML = text;
                 }
             });
+
+            // Banner Swap Logic: Hide SHOWTIMEBOXX ads and show Buy Me A Coffee if non-Japanese
+            document.querySelectorAll('.ad-banner').forEach(banner => {
+                if (banner.classList.contains('ad-theme-coffee')) {
+                    banner.style.display = isNonJa ? 'block' : 'none';
+                } else {
+                    banner.style.display = isNonJa ? 'none' : 'block';
+                }
+            });
+
             document.title = t('appName');
             const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
             if (appleTitle) appleTitle.setAttribute('content', t('appName'));
@@ -2419,7 +2627,6 @@
         }
 
         // --- Shop Logic: Render ---
-        // --- Shop Logic: Render ---
         function renderProducts() {
             if (!productGrid) return;
             productGrid.innerHTML = '';
@@ -2596,8 +2803,6 @@
             modal.classList.remove('active');
             currentSelectedProduct = null;
         }
-
-        // addFromSelect removed as it is no longer used
 
         function increaseQTY(prodId, varName) {
             const product = products.find(p => p.id === prodId);
@@ -3153,18 +3358,17 @@
 
             container.innerHTML = `
                 <div class="settings-container">
-                    <div id="pwa-settings-guide" class="setting-item" style="background:rgba(0,123,255,0.05); border:1px dashed var(--primary-color);">
-                        <i class="fas fa-mobile-alt"></i>
+                    <div id="pwa-settings-guide" class="setting-item" style="background:rgba(0,123,255,0.05); border:1px dashed var(--primary-color); margin-bottom:15px; padding:15px; border-radius:12px; display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-mobile-alt" style="font-size:1.5rem; color:var(--primary-color);"></i>
                         <div style="flex:1; font-size:0.85rem;">
                             <strong data-i18n="pwaBannerTitle">ホーム画面に追加して使う</strong><br>
-                            <span style="color:#666; font-size:0.75rem;" data-i18n="pwaBannerDesc">全画面表示になり、より本物のレジのように使いやすくなります。</span>
+                            <span style="color:#666; font-size:0.75rem;" data-i18n="pwaBannerDescLong">このアプリを「ホーム画面に追加」すると、全画面表示でより使いやすくなります。</span>
                         </div>
                         <button onclick="showInstallBanner(true)" style="background:var(--primary-color); color:#fff; border:none; padding:5px 12px; border-radius:6px; font-size:0.75rem; cursor:pointer;" data-i18n="pwaGuideBtn">ガイドを表示</button>
                     </div>
 
-                    <!-- Global Settings Card -->
                     <div class="settings-card">
-                        <h3 data-i18n="globalSettings">全体設定</h3>
+                        <h3 data-i18n="globalSettings">設定</h3>
                         <div class="form-group">
                             <label data-i18n="displayLanguage">表示言語</label>
                             <select class="form-control" onchange="changeLanguage(this.value)">
@@ -3197,7 +3401,7 @@
                         <h3 data-i18n="addProductTitle">商品を登録する</h3>
                         <div class="form-group">
                             <label data-i18n="productNameLabel">商品名</label>
-                            <input type="text" id="newProdName" class="form-control" placeholder="例: Tシャツ" list="commonProductNames">
+                            <input type="text" id="newProdName" class="form-control" data-i18n="placeholderName" placeholder="${t('placeholderName')}" list="commonProductNames">
                             <datalist id="commonProductNames">
                                 ${productKeys.map(k => `<option value="${t(k)}">`).join('')}
                             </datalist>
@@ -3247,10 +3451,10 @@
             // Layout: Name | Price | Stock | Del
             // Use placeholders effectively
             div.innerHTML = `
-                <input type="text" placeholder="種類名 (空欄可)" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
-                <input type="number" placeholder="価格" class="form-control" value="${priceVal}">
-                <input type="number" placeholder="在庫" class="form-control" value="${stockVal}">
-                <button class="btn-remove-variant" onclick="this.parentElement.remove()" title="削除">×</button>
+                <input type="text" data-i18n="placeholderVariant" placeholder="${t('placeholderVariant')}" class="form-control" value="${nameVal}" style="grid-column: span 1" list="commonVariantNames">
+                <input type="number" data-i18n="placeholderPrice" placeholder="${t('placeholderPrice')}" class="form-control" value="${priceVal}">
+                <input type="number" data-i18n="placeholderStock" placeholder="${t('placeholderStock')}" class="form-control" value="${stockVal}">
+                <button class="btn-remove-variant" onclick="this.parentElement.remove()" title="${t('delete')}">×</button>
             `;
             container.appendChild(div);
         }
