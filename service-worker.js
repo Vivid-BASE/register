@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v99'; // v3.6.5 Mobile layout and timezone-based localization fixes
+const CACHE_NAME = 'boxx-reg-v100'; // v3.6.6 Region-aware Amazon localization and JPY parameter
 const ASSETS = [
   './',
   './index.html',

@@ -1506,7 +1506,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1834,7 +1834,11 @@
 
         // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
         function getRandomAmazonLink() {
-            const isJP = (userAccessCountry === 'JP');
+            // 【最優先】設定画面の「地域 (currentRegion)」をチェック
+            // 設定が日本なら、自動判定に関わらず日本のアマゾンを強制する
+            const isManualJP = (currentRegion === 'ja');
+            const isAutoJP = (userAccessCountry === 'JP');
+            const isJP = isManualJP || isAutoJP;
             
             // ドメイン決定
             let domain = 'www.amazon.com';
@@ -1859,7 +1863,12 @@
             trackEvent('amazon_click', 'affiliate', `${domain} | ${kw}`);
             
             let url = `https://${domain}/s?k=${kw}&tag=${tag}`;
-            if (isJP) url += `&language=ja_JP`;
+            
+            // 日本の場合、アプリに対して「日本ですよ」と強くアピールするパラメータを追加
+            if (isJP) {
+                url += `&language=ja_JP&currency=JPY`;
+            }
+            
             return url;
         }
         // --- Amazon Global Optimization End ---
@@ -3661,7 +3670,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.6.5</p>
+                        <p>BOXXレジ App v3.6.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
