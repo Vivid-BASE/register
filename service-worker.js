@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v72'; // v3.2.0 Grid & Responsive fix
+const CACHE_NAME = 'boxx-reg-v73'; // v3.2.1 Shop Stack & Settings Scroll fix
 const ASSETS = [
   './',
   './index.html',
