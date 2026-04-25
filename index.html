@@ -21,6 +21,15 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon-v11.png?v=11">
     <meta name="theme-color" content="#1A1A40">
     <!-- Update: Inventory & Sales Management -->
+    <!-- Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9SKXZLFLN1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9SKXZLFLN1');
+    </script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -1474,7 +1483,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.3</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1492,7 +1501,7 @@
                     <div class="ad-banner-text" data-i18n="adLab">業務効率化！オリジナルアプリ開発</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
-                <a href="https://buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                <a href="https://buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee" onclick="trackEvent('bmac_click', 'donation', 'shop_view')">
                     <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
                     <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                     <div class="ad-banner-arrow">〉</div>
@@ -1522,7 +1531,7 @@
                     <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
-                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee" onclick="trackEvent('bmac_click', 'donation', 'settings_view')">
                     <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
                     <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                     <div class="ad-banner-arrow">〉</div>
@@ -1543,7 +1552,7 @@
                     <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
-                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee" onclick="trackEvent('bmac_click', 'donation', 'summary_view')">
                     <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
                     <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
                     <div class="ad-banner-arrow">〉</div>
@@ -1775,6 +1784,17 @@
             "ポスカ+セット"             // 看板・POP作成用
         ];
 
+        // Googleアナリティクスに「何が起きたか」を報告する関数です
+        function trackEvent(action, category, label) {
+            if (typeof gtag === 'function') {
+                gtag('event', action, {
+                    'event_category': category,
+                    'event_label': label,
+                    'user_country': userAccessCountry // 判定されたアクセス国も一緒に送るよ
+                });
+            }
+        }
+
         // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
         function getRandomAmazonLink() {
             const isJP = (userAccessCountry === 'JP');
@@ -1799,6 +1819,10 @@
             
             // キーワードをランダムに選んで、URLを組み立てるよ
             const kw = AMAZON_KEYWORDS[Math.floor(Math.random() * AMAZON_KEYWORDS.length)];
+            
+            // 【分析】どの国のリンクが踏まれたか、GA4にこっそり教えるよ
+            trackEvent('amazon_click', 'affiliate', `${domain} | ${kw}`);
+            
             return `https://${domain}/s?k=${kw}&tag=${tag}`;
         }
         // --- Amazon Global Optimization End ---
@@ -3566,7 +3590,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.4.3</p>
+                        <p>BOXXレジ App v3.5.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3805,7 +3829,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3403')
+                navigator.serviceWorker.register('./service-worker.js?v=3500')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

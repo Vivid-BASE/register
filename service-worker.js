@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v88'; // v3.4.3 EU Amazon support
+const CACHE_NAME = 'boxx-reg-v89'; // v3.5.0 GA4 tracking
 const ASSETS = [
   './',
   './index.html',
