@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v76'; // v3.2.6 decimal support fix
+const CACHE_NAME = 'boxx-reg-v77'; // v3.2.7 product decimal fix
 const ASSETS = [
   './',
   './index.html',
