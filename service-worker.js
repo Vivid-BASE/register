@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v67'; // v3.0.9 banner flex fix
+const CACHE_NAME = 'boxx-reg-v68'; // v3.1.0 summary visibility fix
 const ASSETS = [
   './',
   './index.html',
