@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v78'; // v3.2.8 clean region labels
+const CACHE_NAME = 'boxx-reg-v80'; // v3.3.2 region label with symbol
 const ASSETS = [
   './',
   './index.html',
