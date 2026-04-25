@@ -388,7 +388,7 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
             display: none;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
             z-index: 5000;
             overflow-y: auto;
@@ -401,14 +401,13 @@
 
         .modal-content {
             background: #ffffff;
-            /* Explicit white */
             border-radius: var(--border-radius);
-            width: 90%;
+            width: 95%;
             max-width: 500px;
             padding: 24px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            max-height: 90vh;
-            /* Prevent overflow on small screens */
+            margin: auto;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
         }
@@ -1483,7 +1482,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.0</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3590,7 +3589,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.5.0</p>
+                        <p>BOXXレジ App v3.5.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3829,7 +3828,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3500')
+                navigator.serviceWorker.register('./service-worker.js?v=3501')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

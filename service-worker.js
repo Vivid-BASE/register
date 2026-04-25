@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v89'; // v3.5.0 GA4 tracking
+const CACHE_NAME = 'boxx-reg-v90'; // v3.5.1 modal position fix
 const ASSETS = [
   './',
   './index.html',
