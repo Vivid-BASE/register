@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v103'; // v3.6.9 Forced refresh for summary UI fixes
+const CACHE_NAME = 'boxx-reg-v104'; // v3.7.0 Enhanced cache-busting for iOS PWA
 const ASSETS = [
   './',
   './index.html',

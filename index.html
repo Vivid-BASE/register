@@ -1518,7 +1518,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.9</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3694,7 +3694,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.6.9</p>
+                        <p>BOXXレジ App v3.7.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -4017,8 +4017,9 @@
                     await Promise.all(names.map(name => caches.delete(name)));
                 } catch (e) {}
             }
-            // 強制リロード
-            window.location.reload(true);
+            // 強制リロード (パラメータ付与でキャッシュ回避)
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.location.href = cleanUrl + '?v=' + Date.now();
         }
 
         /**
