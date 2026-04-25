@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v98'; // v3.6.4 iPhone layout and persistence fixes
+const CACHE_NAME = 'boxx-reg-v99'; // v3.6.5 Mobile layout and timezone-based localization fixes
 const ASSETS = [
   './',
   './index.html',
