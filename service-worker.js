@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v106'; // v3.7.2 Responsive summary list fix
+const CACHE_NAME = 'boxx-reg-v107'; // v3.7.3 Subtotal & Premium Summary UI
 const ASSETS = [
   './',
   './index.html',

@@ -1563,7 +1563,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.2</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.3</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1649,6 +1649,7 @@
                                 <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
                                 <th data-i18n="unitPrice">単価</th>
                                 <th data-i18n="soldCount">本日売れた数</th>
+                                <th data-i18n="subtotal">小計</th>
                                 <th data-i18n="stockCount">残り在庫</th>
                                 <th data-i18n="paymentMethod">決済</th>
                                 <th style="width: 50px;" data-i18n="remove">取消</th>
@@ -2027,7 +2028,8 @@
                 freeSize: "フリーサイズ", ladies: "レディース", red: "赤", blue: "青", yellow: "黄", green: "緑", white: "白", black: "黒",
                 normal: "通常", signed: "サイン入り", set: "セット",
                 variant: "バリエーション", quantity: "数量", complete: "完了", exact: "ピッタリ",
-                amazonDisclosure: "無料で運営する為にもAmazonアソシエイトに参加しています"
+                amazonDisclosure: "無料で運営する為にもAmazonアソシエイトに参加しています",
+                subtotal: "小計"
             },
             en: {
                 appName: "BOXX Register",
@@ -2144,7 +2146,8 @@
                 freeSize: "Free Size", ladies: "Ladies", red: "Red", blue: "Blue", yellow: "Yellow", green: "Green", white: "White", black: "Black",
                 normal: "Normal", signed: "Signed", set: "Set",
                 variant: "Variant", quantity: "Quantity", complete: "Done", exact: "Exact",
-                amazonDisclosure: "As an Amazon Associate, we earn from qualifying purchases to keep this app free."
+                amazonDisclosure: "As an Amazon Associate, we earn from qualifying purchases to keep this app free.",
+                subtotal: "Subtotal"
             },
             zh: { // Simplified Chinese
                 appName: "BOXX收银台",
@@ -2214,7 +2217,8 @@
                 newVersionAvailable: "有新版本可用",
                 updateNowBtn: "立即更新",
                 exact: "刚好",
-                amazonDisclosure: "作为亚马逊关联公司，我们通过合格购买赚取收入，以保持此应用的免费使用。"
+                amazonDisclosure: "作为亚马逊关联公司，我们通过合格购买赚取收入，以保持此应用的免费使用。",
+                subtotal: "小计"
             },
             tw: { // Traditional Chinese
                 appName: "BOXX收銀台",
@@ -2284,7 +2288,8 @@
                 newVersionAvailable: "有新版本可用",
                 updateNowBtn: "立即更新",
                 exact: "剛好",
-                amazonDisclosure: "作為亞馬遜關聯公司，我們透過合格購買賺取收入，以保持此應用的免費使用。"
+                amazonDisclosure: "作為亞馬遜關聯公司，我們透過合格購買賺取收入，以保持此應用的免費使用。",
+                subtotal: "小計"
             },
             es: {
                 appName: "Caja BOXX",
@@ -2354,7 +2359,8 @@
                 newVersionAvailable: "Nueva versión disponible",
                 updateNowBtn: "Actualizar ahora",
                 exact: "Exacto",
-                amazonDisclosure: "Como afiliado de Amazon, ganamos por compras calificadas para mantener esta aplicación gratuita."
+                amazonDisclosure: "Como afiliado de Amazon, ganamos por compras calificadas para mantener esta aplicación gratuita.",
+                subtotal: "Subtotal"
             },
             fr: {
                 appName: "Caisse BOXX",
@@ -2424,7 +2430,8 @@
                 newVersionAvailable: "Nouvelle version disponible",
                 updateNowBtn: "Mettre à jour",
                 exact: "Juste",
-                amazonDisclosure: "En tant que partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises pour maintenir cette application gratuite."
+                amazonDisclosure: "En tant que partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises pour maintenir cette application gratuite.",
+                subtotal: "Sous-total"
             },
             de: {
                 appName: "BOXX Kasse",
@@ -2494,7 +2501,8 @@
                 newVersionAvailable: "Neue Version verfügbar",
                 updateNowBtn: "Jetzt aktualisieren",
                 exact: "Passend",
-                amazonDisclosure: "Als Amazon-Partner verdienen wir an qualifizierten Verkäufen, um diese App kostenlos zu halten."
+                amazonDisclosure: "Als Amazon-Partner verdienen wir an qualifizierten Verkäufen, um diese App kostenlos zu halten.",
+                subtotal: "Zwischensumme"
             },
             pt: {
                 appName: "Caixa BOXX",
@@ -2564,7 +2572,8 @@
                 newVersionAvailable: "Nova versão disponível",
                 updateNowBtn: "Atualizar agora",
                 exact: "Exato",
-                amazonDisclosure: "Como associado da Amazon, ganhamos com compras qualificadas para manter este aplicativo gratuito."
+                amazonDisclosure: "Como associado da Amazon, ganhamos com compras qualificadas para manter este aplicativo gratuito.",
+                subtotal: "Subtotal"
             }
         };
         const CURRENCY_CONFIG = {
@@ -3343,10 +3352,7 @@
 
             // Re-render shop to show updated stock
             renderProducts();
-        }
-
-
-        // --- Summary Logic ---
+        }        // --- Summary Logic ---
         function renderSummary() {
             summaryTableBody.innerHTML = '';
             let total = 0;
@@ -3367,10 +3373,12 @@
                         name: `${log.productName} - ${log.variantName}`,
                         price: log.price,
                         count: 0,
-                        method: method
+                        method: method,
+                        subtotal: 0
                     };
                 }
                 aggregation[key].count++;
+                aggregation[key].subtotal += log.price;
                 total += log.price;
 
                 if (method === 'credit') paymentTotals.credit += log.price;
@@ -3394,26 +3402,38 @@
 
                 if (isMobile) {
                     tr.innerHTML = `
-                        <div class="summary-item-name">${item.name}</div>
-                        <div class="summary-item-details">
-                            <span style="padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.7rem; color:${methodColor};">${methodLabel}</span>
-                            <span>${formatCurrency(item.price)}</span>
-                            <span>× ${item.count}</span>
-                            <span style="color:#999;">(${t('stockPrefix')} ${stock})</span>
+                        <div class="summary-item-name" style="font-weight:800; font-size:1.1rem; color:#222; margin-bottom:8px;">${item.name}</div>
+                        <div class="summary-item-details" style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                            <span style="display:inline-block; padding:2px 8px; border-radius:12px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.75rem; color:${methodColor}; border:1px solid rgba(0,0,0,0.1);">${methodLabel}</span>
+                            <span style="font-size:0.9rem; color:#666;">${formatCurrency(item.price)} × ${item.count}</span>
+                            <span style="font-size:0.8rem; color:#999; margin-left:auto;">${t('stockPrefix')} ${stock}</span>
                         </div>
-                        <div class="summary-cancel-box">
-                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
+                        <div style="text-align:right; border-top:1px dashed #eee; padding-top:8px;">
+                            <span style="font-size:0.85rem; color:#777; margin-right:5px;">${t('subtotal')}:</span>
+                            <span style="font-size:1.3rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
+                        </div>
+                        <div class="summary-cancel-box" style="position:absolute; top:10px; right:10px;">
+                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')" 
+                                style="width:28px; height:28px; border-radius:50%; background:#f5f5f5; border:1px solid #ddd; color:#999; display:flex; align-items:center; justify-content:center; font-size:1.2rem; cursor:pointer;">×</button>
                         </div>
                     `;
+                    tr.style.position = 'relative';
+                    tr.style.padding = '15px';
+                    tr.style.marginBottom = '10px';
+                    tr.style.borderRadius = '10px';
+                    tr.style.border = '1px solid #eee';
+                    tr.style.boxShadow = '0 2px 5px rgba(0,0,0,0.02)';
                 } else {
                     tr.innerHTML = `
-                        <td style="word-break: break-all;">${item.name}</td>
+                        <td style="word-break: break-all; font-weight:bold;">${item.name}</td>
                         <td style="white-space: nowrap;">${formatCurrency(item.price)}</td>
-                        <td style="text-align: center;">${item.count}</td>
+                        <td style="text-align: center; font-weight:bold;">${item.count}</td>
+                        <td style="text-align: right; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</td>
                         <td style="text-align: center; color: #888;">${stock}</td>
-                        <td style="text-align:center;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.7rem; color:${methodColor};">${methodLabel}</span></td>
+                        <td style="text-align:center;"><span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.75rem; color:${methodColor};">${methodLabel}</span></td>
                         <td style="text-align: center;">
-                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
+                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')"
+                                style="width:32px; height:32px; border-radius:50%; border:1px solid #ddd; background:#fff; color:#ff3b30; cursor:pointer; font-weight:bold;">×</button>
                         </td>
                     `;
                 }
