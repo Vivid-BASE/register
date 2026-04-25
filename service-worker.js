@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v68'; // v3.1.0 summary visibility fix
+const CACHE_NAME = 'boxx-reg-v69'; // v3.1.1 layout refactor fix
 const ASSETS = [
   './',
   './index.html',
