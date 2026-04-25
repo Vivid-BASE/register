@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v73'; // v3.2.1 Shop Stack & Settings Scroll fix
+const CACHE_NAME = 'boxx-reg-v74'; // v3.2.2 version badge & verification
 const ASSETS = [
   './',
   './index.html',
