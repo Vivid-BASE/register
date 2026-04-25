@@ -1473,7 +1473,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.7</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1488,7 +1488,7 @@
             <main class="product-area">
                 <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=shop_view" target="_blank" class="ad-banner ad-theme-lab">
                     <div class="ad-banner-title" data-i18n="adLabTitle">SHOWTIMEBOXX LAB</div>
-                    <div class="ad-banner-text" data-i18n="adLab">オリジナル業務アプリ・システム開発</div>
+                    <div class="ad-banner-text" data-i18n="adLab">業務効率化！オリジナルアプリ開発</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <a href="https://buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
@@ -1518,7 +1518,7 @@
             <div class="view-body">
                 <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
                     <div class="ad-banner-title" data-i18n="adCreativeTitle">SHOWTIMEBOXX CREATIVE</div>
-                    <div class="ad-banner-text" data-i18n="adCreative">高品質なWEBサイト・HP制作</div>
+                    <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
@@ -1539,7 +1539,7 @@
             <div class="view-body">
                 <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
                     <div class="ad-banner-title" data-i18n="adMainTitle">SHOWTIMEBOXX</div>
-                    <div class="ad-banner-text" data-i18n="adMain">イベント企画・グッズ制作・エンタメ事業</div>
+                    <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
@@ -1818,9 +1818,9 @@
                 paymentMethod: "決済",
                 productNameVar: "商品名 - バリエーション",
                 readyDesc: "次回に向けての準備はお済みですか？",
-                adMain: "イベント企画・グッズ制作・エンタメ事業",
-                adLab: "オリジナル業務アプリ・システム開発",
-                adCreative: "高品質なWEBサイト・HP制作",
+                adMain: "オンラインレッスン・イベント企画",
+                adLab: "業務効率化！オリジナルアプリ開発",
+                adCreative: "HP制作ならおまかせ",
                 checkoutBtn: "会計する",
                 total: "合計",
                 verTitle: "バージョン",
@@ -1885,9 +1885,9 @@
                 verTitle: "Version",
                 updateNow: "Update",
                 productList: "Product List",
-                adLab: "Original Business App & System Development",
-                adCreative: "High-Quality Website & HP Production",
-                adMain: "Event Planning, Merchandising & Entertainment",
+                adLab: "Business Efficiency! Original App Development",
+                adCreative: "Leave HP Production to Us",
+                adMain: "Online Lessons & Event Planning",
                 productNameVar: "Product - Variant",
                 unitPrice: "Price",
                 soldCount: "Sold Today",
@@ -3509,7 +3509,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.3.5</p>
+                        <p>BOXXレジ App v3.3.7</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3748,7 +3748,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3305')
+                navigator.serviceWorker.register('./service-worker.js?v=3307')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

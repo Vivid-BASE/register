@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v82'; // v3.3.5 truly original banner
+const CACHE_NAME = 'boxx-reg-v83'; // v3.3.7 restore to state 2
 const ASSETS = [
   './',
   './index.html',
