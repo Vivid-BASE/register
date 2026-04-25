@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v101'; // v3.6.7 Amazon disclosure addition
+const CACHE_NAME = 'boxx-reg-v102'; // v3.6.8 Summary table UI fixes and payment labels restored
 const ASSETS = [
   './',
   './index.html',
