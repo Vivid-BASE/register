@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v96'; // v3.6.2 Restored '+' button & Fixed Amazon Localization
+const CACHE_NAME = 'boxx-reg-v97'; // v3.6.3 Physical button restoration & Simplified Amazon logic
 const ASSETS = [
   './',
   './index.html',

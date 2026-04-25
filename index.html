@@ -1483,7 +1483,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.2</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.3</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1748,28 +1748,20 @@
         let userAccessCountry = 'JP'; // 判定が終わるまでは「日本」としておくよ
 
         async function initAmazonAffiliateOptimization() {
-            // 【最優先】ブラウザ設定が日本語なら即座にJP判定にするよ
-            const isBrowserJP = navigator.language && navigator.language.toLowerCase().startsWith('ja');
-            if (isBrowserJP) {
+            // 最優先: ブラウザ設定が日本語なら「日本(JP)」で確定
+            const isJP = navigator.language && navigator.language.toLowerCase().startsWith('ja');
+            if (isJP) {
                 userAccessCountry = 'JP';
-                // それでも一応ヘッダーチェックは裏で走らせておくね
+                return;
             }
 
             try {
+                // 海外の場合のみWorkerに国を問い合わせる
                 const response = await fetch(window.location.href, { method: 'HEAD' });
                 const country = response.headers.get('x-user-country');
-                
-                if (country) {
-                    const detectedCountry = country.toUpperCase();
-                    // ブラウザ設定がJPでない場合のみ、Workerの判定に従うよ
-                    if (!isBrowserJP) {
-                        userAccessCountry = detectedCountry;
-                    }
-                }
+                if (country) userAccessCountry = country.toUpperCase();
             } catch (e) {
-                // トラブル時はブラウザ設定を信じるよ
-                if (isBrowserJP) userAccessCountry = 'JP';
-                else userAccessCountry = 'US';
+                userAccessCountry = 'US';
             }
         }
         // アプリが動き出したら、すぐに「どこの国かな？」と調べ始めるよ
@@ -1809,26 +1801,25 @@
 
         // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
         function getRandomAmazonLink() {
-            // 常にJPを優先し、それ以外はWorkerからの判定またはブラウザ言語で判断するよ
             const isJP = (userAccessCountry === 'JP');
-            const isCA = (userAccessCountry === 'CA');
-            const isGB = (userAccessCountry === 'GB');
-            const isDE = (userAccessCountry === 'DE');
-            const isFR = (userAccessCountry === 'FR');
-            const isIT = (userAccessCountry === 'IT');
-            const isES = (userAccessCountry === 'ES');
             
+            // ドメイン決定
             let domain = 'www.amazon.com';
-            if (isJP) domain = 'www.amazon.co.jp';
-            else if (isCA) domain = 'www.amazon.ca';
-            else if (isGB) domain = 'www.amazon.co.uk';
-            else if (isDE) domain = 'www.amazon.de';
-            else if (isFR) domain = 'www.amazon.fr';
-            else if (isIT) domain = 'www.amazon.it';
-            else if (isES) domain = 'www.amazon.es';
+            if (isJP) {
+                domain = 'www.amazon.co.jp';
+            } else {
+                const domains = {
+                    'CA': 'www.amazon.ca',
+                    'GB': 'www.amazon.co.uk',
+                    'DE': 'www.amazon.de',
+                    'FR': 'www.amazon.fr',
+                    'IT': 'www.amazon.it',
+                    'ES': 'www.amazon.es'
+                };
+                domain = domains[userAccessCountry] || 'www.amazon.com';
+            }
 
-            // 全ての国で jackpotrash-22 を最優先で使用するように修正（Amazon側の互換性を考慮）
-            // ※もしUSなどで弾かれる場合は showtimeboxx-20 に戻す
+            // タグ決定 (日本なら jackpotrash-22, 海外なら showtimeboxx-20)
             const tag = isJP ? 'jackpotrash-22' : 'showtimeboxx-20';
             
             const kw = AMAZON_KEYWORDS[Math.floor(Math.random() * AMAZON_KEYWORDS.length)];
@@ -2943,9 +2934,9 @@
                     <td style="text-align:right; font-family:monospace;">${stock}</td>
                     <td>
                         <div class="batch-qty-control">
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)" style="color:#007aff; border-color:#007aff;">－</button>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
                             <span class="batch-val" style="min-width:1.5em; text-align:center; ${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" style="color:#007aff; border-color:#007aff; display: flex !important; ${isPlusDisabled ? 'opacity:0.2; pointer-events:none;' : 'opacity:1;'}">＋</button>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)">＋</button>
                         </div>
                     </td>
                 `;
@@ -3637,7 +3628,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.6.2</p>
+                        <p>BOXXレジ App v3.6.3</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
