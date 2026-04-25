@@ -1146,6 +1146,7 @@
             border-bottom: 1px solid #eee;
             font-size: 0.95rem;
             overflow-wrap: anywhere;
+            word-break: break-word;
         }
         
         .summary-table tr:last-child td {
@@ -1429,8 +1430,11 @@
                 font-size: 0.95rem !important;
             }
             .summary-table th, .summary-table td {
-                padding: 10px 5px !important;
-                font-size: 0.85rem !important;
+                padding: 8px 4px !important;
+                font-size: 0.8rem !important;
+            }
+            .summary-table th {
+                white-space: nowrap;
             }
             .summary-total-card {
                 padding: 15px !important;
@@ -2000,10 +2004,10 @@
                 remove: "取消",
                 productList: "商品一覧",
                 unitPrice: "単価",
-                soldCount: "本日売れた数",
-                stockCount: "残り在庫",
+                soldCount: "数量",
+                stockCount: "在庫",
                 paymentMethod: "決済",
-                productNameVar: "商品名 - バリエーション",
+                productNameVar: "商品・バリエーション",
                 readyDesc: "次回に向けての準備はお済みですか？",
                 adMain: "オンラインレッスン・イベント企画",
                 adLab: "業務効率化！オリジナルアプリ開発",
@@ -2029,7 +2033,17 @@
                 normal: "通常", signed: "サイン入り", set: "セット",
                 variant: "バリエーション", quantity: "数量", complete: "完了", exact: "ピッタリ",
                 amazonDisclosure: "無料で運営する為にもAmazonアソシエイトに参加しています",
-                subtotal: "小計"
+                subtotal: "小計",
+                confirmReset: "本日の売上をリセットしますか？",
+                confirmDelete: "削除しますか？",
+                saveToHistory: "履歴に保存しました",
+                removedFromHistory: "履歴から削除しました",
+                cancel: "キャンセル",
+                calendarTitle: "売上カレンダー",
+                backToCalendar: "◀ カレンダーに戻る",
+                stockPrefix: "在庫",
+                priceSuffix: "〜",
+                salesToday: "売上"
             },
             en: {
                 appName: "BOXX Register",
@@ -3366,7 +3380,8 @@
 
             sessionLogs.forEach(log => {
                 const method = log.paymentMethod || 'cash';
-                const key = `${log.productName} - ${log.variantName} - ${method}`;
+                // Include price in the key to prevent grouping items with different prices
+                const key = `${log.productName} - ${log.variantName} - ${method} - ${log.price}`;
 
                 if (!aggregation[key]) {
                     aggregation[key] = {
@@ -3408,13 +3423,12 @@
                             <span style="font-size:0.9rem; color:#666;">${formatCurrency(item.price)} × ${item.count}</span>
                             <span style="font-size:0.8rem; color:#999; margin-left:auto;">${t('stockPrefix')} ${stock}</span>
                         </div>
-                        <div style="text-align:right; border-top:1px dashed #eee; padding-top:8px;">
-                            <span style="font-size:0.85rem; color:#777; margin-right:5px;">${t('subtotal')}:</span>
-                            <span style="font-size:1.3rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
-                        </div>
-                        <div class="summary-cancel-box" style="position:absolute; top:10px; right:10px;">
-                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')" 
-                                style="width:28px; height:28px; border-radius:50%; background:#f5f5f5; border:1px solid #ddd; color:#999; display:flex; align-items:center; justify-content:center; font-size:1.2rem; cursor:pointer;">×</button>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px dashed #eee; padding-top:8px;">
+                            <div style="font-size:0.75rem; color:#888;">
+                                ${t('subtotal')}: <span style="font-size:1.1rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
+                            </div>
+                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1] || ''}', '${item.method}')" 
+                                style="padding:4px 12px; border-radius:6px; background:#fff; border:1px solid #ff3b30; color:#ff3b30; font-size:0.85rem; font-weight:bold; cursor:pointer;">${t('remove')}</button>
                         </div>
                     `;
                     tr.style.position = 'relative';
@@ -3423,16 +3437,23 @@
                     tr.style.borderRadius = '10px';
                     tr.style.border = '1px solid #eee';
                     tr.style.boxShadow = '0 2px 5px rgba(0,0,0,0.02)';
+                    tr.style.background = '#fff';
                 } else {
+                    const parts = item.name.split(' - ');
+                    const pName = parts[0];
+                    const vName = parts[1] || '';
                     tr.innerHTML = `
-                        <td style="word-break: break-all; font-weight:bold;">${item.name}</td>
+                        <td style="padding: 10px 8px;">
+                            <div style="font-weight:bold; font-size:0.95rem;">${pName}</div>
+                            ${vName ? `<div style="font-size:0.8rem; color:#666; font-weight:normal;">${vName}</div>` : ''}
+                        </td>
                         <td style="white-space: nowrap;">${formatCurrency(item.price)}</td>
                         <td style="text-align: center; font-weight:bold;">${item.count}</td>
                         <td style="text-align: right; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</td>
                         <td style="text-align: center; color: #888;">${stock}</td>
                         <td style="text-align:center;"><span style="display:inline-block; padding:2px 8px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.75rem; color:${methodColor};">${methodLabel}</span></td>
                         <td style="text-align: center;">
-                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')"
+                            <button class="btn-cancel-sale" onclick="cancelSale('${pName}', '${vName}', '${item.method}')"
                                 style="width:32px; height:32px; border-radius:50%; border:1px solid #ddd; background:#fff; color:#ff3b30; cursor:pointer; font-weight:bold;">×</button>
                         </td>
                     `;
@@ -3776,7 +3797,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.7.1</p>
+                        <p>BOXXレジ App v3.7.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
