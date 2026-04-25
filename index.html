@@ -72,11 +72,9 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100dvh;
-            /* Dynamic Viewport Height for iOS */
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         /* Views */
@@ -105,28 +103,23 @@
 
         /* Layout */
         .container {
-            display: flex;
+            display: block;
             width: 100%;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-            min-height: 0;
+            overflow: visible;
         }
 
         .view-body {
-            flex: 1;
             padding: var(--spacing-unit);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* Essential for smooth iOS scrolling */
-            display: flex;
-            flex-direction: column;
+            display: block;
             width: 100%;
-            min-height: 0;
         }
         
-        /* Ensure specific views fill the height */
         #summaryView, #settingsView {
-            height: 100%;
+            display: none;
+        }
+        
+        #summaryView.active, #settingsView.active {
+            display: block;
         }
 
         .product-area {
@@ -155,13 +148,14 @@
         /* Header */
         header {
             background-color: #ffffff;
-            padding: 6px 15px;
+            padding: 10px 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0; /* Keep size fixed */
+            position: sticky;
+            top: 0;
         }
             flex-wrap: nowrap;
         }
@@ -1278,11 +1272,12 @@
             background: #1A1A40;
             color: white;
             text-align: center;
-            padding: 12px;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            padding: 15px;
+            z-index: 1001;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             font-weight: bold;
-            flex-shrink: 0;
+            position: sticky;
+            top: 60px; /* Below sticky header */
         }
 
         #update-banner button {
@@ -1480,7 +1475,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.1.2</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.1.5</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3504,7 +3499,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.1.2</p>
+                        <p>BOXXレジ App v3.1.5</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3743,7 +3738,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3102')
+                navigator.serviceWorker.register('./service-worker.js?v=3105')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
