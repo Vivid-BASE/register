@@ -492,8 +492,9 @@
         .batch-qty-control {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
+            justify-content: center; /* 確実に中央寄せ */
+            gap: 12px;
+            min-width: 120px; /* 領域を確保 */
         }
 
         .batch-btn {
@@ -1482,7 +1483,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1831,7 +1832,9 @@
             // 【分析】どの国のリンクが踏まれたか、GA4にこっそり教えるよ
             trackEvent('amazon_click', 'affiliate', `${domain} | ${kw}`);
             
-            return `https://${domain}/s?k=${kw}&tag=${tag}`;
+            let url = `https://${domain}/s?k=${kw}&tag=${tag}`;
+            if (isJP) url += `&language=ja_JP`;
+            return url;
         }
         // --- Amazon Global Optimization End ---
 
@@ -2912,12 +2915,11 @@
 
             currentSelectedProduct.variants.forEach(variant => {
                 const stock = parseInt(variant.stock) || 0;
+                const batchQty = parseInt(currentBatchSelections[variant.name]) || 0;
                 const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
-                const batchQty = currentBatchSelections[variant.name] || 0;
                 
-                // 在庫が空欄または未定義なら無限
-                const isInfinite = (variant.stock === "" || variant.stock === null || variant.stock === undefined);
-                // ボタンを無効化するかどうかの判定
+                const isInfinite = (variant.stock === "" || variant.stock === null || variant.stock === undefined || variant.stock === "∞");
+                // 在庫上限チェック
                 const isPlusDisabled = !isInfinite && (batchQty + inCart >= stock);
                 const remainingStock = isInfinite ? 999999 : (stock - inCart - batchQty);
 
@@ -2939,9 +2941,9 @@
                     <td style="text-align:right; font-family:monospace;">${stock}</td>
                     <td>
                         <div class="batch-qty-control">
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
-                            <span class="batch-val" style="${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${isPlusDisabled ? 'disabled style="opacity:0.3"' : ''}>＋</button>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)" style="color:#007aff; border-color:#007aff;">－</button>
+                            <span class="batch-val" style="min-width:1.5em; text-align:center; ${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" style="color:#007aff; border-color:#007aff; ${isPlusDisabled ? 'opacity:0.1; pointer-events:none;' : ''}">＋</button>
                         </div>
                     </td>
                 `;
@@ -3628,7 +3630,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.5.5</p>
+                        <p>BOXXレジ App v3.6.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3875,7 +3877,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3505')
+                navigator.serviceWorker.register('./service-worker.js?v=3600')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
