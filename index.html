@@ -1474,7 +1474,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.0</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1761,14 +1761,18 @@
         // アプリが動き出したら、すぐに「どこの国かな？」と調べ始めるよ
         initAmazonAffiliateOptimization();
 
-        // 備品リスト（検索キーワードのリストだよ）
+        // 備品リスト（イベントや物販の現場で「本当に使うもの」だけを集めたよ）
         const AMAZON_KEYWORDS = [
-            "TERAOKA+145+黒+50mmX25M",
-            "梱包資材+プチプチ",
-            "コインケース+釣銭",
-            "台車+折りたたみ",
-            "ポップスタンド+卓上",
-            "モバイルバッテリー+大容量"
+            "TERAOKA+145+黒+50mmX25M", // 養生テープ（設営の必須アイテム）
+            "梱包資材+プチプチ",        // 割れ物用
+            "コインケース+釣銭",        // 現金管理
+            "台車+折りたたみ",          // 搬入・搬出用
+            "ポップスタンド+卓上",      // 商品説明・価格表示用
+            "モバイルバッテリー+大容量", // スマホレジの命綱
+            "レジ袋+手提げ+セット",     // お持ち帰り用
+            "値札+シール+剥がせる",     // 商品へのプライス貼り
+            "ブラックボード+卓上+看板", // セール・案内表示用
+            "ポスカ+セット"             // 看板・POP作成用
         ];
 
         // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
@@ -3548,7 +3552,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.4.0</p>
+                        <p>BOXXレジ App v3.4.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3787,7 +3791,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3400')
+                navigator.serviceWorker.register('./service-worker.js?v=3401')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
