@@ -1473,7 +1473,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.2.9</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1686,7 +1686,7 @@
 
             <div style="text-align: center; margin-bottom: 5px;">
                 <div style="font-size: 0.9rem; color: #555; margin-bottom: 0px;" data-i18n="total">Total</div>
-                <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;"><span class="currencySymbol">¥</span>0</div>
+                <div id="paymentTotal" style="font-size: 2.22rem; font-weight: 900; color: #333; line-height: 1;">0</div>
             </div>
 
             <div class="payment-methods" style="margin-bottom: 10px;">
@@ -1717,7 +1717,7 @@
 
                 <div style="display: flex !important; flex-direction: row !important; align-items: center; justify-content: center; gap: 15px; margin-top: 4px; padding: 8px; background: #fffcf0; border-radius: 12px; border:2px solid #ffd700; white-space: nowrap; flex-shrink: 0;">
                     <div style="font-size: 1.1rem; color: #555; font-weight:bold; flex-shrink: 0;" data-i18n="changeAmount">お釣り</div>
-                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);"><span class="currencySymbol">¥</span>0</div>
+                    <div id="paymentChange" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-color);">0</div>
                 </div>
             </div>
 
@@ -3067,12 +3067,12 @@
 
             if (!isNaN(received) && received >= total) {
                 const change = received - total;
-                document.getElementById('paymentChange').textContent = `${formatCurrency(change)}`;
+                document.getElementById('paymentChange').textContent = formatCurrency(change);
                 document.getElementById('paymentChange').style.color = 'var(--primary-color)';
                 btn.disabled = false;
                 btn.style.opacity = '1';
             } else {
-                document.getElementById('paymentChange').textContent = `${formatCurrency(0)}`;
+                document.getElementById('paymentChange').textContent = formatCurrency(0);
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
             }
@@ -3469,15 +3469,8 @@
                         </div>
                         <div class="form-group">
                             <label data-i18n="currencyRegion">通貨・地域</label>
-                            <select class="form-control" onchange="changeRegion(this.value)">
-                                <option value="ja" ${currentRegion === 'ja' ? 'selected' : ''}>日本 (¥ / amazon.co.jp)</option>
-                                <option value="en" ${currentRegion === 'en' ? 'selected' : ''}>US ($ / amazon.com)</option>
-                                <option value="zh" ${currentRegion === 'zh' ? 'selected' : ''}>China (¥ / amazon.cn)</option>
-                                <option value="tw" ${currentRegion === 'tw' ? 'selected' : ''}>Taiwan ($ / amazon.com)</option>
-                                <option value="es" ${currentRegion === 'es' ? 'selected' : ''}>Spain (€ / amazon.es)</option>
-                                <option value="fr" ${currentRegion === 'fr' ? 'selected' : ''}>France (€ / amazon.fr)</option>
-                                <option value="de" ${currentRegion === 'de' ? 'selected' : ''}>Germany (€ / amazon.de)</option>
-                                <option value="pt" ${currentRegion === 'pt' ? 'selected' : ''}>Portugal (€ / amazon.pt)</option>
+                            <select id="regionSelect" class="form-control" onchange="changeRegion(this.value)">
+                                <!-- Options populated by applyTranslations() -->
                             </select>
                         </div>
                     </div>
@@ -3513,7 +3506,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.2.9</p>
+                        <p>BOXXレジ App v3.3.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3752,7 +3745,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3209')
+                navigator.serviceWorker.register('./service-worker.js?v=3300')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
