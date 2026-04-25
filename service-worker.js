@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v83'; // v3.3.7 restore to state 2
+const CACHE_NAME = 'boxx-reg-v84'; // v3.3.8 payment modal fix
 const ASSETS = [
   './',
   './index.html',
