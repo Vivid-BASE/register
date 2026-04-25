@@ -116,6 +116,15 @@
             min-height: 0;
         }
 
+        .view-body {
+            flex: 1;
+            padding: var(--spacing-unit);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
         .product-area {
             flex: 2;
             padding: var(--spacing-unit);
@@ -1473,7 +1482,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1515,69 +1524,71 @@
 
         <!-- SETTINGS VIEW -->
         <div id="settingsView" class="view-content">
-            <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
-                <div class="ad-banner-title" data-i18n="adCreativeTitle">SHOWTIMEBOXX CREATIVE</div>
-                <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
-                <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
-                <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;" data-i18n="productEntry">商品登録・編集</h2>
+            <div class="view-body">
+                <a href="https://showtimeboxx.com/creative/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=settings_view" target="_blank" class="ad-banner ad-theme-creative">
+                    <div class="ad-banner-title" data-i18n="adCreativeTitle">SHOWTIMEBOXX CREATIVE</div>
+                    <div class="ad-banner-text" data-i18n="adCreative">HP制作ならおまかせ</div>
+                    <div class="ad-banner-arrow">〉</div>
+                </a>
+                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                    <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
+                    <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
+                    <div class="ad-banner-arrow">〉</div>
+                </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0;" data-i18n="productEntry">商品登録・編集</h2>
+                </div>
+                <!-- 有料機能: データ初期化ボタンを削除 -->
+                <div id="settingsList"></div>
             </div>
-            <!-- 有料機能: データ初期化ボタンを削除 -->
-
-
-            <div id="settingsList"></div>
         </div>
 
         <!-- SUMMARY VIEW -->
         <div id="summaryView" class="view-content">
-            <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
-                <div class="ad-banner-title" data-i18n="adMainTitle">SHOWTIMEBOXX</div>
-                <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
-                <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
-                <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
-                <div class="ad-banner-arrow">〉</div>
-            </a>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;" data-i18n="todaySummary">本日の集計</h2>
-            </div>
-            <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
-
-            <table class="summary-table">
-                <thead>
-                    <tr>
-                        <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
-                        <th data-i18n="unitPrice">単価</th>
-                        <th data-i18n="soldCount">本日売れた数</th>
-                        <th data-i18n="stockCount">残り在庫</th>
-                        <th data-i18n="paymentMethod">決済</th>
-                        <th style="width: 50px;" data-i18n="remove">取消</th>
-                    </tr>
-                </thead>
-                <tbody id="summaryTableBody"></tbody>
-            </table>
-
-            <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-                <button onclick="resetSession()" data-i18n="resetSales"
-                    style="padding: 12px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(255,59,48,0.2);">
-                    本日の売上をリセット
-                </button>
-                <div style="font-size: 0.85rem; color: #777; margin-top: 5px;" data-i18n="readyDesc">次回に向けての準備はお済みですか？</div>
-                <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;" data-i18n="checkSupplies"
-                   style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-                    📦 不足している備品をチェック (Amazon)
+            <div class="view-body">
+                <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
+                    <div class="ad-banner-title" data-i18n="adMainTitle">SHOWTIMEBOXX</div>
+                    <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
+                    <div class="ad-banner-arrow">〉</div>
                 </a>
-            </div>
+                <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
+                    <div class="ad-banner-title" data-i18n="coffeeTitle">BUY ME A COFFEE</div>
+                    <div class="ad-banner-text" data-i18n="coffeeText">開発を支援する（寄付）</div>
+                    <div class="ad-banner-arrow">〉</div>
+                </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0;" data-i18n="todaySummary">本日の集計</h2>
+                </div>
+                <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
-            <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
+                            <th data-i18n="unitPrice">単価</th>
+                            <th data-i18n="soldCount">本日売れた数</th>
+                            <th data-i18n="stockCount">残り在庫</th>
+                            <th data-i18n="paymentMethod">決済</th>
+                            <th style="width: 50px;" data-i18n="remove">取消</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryTableBody"></tbody>
+                </table>
+
+                <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <button onclick="resetSession()" data-i18n="resetSales"
+                        style="padding: 12px 20px; background: #ff3b30; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(255,59,48,0.2);">
+                        本日の売上をリセット
+                    </button>
+                    <div style="font-size: 0.85rem; color: #777; margin-top: 5px;" data-i18n="readyDesc">次回に向けての準備はお済みですか？</div>
+                    <a href="#" onclick="window.open(getRandomAmazonLink(), '_blank'); return false;" data-i18n="checkSupplies"
+                       style="display: block; width: 100%; padding: 14px; background: #232f3e; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                        📦 不足している備品をチェック (Amazon)
+                    </a>
+                </div>
+
+                <!-- 有料機能: カレンダーへの誘導テキストを削除 -->
+            </div>
         </div>
 
     </div>
@@ -3473,7 +3484,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.0.5</p>
+                        <p>BOXXレジ App v3.0.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3712,7 +3723,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3005')
+                navigator.serviceWorker.register('./service-worker.js?v=3006')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

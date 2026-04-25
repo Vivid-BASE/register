@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v63'; // v3.0.5 banner layout fix
+const CACHE_NAME = 'boxx-reg-v64'; // v3.0.6 layout unify fix
 const ASSETS = [
   './',
   './index.html',
