@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v75'; // v3.2.5 stable restoration
+const CACHE_NAME = 'boxx-reg-v76'; // v3.2.6 decimal support fix
 const ASSETS = [
   './',
   './index.html',

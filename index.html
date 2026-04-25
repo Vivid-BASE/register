@@ -1466,7 +1466,6 @@
 </head>
 
 <body>
-    <div id="version-debug" style="position:fixed; top:5px; left:5px; background:rgba(0,0,0,0.7); color:white; padding:2px 6px; border-radius:4px; font-size:10px; z-index:100000; pointer-events:none;">v3.2.5</div>
     <div id="update-banner">
         <span data-i18n="newVersionAvailable">新しいバージョンがあります</span>
         <button id="update-button" data-i18n="updateNowBtn">今すぐ更新</button>
@@ -1474,7 +1473,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.2.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.2.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1706,7 +1705,7 @@
                     </div>
                     
                     <div style="display: flex; gap: 10px; margin-top: 0px; justify-content: center; margin-bottom: 8px;">
-                        <input type="number" id="amountReceived" class="form-control"
+                        <input type="number" id="amountReceived" class="form-control" step="any" inputmode="decimal"
                             style="font-size: 1.8rem; text-align: center; padding: 10px; font-weight:900; background:#fff; border:2px solid var(--primary-color); height: auto; margin-bottom: 0;" 
                             placeholder="0" oninput="updateChange()">
                     </div>
@@ -3032,8 +3031,9 @@
         }
 
         function setReceivedAmount(amount) {
-            const currentVal = parseInt(document.getElementById('amountReceived').value) || 0;
-            document.getElementById('amountReceived').value = currentVal + amount;
+            const input = document.getElementById('amountReceived');
+            const currentVal = parseFloat(input.value) || 0;
+            input.value = currentVal + amount;
             updateChange();
         }
 
@@ -3047,7 +3047,7 @@
 
         function updateChange() {
             const total = currentCheckoutTotal;
-            const received = parseInt(document.getElementById('amountReceived').value);
+            const received = parseFloat(document.getElementById('amountReceived').value);
             const btn = document.getElementById('btnCompletePayment');
 
             if (!isNaN(received) && received >= total) {
@@ -3498,7 +3498,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.2.5</p>
+                        <p>BOXXレジ App v3.2.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3737,7 +3737,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3205')
+                navigator.serviceWorker.register('./service-worker.js?v=3206')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
