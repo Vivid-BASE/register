@@ -1474,7 +1474,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.1</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1778,9 +1778,11 @@
         // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
         function getRandomAmazonLink() {
             const isJP = (userAccessCountry === 'JP');
+            const isCA = (userAccessCountry === 'CA');
             
             // 【重要】国によってドメインとIDを使い分けるよ
-            const domain = isJP ? 'www.amazon.co.jp' : 'www.amazon.com';
+            // 日本なら .co.jp / カナダなら .ca / それ以外は .com を開くようにパワーアップしたよ！
+            const domain = isJP ? 'www.amazon.co.jp' : (isCA ? 'www.amazon.ca' : 'www.amazon.com');
             const tag = isJP ? 'jackpotrash-22' : 'showtimeboxx-20';
             
             // キーワードをランダムに選んで、URLを組み立てるよ
@@ -3552,7 +3554,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.4.1</p>
+                        <p>BOXXレジ App v3.4.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3791,7 +3793,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3401')
+                navigator.serviceWorker.register('./service-worker.js?v=3402')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
