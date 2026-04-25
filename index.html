@@ -1482,7 +1482,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.1</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1913,7 +1913,15 @@
                 clear: "クリア",
                 accountingComplete: "会計完了",
                 back: "戻る",
-                qrPay: "PayPay"
+                qrPay: "PayPay",
+                // Templates
+                tshirt: "Tシャツ", longT: "ロンT", towel: "タオル", muffler: "マフラー", cheki: "チェキ", sticker: "ステッカー",
+                hoodie: "パーカー", tote: "トートバッグ", acrylic: "アクスタ", keyholder: "キーホルダー", postcard: "ポストカード",
+                pamphlet: "パンフレット", cd: "CD", dvd: "DVD", bluray: "Blu-ray", calendar: "カレンダー", photobook: "写真集",
+                penlight: "ペンライト", wristband: "リストバンド",
+                sizeS: "Sサイズ", sizeM: "Mサイズ", sizeL: "Lサイズ", sizeXL: "XLサイズ", sizeXS: "XSサイズ", sizeXXL: "XXLサイズ",
+                freeSize: "フリーサイズ", ladies: "レディース", red: "赤", blue: "青", yellow: "黄", green: "緑", white: "白", black: "黒",
+                normal: "通常", signed: "サイン入り", set: "セット"
             },
             en: {
                 appName: "BOXX Register",
@@ -2020,7 +2028,15 @@
                 pwaBannerDescLong: "Add this app to your <strong>'Home Screen'</strong> for a full-screen experience.",
                 coffeeTitle: "BUY ME A COFFEE",
                 coffeeText: "Support this project with a donation",
-                qrPay: "QR Pay"
+                qrPay: "QR Pay",
+                // Templates
+                tshirt: "T-shirt", longT: "Long T-shirt", towel: "Towel", muffler: "Muffler", cheki: "Instax", sticker: "Sticker",
+                hoodie: "Hoodie", tote: "Tote Bag", acrylic: "Acrylic Stand", keyholder: "Keyholder", postcard: "Postcard",
+                pamphlet: "Pamphlet", cd: "CD", dvd: "DVD", bluray: "Blu-ray", calendar: "Calendar", photobook: "Photo Book",
+                penlight: "Penlight", wristband: "Wristband",
+                sizeS: "Size S", sizeM: "Size M", sizeL: "Size L", sizeXL: "Size XL", sizeXS: "Size XS", sizeXXL: "Size XXL",
+                freeSize: "Free Size", ladies: "Ladies", red: "Red", blue: "Blue", yellow: "Yellow", green: "Green", white: "White", black: "Black",
+                normal: "Normal", signed: "Signed", set: "Set"
             },
             zh: { // Simplified Chinese
                 appName: "BOXX收银台",
@@ -3589,7 +3605,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.5.1</p>
+                        <p>BOXXレジ App v3.5.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3757,15 +3773,23 @@
 
         function getIconForName(name) {
             const lowName = name.toLowerCase();
-            if (lowName.includes('tシャツ') || lowName.includes('t-shirt') || lowName.includes('tshirt') || lowName.includes('tee') || lowName.includes('ロンt') || lowName.includes('パーカー') || lowName.includes('hoodie')) return '👕';
-            if (lowName.includes('タオル') || lowName.includes('towel')) return '🏳️';
-            if (lowName.includes('マフラー') || lowName.includes('muffler')) return '🏳️';
-            if (lowName.includes('チェキ') || lowName.includes('photo') || lowName.includes('instax')) return '📸';
-            if (lowName.includes('バッグ') || lowName.includes('bag') || lowName.includes('tote')) return '🛍️';
-            if (lowName.includes('キーホルダー') || lowName.includes('acrylic') || lowName.includes('acsta') || lowName.includes('アクスタ') || lowName.includes('ステッカー') || lowName.includes('sticker')) return '🧸';
+            // アパレル系
+            if (lowName.includes('tシャツ') || lowName.includes('t-shirt') || lowName.includes('tshirt') || lowName.includes('tee') || lowName.includes('ロンt') || lowName.includes('longt') || lowName.includes('パーカー') || lowName.includes('hoodie')) return '👕';
+            // 布製品
+            if (lowName.includes('タオル') || lowName.includes('towel') || lowName.includes('マフラー') || lowName.includes('muffler')) return '🏳️';
+            // カメラ・写真系
+            if (lowName.includes('チェキ') || lowName.includes('photo') || lowName.includes('instax') || lowName.includes('写真')) return '📸';
+            // バッグ系
+            if (lowName.includes('バッグ') || lowName.includes('bag') || lowName.includes('tote') || lowName.includes('トート')) return '🛍️';
+            // 小物・雑貨系
+            if (lowName.includes('キーホルダー') || lowName.includes('keyholder') || lowName.includes('acrylic') || lowName.includes('acsta') || lowName.includes('アクスタ') || lowName.includes('ステッカー') || lowName.includes('sticker')) return '🧸';
+            // 光り物系
             if (lowName.includes('ペンライト') || lowName.includes('light') || lowName.includes('リストバンド') || lowName.includes('wrist')) return '💡';
-            if (lowName.includes('cd') || lowName.includes('dvd') || lowName.includes('blu-ray')) return '💿';
-            if (lowName.includes('本') || lowName.includes('写真集') || lowName.includes('photo book') || lowName.includes('パンフレット') || lowName.includes('pamphlet') || lowName.includes('カレンダー') || lowName.includes('calendar')) return '📚';
+            // メディア系
+            if (lowName.includes('cd') || lowName.includes('dvd') || lowName.includes('blu-ray') || lowName.includes('disc')) return '💿';
+            // 書籍系
+            if (lowName.includes('本') || lowName.includes('写真集') || lowName.includes('photo book') || lowName.includes('パンフレット') || lowName.includes('pamphlet') || lowName.includes('カレンダー') || lowName.includes('calendar') || lowName.includes('ブック')) return '📚';
+            
             return '🛍️';
         }
 
@@ -3828,7 +3852,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3501')
+                navigator.serviceWorker.register('./service-worker.js?v=3502')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

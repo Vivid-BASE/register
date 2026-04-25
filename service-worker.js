@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v90'; // v3.5.1 modal position fix
+const CACHE_NAME = 'boxx-reg-v91'; // v3.5.2 template & icon fix
 const ASSETS = [
   './',
   './index.html',
