@@ -1506,7 +1506,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.6</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.7</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1969,7 +1969,8 @@
                 sizeS: "Sサイズ", sizeM: "Mサイズ", sizeL: "Lサイズ", sizeXL: "XLサイズ", sizeXS: "XSサイズ", sizeXXL: "XXLサイズ",
                 freeSize: "フリーサイズ", ladies: "レディース", red: "赤", blue: "青", yellow: "黄", green: "緑", white: "白", black: "黒",
                 normal: "通常", signed: "サイン入り", set: "セット",
-                variant: "バリエーション", quantity: "数量", complete: "完了", exact: "ピッタリ"
+                variant: "バリエーション", quantity: "数量", complete: "完了", exact: "ピッタリ",
+                amazonDisclosure: "無料で運営する為にもAmazonアソシエイトに参加しています"
             },
             en: {
                 appName: "BOXX Register",
@@ -2085,7 +2086,8 @@
                 sizeS: "Size S", sizeM: "Size M", sizeL: "Size L", sizeXL: "Size XL", sizeXS: "Size XS", sizeXXL: "Size XXL",
                 freeSize: "Free Size", ladies: "Ladies", red: "Red", blue: "Blue", yellow: "Yellow", green: "Green", white: "White", black: "Black",
                 normal: "Normal", signed: "Signed", set: "Set",
-                variant: "Variant", quantity: "Quantity", complete: "Done", exact: "Exact"
+                variant: "Variant", quantity: "Quantity", complete: "Done", exact: "Exact",
+                amazonDisclosure: "As an Amazon Associate, we earn from qualifying purchases to keep this app free."
             },
             zh: { // Simplified Chinese
                 appName: "BOXX收银台",
@@ -2154,7 +2156,8 @@
                 currencyRegion: "货币与地区",
                 newVersionAvailable: "有新版本可用",
                 updateNowBtn: "立即更新",
-                exact: "刚好"
+                exact: "刚好",
+                amazonDisclosure: "作为亚马逊关联公司，我们通过合格购买赚取收入，以保持此应用的免费使用。"
             },
             tw: { // Traditional Chinese
                 appName: "BOXX收銀台",
@@ -2223,7 +2226,8 @@
                 currencyRegion: "貨幣與地區",
                 newVersionAvailable: "有新版本可用",
                 updateNowBtn: "立即更新",
-                exact: "剛好"
+                exact: "剛好",
+                amazonDisclosure: "作為亞馬遜關聯公司，我們透過合格購買賺取收入，以保持此應用的免費使用。"
             },
             es: {
                 appName: "Caja BOXX",
@@ -2292,7 +2296,8 @@
                 currencyRegion: "Moneda y Región",
                 newVersionAvailable: "Nueva versión disponible",
                 updateNowBtn: "Actualizar ahora",
-                exact: "Exacto"
+                exact: "Exacto",
+                amazonDisclosure: "Como afiliado de Amazon, ganamos por compras calificadas para mantener esta aplicación gratuita."
             },
             fr: {
                 appName: "Caisse BOXX",
@@ -2361,7 +2366,8 @@
                 currencyRegion: "Monnaie et Région",
                 newVersionAvailable: "Nouvelle version disponible",
                 updateNowBtn: "Mettre à jour",
-                exact: "Juste"
+                exact: "Juste",
+                amazonDisclosure: "En tant que partenaire Amazon, nous réalisons un bénéfice sur les achats remplissant les conditions requises pour maintenir cette application gratuite."
             },
             de: {
                 appName: "BOXX Kasse",
@@ -2430,7 +2436,8 @@
                 currencyRegion: "Währung & Region",
                 newVersionAvailable: "Neue Version verfügbar",
                 updateNowBtn: "Jetzt aktualisieren",
-                exact: "Passend"
+                exact: "Passend",
+                amazonDisclosure: "Als Amazon-Partner verdienen wir an qualifizierten Verkäufen, um diese App kostenlos zu halten."
             },
             pt: {
                 appName: "Caixa BOXX",
@@ -2499,7 +2506,8 @@
                 currencyRegion: "Moeda e Região",
                 newVersionAvailable: "Nova versão disponível",
                 updateNowBtn: "Atualizar agora",
-                exact: "Exato"
+                exact: "Exato",
+                amazonDisclosure: "Como associado da Amazon, ganhamos com compras qualificadas para manter este aplicativo gratuito."
             }
         };
         const CURRENCY_CONFIG = {
@@ -3670,7 +3678,10 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.6.6</p>
+                        <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
+                            無料で運営する為にもAmazonアソシエイトに参加しています
+                        </p>
+                        <p>BOXXレジ App v3.6.7</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>

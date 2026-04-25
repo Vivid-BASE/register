@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v100'; // v3.6.6 Region-aware Amazon localization and JPY parameter
+const CACHE_NAME = 'boxx-reg-v101'; // v3.6.7 Amazon disclosure addition
 const ASSETS = [
   './',
   './index.html',
