@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v94'; // v3.5.5 JP priority & + button fix
+const CACHE_NAME = 'boxx-reg-v96'; // v3.6.2 Restored '+' button & Fixed Amazon Localization
 const ASSETS = [
   './',
   './index.html',
