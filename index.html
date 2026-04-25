@@ -107,8 +107,9 @@
         .container {
             display: flex;
             width: 100%;
-            flex: 1; /* Take remaining space */
+            flex: 1;
             overflow: hidden;
+            position: relative;
             min-height: 0;
         }
 
@@ -116,10 +117,16 @@
             flex: 1;
             padding: var(--spacing-unit);
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Essential for smooth iOS scrolling */
             display: flex;
             flex-direction: column;
             width: 100%;
             min-height: 0;
+        }
+        
+        /* Ensure specific views fill the height */
+        #summaryView, #settingsView {
+            height: 100%;
         }
 
         .product-area {
@@ -1473,7 +1480,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.1.1</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.1.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3497,7 +3504,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.1.1</p>
+                        <p>BOXXレジ App v3.1.2</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3736,7 +3743,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3101')
+                navigator.serviceWorker.register('./service-worker.js?v=3102')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

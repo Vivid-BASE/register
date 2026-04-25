@@ -1,14 +1,13 @@
-const CACHE_NAME = 'boxx-reg-v69'; // v3.1.1 layout refactor fix
+const CACHE_NAME = 'boxx-reg-v70'; // v3.1.2 aggressive update fix
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon-v11.png',
-  './apple-touch-icon-v11.png'
+  './LOGO.png'
 ];
 
 self.addEventListener('install', (event) => {
-  // Removed skipWaiting to enable manual update check logic
+  self.skipWaiting(); // Force active immediately after download
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
@@ -16,17 +15,21 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Take control of all pages immediately
+      self.clients.claim()
+    ])
   );
 });
 
