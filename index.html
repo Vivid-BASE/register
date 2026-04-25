@@ -996,7 +996,7 @@
         .ad-banner {
             display: block;
             border-radius: 8px;
-            padding: 14px 45px 14px 16px; /* Increased right padding for arrow */
+            padding: 14px 45px 14px 16px;
             text-decoration: none;
             color: #fff;
             margin-bottom: 20px;
@@ -1004,6 +1004,7 @@
             position: relative;
             transition: all 0.2s ease;
             overflow: hidden;
+            flex-shrink: 0; /* Prevent compression in flex layouts */
         }
         .ad-banner:active { transform: scale(0.97); }
         .ad-banner-title {
@@ -1478,7 +1479,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.8</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.9</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1557,19 +1558,21 @@
                 </div>
                 <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
-                <table class="summary-table">
-                    <thead>
-                        <tr>
-                            <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
-                            <th data-i18n="unitPrice">単価</th>
-                            <th data-i18n="soldCount">本日売れた数</th>
-                            <th data-i18n="stockCount">残り在庫</th>
-                            <th data-i18n="paymentMethod">決済</th>
-                            <th style="width: 50px;" data-i18n="remove">取消</th>
-                        </tr>
-                    </thead>
-                    <tbody id="summaryTableBody"></tbody>
-                </table>
+                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border-radius: 8px; border: 1px solid #eee;">
+                    <table class="summary-table" style="min-width: 600px; margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
+                                <th data-i18n="unitPrice">単価</th>
+                                <th data-i18n="soldCount">本日売れた数</th>
+                                <th data-i18n="stockCount">残り在庫</th>
+                                <th data-i18n="paymentMethod">決済</th>
+                                <th style="width: 50px;" data-i18n="remove">取消</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryTableBody"></tbody>
+                    </table>
+                </div>
 
                 <div style="margin-top: 30px; text-align: center; display:flex; flex-direction:column; gap:15px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
                     <button onclick="resetSession()" data-i18n="resetSales"
@@ -3500,7 +3503,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.0.8</p>
+                        <p>BOXXレジ App v3.0.9</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3739,7 +3742,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3008')
+                navigator.serviceWorker.register('./service-worker.js?v=3009')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v66'; // v3.0.8 dynamic payment buttons
+const CACHE_NAME = 'boxx-reg-v67'; // v3.0.9 banner flex fix
 const ASSETS = [
   './',
   './index.html',
