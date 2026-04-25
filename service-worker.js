@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v97'; // v3.6.3 Physical button restoration & Simplified Amazon logic
+const CACHE_NAME = 'boxx-reg-v98'; // v3.6.4 iPhone layout and persistence fixes
 const ASSETS = [
   './',
   './index.html',

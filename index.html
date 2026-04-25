@@ -510,6 +510,7 @@
             cursor: pointer;
             color: var(--primary-color);
             transition: all 0.2s;
+            flex-shrink: 0; /* iPhoneでボタンが押しつぶされないように固定 */
         }
 
         .batch-btn:active {
@@ -1483,7 +1484,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.3</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.6.4</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1748,20 +1749,31 @@
         let userAccessCountry = 'JP'; // 判定が終わるまでは「日本」としておくよ
 
         async function initAmazonAffiliateOptimization() {
-            // 最優先: ブラウザ設定が日本語なら「日本(JP)」で確定
-            const isJP = navigator.language && navigator.language.toLowerCase().startsWith('ja');
-            if (isJP) {
+            // ブラウザ設定をチェック
+            const isBrowserJP = navigator.language && navigator.language.toLowerCase().startsWith('ja');
+            
+            // すでにJPと判定されているか、ブラウザが日本語ならJPに固定
+            if (isBrowserJP) {
                 userAccessCountry = 'JP';
-                return;
+                localStorage.setItem('boxx_user_country', 'JP');
             }
 
+            // 保存された値があるか確認
+            const savedCountry = localStorage.getItem('boxx_user_country');
+            if (savedCountry) userAccessCountry = savedCountry;
+
             try {
-                // 海外の場合のみWorkerに国を問い合わせる
-                const response = await fetch(window.location.href, { method: 'HEAD' });
+                // キャッシュを避けるためにタイムスタンプを付与
+                const response = await fetch(window.location.href + '?t=' + Date.now(), { method: 'HEAD' });
                 const country = response.headers.get('x-user-country');
-                if (country) userAccessCountry = country.toUpperCase();
+                if (country) {
+                    userAccessCountry = country.toUpperCase();
+                    // 日本語環境ならJPを上書きさせない
+                    if (isBrowserJP) userAccessCountry = 'JP';
+                    localStorage.setItem('boxx_user_country', userAccessCountry);
+                }
             } catch (e) {
-                userAccessCountry = 'US';
+                if (!userAccessCountry) userAccessCountry = isBrowserJP ? 'JP' : 'US';
             }
         }
         // アプリが動き出したら、すぐに「どこの国かな？」と調べ始めるよ
@@ -2934,9 +2946,9 @@
                     <td style="text-align:right; font-family:monospace;">${stock}</td>
                     <td>
                         <div class="batch-qty-control">
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
-                            <span class="batch-val" style="min-width:1.5em; text-align:center; ${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)">＋</button>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">-</button>
+                            <span class="batch-val" style="min-width:1.2em; text-align:center; ${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)">+</button>
                         </div>
                     </td>
                 `;
@@ -3628,7 +3640,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.6.3</p>
+                        <p>BOXXレジ App v3.6.4</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
