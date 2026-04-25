@@ -1473,7 +1473,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.0</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -2345,14 +2345,14 @@
             }
         };
         const CURRENCY_CONFIG = {
-            ja: { symbol: "¥", domain: "www.amazon.co.jp", kw: "TERAOKA+145+黒+50mmX25M" },
-            en: { symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black+2-inch" },
-            zh: { symbol: "¥", domain: "www.amazon.cn", kw: "Gaffer+Tape+Black" },
-            tw: { symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black" },
-            es: { symbol: "€", domain: "www.amazon.es", kw: "Cinta+Americana+Negra" },
-            fr: { symbol: "€", domain: "www.amazon.fr", kw: "Ruban+Gaffer+Noir" },
-            de: { symbol: "€", domain: "www.amazon.de", kw: "Gewebeband+Schwarz" },
-            pt: { symbol: "€", domain: "www.amazon.pt", kw: "Fita+Gaffer+Preta" }
+            ja: { name: "Japan", symbol: "¥", domain: "www.amazon.co.jp", kw: "TERAOKA+145+黒+50mmX25M" },
+            en: { name: "United States", symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black+2-inch" },
+            zh: { name: "China", symbol: "¥", domain: "www.amazon.cn", kw: "Gaffer+Tape+Black" },
+            tw: { name: "Taiwan", symbol: "$", domain: "www.amazon.com", kw: "Pro+Gaffer+Tape+Black" },
+            es: { name: "Spain", symbol: "€", domain: "www.amazon.es", kw: "Cinta+Americana+Negra" },
+            fr: { name: "France", symbol: "€", domain: "www.amazon.fr", kw: "Ruban+Gaffer+Noir" },
+            de: { name: "Germany", symbol: "€", domain: "www.amazon.de", kw: "Gewebeband+Schwarz" },
+            pt: { name: "Portugal", symbol: "€", domain: "www.amazon.pt", kw: "Fita+Gaffer+Preta" }
         };
 
         let currentLanguage = 'ja';
@@ -3506,7 +3506,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.3.0</p>
+                        <p>BOXXレジ App v3.3.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3745,7 +3745,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3300')
+                navigator.serviceWorker.register('./service-worker.js?v=3301')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
