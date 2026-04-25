@@ -1474,7 +1474,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.8</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.4.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1732,18 +1732,58 @@
     </div>
 
     <script>
-        // --- Amazon Links Data ---
-        const AMAZON_LINKS = [
-            "https://www.amazon.co.jp/s?k=TERAOKA+145+%E9%BB%92+50mmX25M&tag=jackpotrash-22", // テラオカ黒テープ
-            "https://www.amazon.co.jp/s?k=%E6%A2%B1%E5%8C%85%E8%B3%87%E6%9D%90+%E3%83%97%E3%83%81%E3%83%97%E3%83%81&tag=jackpotrash-22", // プチプチ
-            "https://www.amazon.co.jp/s?k=%E3%82%B3%E3%82%A4%E3%83%B3%E3%82%B1%E3%83%BC%E3%82%B9+%E9%87%A3%E9%8A%AD&tag=jackpotrash-22", // コインケース
-            "https://www.amazon.co.jp/s?k=%E5%8F%B0%E8%EBB%8A+%E6%8A%98%E3%82%8A%E3%81%9F%E3%81%9F%E3%81%BF&tag=jackpotrash-22", // 折りたたみ台車
-            "https://www.amazon.co.jp/s?k=%E3%83%9D%E3%83%83%E3%83%97%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%89+%E5%8D%93%E4%B8%8A&tag=jackpotrash-22", // ポップスタンド 卓上
-            "https://www.amazon.co.jp/s?k=%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%90%E3%83%83%E3%83%86%E3%83%AA%E3%83%BC+%E5%A4%A7%E5%AE%B9%E9%87%8F&tag=jackpotrash-22" // モバイルバッテリー
-        ];
-        function getRandomAmazonLink() {
-            return AMAZON_LINKS[Math.floor(Math.random() * AMAZON_LINKS.length)];
+        // --- [NEW] Amazonグローバル最適化ロジック ---
+        // Cloudflare Workerから届く「どこの国からアクセスしてる？」という情報 (x-user-country) を使って、
+        // Amazonのリンクをその国にぴったりのものに自動で作り変える「魔法の探偵さん」です。
+
+        let userAccessCountry = 'JP'; // 判定が終わるまでは「日本」としておくよ
+
+        async function initAmazonAffiliateOptimization() {
+            try {
+                // アプリのページを読み込んだ時の「お返事（ヘッダー）」に国名が入っているか確認するよ
+                const response = await fetch(window.location.href, { method: 'HEAD' });
+                const country = response.headers.get('x-user-country');
+                
+                if (country) {
+                    userAccessCountry = country.toUpperCase();
+                    console.log("Access Country Detected:", userAccessCountry);
+                } else {
+                    // もしヘッダーが取れなければ、ブラウザの言葉が「日本語」かどうかで判断するよ
+                    const lang = (navigator.language || '').toLowerCase();
+                    userAccessCountry = lang.startsWith('ja') ? 'JP' : 'US';
+                }
+            } catch (e) {
+                // 何かトラブルがあっても、とりあえずブラウザの言葉で判断するから安心だよ
+                const lang = (navigator.language || '').toLowerCase();
+                userAccessCountry = lang.startsWith('ja') ? 'JP' : 'US';
+            }
         }
+        // アプリが動き出したら、すぐに「どこの国かな？」と調べ始めるよ
+        initAmazonAffiliateOptimization();
+
+        // 備品リスト（検索キーワードのリストだよ）
+        const AMAZON_KEYWORDS = [
+            "TERAOKA+145+黒+50mmX25M",
+            "梱包資材+プチプチ",
+            "コインケース+釣銭",
+            "台車+折りたたみ",
+            "ポップスタンド+卓上",
+            "モバイルバッテリー+大容量"
+        ];
+
+        // この関数が、クリックされた瞬間に「最適なドメイン」と「最適なID」を組み合わせてリンクを作るよ
+        function getRandomAmazonLink() {
+            const isJP = (userAccessCountry === 'JP');
+            
+            // 【重要】国によってドメインとIDを使い分けるよ
+            const domain = isJP ? 'www.amazon.co.jp' : 'www.amazon.com';
+            const tag = isJP ? 'jackpotrash-22' : 'showtimeboxx-20';
+            
+            // キーワードをランダムに選んで、URLを組み立てるよ
+            const kw = AMAZON_KEYWORDS[Math.floor(Math.random() * AMAZON_KEYWORDS.length)];
+            return `https://${domain}/s?k=${kw}&tag=${tag}`;
+        }
+        // --- Amazon Global Optimization End ---
 
         const I18N = {
             ja: {
@@ -2477,11 +2517,7 @@
             return (CURRENCY_CONFIG[currentRegion] || CURRENCY_CONFIG['en']).symbol;
         }
 
-        function getRandomAmazonLink() {
-            const config = CURRENCY_CONFIG[currentRegion] || CURRENCY_CONFIG['en'];
-            const tag = "jackpotrash-22";
-            return `https://${config.domain}/s?k=${config.kw}&tag=${tag}`;
-        }
+        // 重複していた古いgetRandomAmazonLinkを削除し、上記の新しい統合ロジックを使用するようにしました
 
         function updateCurrencyUI() {
             const symbol = getCurrencySymbol();
@@ -3512,7 +3548,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.3.8</p>
+                        <p>BOXXレジ App v3.4.0</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3751,7 +3787,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3308')
+                navigator.serviceWorker.register('./service-worker.js?v=3400')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

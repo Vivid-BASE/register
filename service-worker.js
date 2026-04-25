@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v84'; // v3.3.8 payment modal fix
+const CACHE_NAME = 'boxx-reg-v85'; // v3.4.0 Amazon global optimization
 const ASSETS = [
   './',
   './index.html',
