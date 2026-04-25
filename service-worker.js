@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v74'; // v3.2.2 version badge & verification
+const CACHE_NAME = 'boxx-reg-v75'; // v3.2.5 stable restoration
 const ASSETS = [
   './',
   './index.html',
