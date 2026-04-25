@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v102'; // v3.6.8 Summary table UI fixes and payment labels restored
+const CACHE_NAME = 'boxx-reg-v103'; // v3.6.9 Forced refresh for summary UI fixes
 const ASSETS = [
   './',
   './index.html',
