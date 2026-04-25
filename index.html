@@ -1473,7 +1473,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.3</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.3.4</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1539,7 +1539,7 @@
             <div class="view-body">
                 <a href="https://showtimeboxx.com/?utm_source=boxx_regi_app&utm_medium=app_banner&utm_campaign=summary_view" target="_blank" class="ad-banner ad-theme-main">
                     <div class="ad-banner-title" data-i18n="adMainTitle">SHOWTIMEBOXX</div>
-                    <div class="ad-banner-text" data-i18n="adMain">公式サイト</div>
+                    <div class="ad-banner-text" data-i18n="adMain">オンラインレッスン・イベント企画</div>
                     <div class="ad-banner-arrow">〉</div>
                 </a>
                 <a href="https://www.buymeacoffee.com/showtimeboxx" target="_blank" class="ad-banner ad-theme-coffee">
@@ -1818,7 +1818,7 @@
                 paymentMethod: "決済",
                 productNameVar: "商品名 - バリエーション",
                 readyDesc: "次回に向けての準備はお済みですか？",
-                adMain: "公式サイト",
+                adMain: "オンラインレッスン・イベント企画",
                 adLab: "アプリ開発・業務効率化",
                 adCreative: "デザイン・写真制作",
                 checkoutBtn: "会計する",
@@ -1885,9 +1885,9 @@
                 verTitle: "Version",
                 updateNow: "Update",
                 productList: "Product List",
-                adLab: "Application Development",
+                adLab: "App Development & Efficiency",
                 adCreative: "Design & Photography",
-                adMain: "Official Site",
+                adMain: "Online Lessons & Events",
                 productNameVar: "Product - Variant",
                 unitPrice: "Price",
                 soldCount: "Sold Today",
@@ -3509,7 +3509,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.3.3</p>
+                        <p>BOXXレジ App v3.3.4</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3748,7 +3748,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3303')
+                navigator.serviceWorker.register('./service-worker.js?v=3304')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

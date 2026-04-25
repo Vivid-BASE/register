@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v80'; // v3.3.2 region label with symbol
+const CACHE_NAME = 'boxx-reg-v81'; // v3.3.4 true banner restore
 const ASSETS = [
   './',
   './index.html',
