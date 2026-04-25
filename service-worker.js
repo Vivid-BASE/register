@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v61'; // v3.0.3 link fix
+const CACHE_NAME = 'boxx-reg-v62'; // v3.0.4 link update
 const ASSETS = [
   './',
   './index.html',
