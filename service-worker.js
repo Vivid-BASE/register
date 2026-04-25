@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v64'; // v3.0.6 layout unify fix
+const CACHE_NAME = 'boxx-reg-v65'; // v3.0.7 CSS conflict fix
 const ASSETS = [
   './',
   './index.html',

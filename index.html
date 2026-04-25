@@ -862,14 +862,7 @@
             cursor: pointer;
         }
 
-        /* Settings & Summary View Styles */
-        .view-content {
-            display: none;
-            padding: 20px;
-            overflow-y: auto;
-            flex-direction: column;
-            height: 100%;
-        }
+        /* Settings & Summary View Styles (Merged into base view-content) */
 
         .view-content.active {
             display: flex;
@@ -1482,7 +1475,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.6</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.0.7</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -3484,7 +3477,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.0.6</p>
+                        <p>BOXXレジ App v3.0.7</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3723,7 +3716,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3006')
+                navigator.serviceWorker.register('./service-worker.js?v=3007')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);
