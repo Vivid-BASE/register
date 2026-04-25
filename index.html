@@ -3417,26 +3417,25 @@
 
                 if (isMobile) {
                     tr.innerHTML = `
-                        <div class="summary-item-name" style="font-weight:800; font-size:1.1rem; color:#222; margin-bottom:8px;">${item.name}</div>
+                        <div class="summary-item-name" style="font-weight:800; font-size:1.1rem; color:#222; margin-bottom:8px; padding-right:35px;">${item.name}</div>
                         <div class="summary-item-details" style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
                             <span style="display:inline-block; padding:2px 8px; border-radius:12px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.75rem; color:${methodColor}; border:1px solid rgba(0,0,0,0.1);">${methodLabel}</span>
                             <span style="font-size:0.9rem; color:#666;">${formatCurrency(item.price)} × ${item.count}</span>
                             <span style="font-size:0.8rem; color:#999; margin-left:auto;">${t('stockPrefix')} ${stock}</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top:1px dashed #eee; padding-top:8px;">
-                            <div style="font-size:0.75rem; color:#888;">
-                                ${t('subtotal')}: <span style="font-size:1.1rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
-                            </div>
-                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1] || ''}', '${item.method}')" 
-                                style="padding:4px 12px; border-radius:6px; background:#fff; border:1px solid #ff3b30; color:#ff3b30; font-size:0.85rem; font-weight:bold; cursor:pointer;">${t('remove')}</button>
+                        <div style="border-top:1px dashed #eee; padding-top:8px;">
+                            <span style="font-size:0.75rem; color:#888;">${t('subtotal')}:</span>
+                            <span style="font-size:1.1rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
                         </div>
+                        <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1] || ''}', '${item.method}')" 
+                            style="position:absolute; top:12px; right:12px; width:28px; height:28px; border-radius:50%; background:#fff5f5; border:1px solid #ffebeb; color:#ff3b30; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(255,59,48,0.1); transition:all 0.2s;">×</button>
                     `;
                     tr.style.position = 'relative';
                     tr.style.padding = '15px';
                     tr.style.marginBottom = '10px';
-                    tr.style.borderRadius = '10px';
+                    tr.style.borderRadius = '12px';
                     tr.style.border = '1px solid #eee';
-                    tr.style.boxShadow = '0 2px 5px rgba(0,0,0,0.02)';
+                    tr.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
                     tr.style.background = '#fff';
                 } else {
                     const parts = item.name.split(' - ');
@@ -3797,7 +3796,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.7.2</p>
+                        <p>BOXXレジ App v3.7.3</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
