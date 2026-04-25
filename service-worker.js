@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v65'; // v3.0.7 CSS conflict fix
+const CACHE_NAME = 'boxx-reg-v66'; // v3.0.8 dynamic payment buttons
 const ASSETS = [
   './',
   './index.html',
