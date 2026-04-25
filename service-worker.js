@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v104'; // v3.7.0 Enhanced cache-busting for iOS PWA
+const CACHE_NAME = 'boxx-reg-v106'; // v3.7.2 Responsive summary list fix
 const ASSETS = [
   './',
   './index.html',

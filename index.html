@@ -1145,12 +1145,16 @@
             text-align: left;
             border-bottom: 1px solid #eee;
             font-size: 0.95rem;
+            overflow-wrap: anywhere;
+        }
+        
+        .summary-table tr:last-child td {
+            border-bottom: none;
         }
 
         .summary-table th {
             background-color: #f9f9f9;
             font-weight: bold;
-            white-space: nowrap;
         }
 
         .summary-total {
@@ -1434,6 +1438,47 @@
             .payment-total-item {
                 padding: 10px !important;
             }
+            
+            /* Mobile Summary Table Overrides */
+            .summary-table thead {
+                display: none;
+            }
+            .summary-table, .summary-table tbody, .summary-table tr, .summary-table td {
+                display: block;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            .summary-table tr {
+                padding: 12px 10px;
+                border-bottom: 1px solid #eee;
+                position: relative;
+            }
+            .summary-table td {
+                padding: 0 !important;
+                border: none !important;
+            }
+            .summary-item-name {
+                font-weight: bold;
+                font-size: 1rem;
+                margin-bottom: 6px;
+                padding-right: 40px; /* Space for cancel button */
+                color: #333;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+            .summary-item-details {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+                font-size: 0.85rem;
+                color: #666;
+            }
+            .summary-cancel-box {
+                position: absolute;
+                top: 12px;
+                right: 10px;
+            }
         }
         } /* End of @media (max-width: 767px) */
 
@@ -1518,7 +1563,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.0</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.2</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1597,8 +1642,8 @@
                 </div>
                 <div id="summaryTotalAmount" style="margin-bottom: 25px;"></div>
 
-                <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; border-radius: 12px; border: 1px solid #eee; flex-shrink: 0; min-height: 150px; background: white;">
-                    <table class="summary-table" style="min-width: 450px; margin: 0; width: 100%;">
+                <div style="width: 100%; overflow-x: auto; margin-bottom: 20px; border-radius: 12px; border: 1px solid #eee; flex-shrink: 0; min-height: 150px; background: white; -webkit-overflow-scrolling: touch;">
+                    <table class="summary-table" style="margin: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th style="text-align: left;" data-i18n="productNameVar">商品名 - バリエーション</th>
@@ -3345,16 +3390,33 @@
                 const methodLabel = item.method === 'credit' ? t('credit') : (item.method === 'paypay' ? t('qrPay') : t('cash'));
                 const methodColor = item.method === 'credit' ? '#333' : (item.method === 'paypay' ? '#856404' : '#0056b3');
 
-                tr.innerHTML = `
-                    <td style="word-break: break-all; min-width: 120px;">${item.name}</td>
-                    <td style="white-space: nowrap;">${formatCurrency(item.price)}</td>
-                    <td style="text-align: center;">${item.count}</td>
-                    <td style="text-align: center; color: #888;">${stock}</td>
-                    <td style="text-align:center;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.7rem; color:${methodColor};">${methodLabel}</span></td>
-                    <td style="text-align: center;">
-                        <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
-                    </td>
-                `;
+                const isMobile = window.innerWidth < 768;
+
+                if (isMobile) {
+                    tr.innerHTML = `
+                        <div class="summary-item-name">${item.name}</div>
+                        <div class="summary-item-details">
+                            <span style="padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.7rem; color:${methodColor};">${methodLabel}</span>
+                            <span>${formatCurrency(item.price)}</span>
+                            <span>× ${item.count}</span>
+                            <span style="color:#999;">(${t('stockPrefix')} ${stock})</span>
+                        </div>
+                        <div class="summary-cancel-box">
+                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
+                        </div>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td style="word-break: break-all;">${item.name}</td>
+                        <td style="white-space: nowrap;">${formatCurrency(item.price)}</td>
+                        <td style="text-align: center;">${item.count}</td>
+                        <td style="text-align: center; color: #888;">${stock}</td>
+                        <td style="text-align:center;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; background:rgba(0,0,0,0.05); font-weight:bold; font-size:0.7rem; color:${methodColor};">${methodLabel}</span></td>
+                        <td style="text-align: center;">
+                            <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1]}', '${item.method}')">×</button>
+                        </td>
+                    `;
+                }
                 summaryTableBody.appendChild(tr);
             });
 
@@ -3694,7 +3756,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.7.0</p>
+                        <p>BOXXレジ App v3.7.1</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
