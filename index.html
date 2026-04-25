@@ -1482,7 +1482,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.4</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.5.5</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1754,9 +1754,11 @@
                 
                 if (country) {
                     userAccessCountry = country.toUpperCase();
-                    console.log("Access Country Detected:", userAccessCountry);
+                    // 【最優先】日本語設定なら、自動判定を上書きしてJPに固定するよ
+                    if (navigator.language && navigator.language.toLowerCase().startsWith('ja')) {
+                        userAccessCountry = 'JP';
+                    }
                 } else {
-                    // もしヘッダーが取れなければ、ブラウザの言葉が「日本語」かどうかで判断するよ
                     const lang = (navigator.language || '').toLowerCase();
                     userAccessCountry = lang.startsWith('ja') ? 'JP' : 'US';
                 }
@@ -1778,9 +1780,16 @@
             "ポップスタンド+卓上",      // 商品説明・価格表示用
             "モバイルバッテリー+大容量", // スマホレジの命綱
             "レジ袋+手提げ+セット",     // お持ち帰り用
-            "値札+シール+剥がせる",     // 商品へのプライス貼り
-            "ブラックボード+卓上+看板", // セール・案内表示用
-            "ポスカ+セット"             // 看板・POP作成用
+            "養生テープ",
+            "プチプチ",
+            "コインケース",
+            "台車",
+            "ポップスタンド",
+            "モバイルバッテリー",
+            "レジ袋",
+            "値札シール",
+            "ブラックボード",
+            "ポスカ"
         ];
 
         // Googleアナリティクスに「何が起きたか」を報告する関数です
@@ -2906,8 +2915,10 @@
                 const inCart = cart.filter(item => item.productId === currentSelectedProduct.id && item.variantName === variant.name).length;
                 const batchQty = currentBatchSelections[variant.name] || 0;
                 
-                // If stock is not set (empty string or 0 in some cases), treat as infinite
-                const isInfinite = variant.stock === "" || variant.stock === null || variant.stock === undefined;
+                // 在庫が空欄または未定義なら無限
+                const isInfinite = (variant.stock === "" || variant.stock === null || variant.stock === undefined);
+                // ボタンを無効化するかどうかの判定
+                const isPlusDisabled = !isInfinite && (batchQty + inCart >= stock);
                 const remainingStock = isInfinite ? 999999 : (stock - inCart - batchQty);
 
                 totalQty += batchQty;
@@ -2930,7 +2941,7 @@
                         <div class="batch-qty-control">
                             <button class="batch-btn" onclick="updateBatch('${variant.name}', -1)">－</button>
                             <span class="batch-val" style="${batchQty > 0 ? 'color:var(--primary-color); font-weight:bold;' : ''}">${batchQty}</span>
-                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${remainingStock <= 0 ? 'disabled style="opacity:0.5"' : ''}>＋</button>
+                            <button class="batch-btn" onclick="updateBatch('${variant.name}', 1)" ${isPlusDisabled ? 'disabled style="opacity:0.3"' : ''}>＋</button>
                         </div>
                     </td>
                 `;
@@ -3617,7 +3628,7 @@
                         <button onclick="manualUpdateCheck()" style="padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-weight: bold; color: #333; margin-bottom: 20px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" data-i18n="updateNow">
                             🔄 最新バージョンを確認
                         </button>
-                        <p>BOXXレジ App v3.5.4</p>
+                        <p>BOXXレジ App v3.5.5</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -3864,7 +3875,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3504')
+                navigator.serviceWorker.register('./service-worker.js?v=3505')
                     .then(registration => {
                         swRegistration = registration;
                         setInterval(() => { registration.update(); }, 60000);

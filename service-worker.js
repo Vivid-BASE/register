@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v93'; // v3.5.4 exact button & + button fix
+const CACHE_NAME = 'boxx-reg-v94'; // v3.5.5 JP priority & + button fix
 const ASSETS = [
   './',
   './index.html',
