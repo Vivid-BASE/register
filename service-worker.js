@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v107'; // v3.7.3 Subtotal & Premium Summary UI
+const CACHE_NAME = 'boxx-reg-v108'; // v3.7.9 UI Update (Amazon button changes)
 const ASSETS = [
   './',
   './index.html',
