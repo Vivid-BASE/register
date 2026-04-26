@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v111'; // v3.8.2 Network-First for index.html
+const CACHE_NAME = 'boxx-reg-v112'; // v3.8.4 Fix init error & version sync
 const ASSETS = [
   './',
   './index.html',
