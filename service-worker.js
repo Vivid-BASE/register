@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v109'; // v3.8.0 Automatic Updates & Amazon Link Fix
+const CACHE_NAME = 'boxx-reg-v110'; // v3.8.1 Auto-update notification toast
 const ASSETS = [
   './',
   './index.html',

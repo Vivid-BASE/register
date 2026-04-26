@@ -1581,7 +1581,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.0</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.1</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1855,6 +1855,21 @@
         // Amazonのリンクをその国にぴったりのものに自動で作り変える「魔法の探偵さん」です。
 
         let userAccessCountry = 'JP'; // 判定が終わるまでは「日本」としておくよ
+
+        async function init() {
+            // 前回のバージョンをチェックして、更新されていればトーストを出す
+            const currentVer = '3.8.1';
+            const savedVer = localStorage.getItem('boxx_app_version');
+            if (savedVer && savedVer !== currentVer) {
+                setTimeout(() => {
+                    showToast(`v${currentVer} へ自動更新しました`);
+                }, 1000);
+            }
+            localStorage.setItem('boxx_app_version', currentVer);
+
+            await initAmazonAffiliateOptimization();
+            loadSettings();
+        }
 
         async function initAmazonAffiliateOptimization() {
             // ブラウザ設定とタイムゾーンをチェック
@@ -4088,7 +4103,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3.8.0')
+                navigator.serviceWorker.register('./service-worker.js?v=3.8.1')
                     .then(registration => {
                         swRegistration = registration;
                         
