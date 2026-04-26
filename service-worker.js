@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v118'; // v3.8.10 Bold items in summary
+const CACHE_NAME = 'boxx-reg-v119'; // v3.8.11 Bold amounts in summary
 const ASSETS = [
   './',
   './index.html',
