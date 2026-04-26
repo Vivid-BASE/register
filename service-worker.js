@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v113'; // v3.8.5 Force Safari for Amazon link
+const CACHE_NAME = 'boxx-reg-v114'; // v3.8.6 Force Safari bypassing Universal Links
 const ASSETS = [
   './',
   './index.html',

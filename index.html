@@ -1581,7 +1581,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.5</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.6</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1765,13 +1765,9 @@
                     // iOS PWAで外部ブラウザ（Safari）を強制する一般的な方法として、
                     // 新しいウィンドウを開く際に noopener を付与し、
                     // かつアプリへの遷移を防ぐために a タグ経由でのクリックを試みます
-                    const a = document.createElement('a');
-                    a.href = url;
-                    // target="_blank" を外すことで、iOS PWAでは外部ブラウザ（Safari）が強制的に起動します
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
                     closeDailyStartModal();
+                    // aタグのクリック(Universal Link)を避け、JS遷移にすることでAmazonアプリの強制起動を回避しSafariを開かせます
+                    window.location.href = url;
                 }
             </script>
         </div>
@@ -2802,7 +2798,7 @@
         // --- Initialization ---
         async function init() {
             // 前回のバージョンをチェックして、更新されていればトーストを出す
-            const currentVer = '3.8.5';
+            const currentVer = '3.8.6';
             const savedVer = localStorage.getItem('boxx_app_version');
             if (savedVer && savedVer !== currentVer) {
                 setTimeout(() => {
@@ -3852,7 +3848,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.8.5</p>
+                        <p>BOXXレジ App v3.8.6</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -4099,7 +4095,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3.8.5')
+                navigator.serviceWorker.register('./service-worker.js?v=3.8.6')
                     .then(registration => {
                         swRegistration = registration;
                         
