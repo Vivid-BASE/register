@@ -1581,7 +1581,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.7.9</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.0</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -1761,7 +1761,17 @@
             </div>
             <script>
                 function confirmAndOpenAmazon() {
-                    window.open(getRandomAmazonLink(), "_blank");
+                    const url = getRandomAmazonLink();
+                    // iOS PWAで外部ブラウザ（Safari）を強制する一般的な方法として、
+                    // 新しいウィンドウを開く際に noopener を付与し、
+                    // かつアプリへの遷移を防ぐために a タグ経由でのクリックを試みます
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
                     closeDailyStartModal();
                 }
             </script>
@@ -4078,10 +4088,18 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3.7.9')
+                navigator.serviceWorker.register('./service-worker.js?v=3.8.0')
                     .then(registration => {
                         swRegistration = registration;
+                        
+                        // 1分ごとに更新をチェック
                         setInterval(() => { registration.update(); }, 60000);
+                        
+                        // ネット復帰時に自動で更新チェック
+                        window.addEventListener('online', () => {
+                            registration.update();
+                        });
+
                         document.addEventListener('visibilitychange', () => {
                             if (document.visibilityState === 'visible') registration.update();
                         });
@@ -4090,13 +4108,22 @@
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    showUpdateBanner(registration);
+                                    // カートが空なら自動で更新（リロード）、そうでなければバナー表示
+                                    if (typeof cart !== 'undefined' && cart.length === 0) {
+                                        newWorker.postMessage('SKIP_WAITING');
+                                    } else {
+                                        showUpdateBanner(registration);
+                                    }
                                 }
                             });
                         });
                         
                         if (registration.waiting && navigator.serviceWorker.controller) {
-                            showUpdateBanner(registration);
+                            if (typeof cart !== 'undefined' && cart.length === 0) {
+                                registration.waiting.postMessage('SKIP_WAITING');
+                            } else {
+                                showUpdateBanner(registration);
+                            }
                         }
                     })
                     .catch(err => console.log('SW registration failed: ', err));

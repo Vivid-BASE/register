@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v108'; // v3.7.9 UI Update (Amazon button changes)
+const CACHE_NAME = 'boxx-reg-v109'; // v3.8.0 Automatic Updates & Amazon Link Fix
 const ASSETS = [
   './',
   './index.html',
