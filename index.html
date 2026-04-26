@@ -1581,7 +1581,7 @@
     </div>
 
     <header>
-        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.6</span></h1>
+        <h1 data-i18n="appName">BOXXレジ <span class="version-badge">v3.8.7</span></h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="switchView('shop')" data-i18n="shop">レジ</button>
             <button class="header-btn" onclick="switchView('summary')" data-i18n="summary">集計</button>
@@ -2798,7 +2798,7 @@
         // --- Initialization ---
         async function init() {
             // 前回のバージョンをチェックして、更新されていればトーストを出す
-            const currentVer = '3.8.6';
+            const currentVer = '3.8.7';
             const savedVer = localStorage.getItem('boxx_app_version');
             if (savedVer && savedVer !== currentVer) {
                 setTimeout(() => {
@@ -3440,11 +3440,15 @@
                         price: log.price,
                         count: 0,
                         method: method,
-                        subtotal: 0
+                        subtotal: 0,
+                        lastTime: log.timestamp || 0
                     };
                 }
                 aggregation[key].count++;
                 aggregation[key].subtotal += log.price;
+                if (log.timestamp && log.timestamp > aggregation[key].lastTime) {
+                    aggregation[key].lastTime = log.timestamp;
+                }
                 total += log.price;
 
                 if (method === 'credit') paymentTotals.credit += log.price;
@@ -3463,6 +3467,12 @@
 
                 const methodLabel = item.method === 'credit' ? t('credit') : (item.method === 'paypay' ? t('qrPay') : t('cash'));
                 const methodColor = item.method === 'credit' ? '#333' : (item.method === 'paypay' ? '#856404' : '#0056b3');
+                
+                let timeStr = '';
+                if (item.lastTime) {
+                    const d = new Date(item.lastTime);
+                    timeStr = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+                }
 
                 const isMobile = window.innerWidth < 768;
 
@@ -3474,9 +3484,12 @@
                             <span style="font-size:0.9rem; color:#666;">${formatCurrency(item.price)} × ${item.count}</span>
                             <span style="font-size:0.8rem; color:#999; margin-left:auto;">${t('stockPrefix')} ${stock}</span>
                         </div>
-                        <div style="border-top:1px dashed #eee; padding-top:8px;">
-                            <span style="font-size:0.75rem; color:#888;">${t('subtotal')}:</span>
-                            <span style="font-size:1.1rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
+                        <div style="border-top:1px dashed #eee; padding-top:8px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <span style="font-size:0.75rem; color:#888;">${t('subtotal')}:</span>
+                                <span style="font-size:1.1rem; font-weight:900; color:var(--primary-color);">${formatCurrency(item.subtotal)}</span>
+                            </div>
+                            ${timeStr ? `<div style="font-size:0.75rem; color:#999; font-weight:bold;">🕒 ${timeStr}</div>` : ''}
                         </div>
                         <button class="btn-cancel-sale" onclick="cancelSale('${item.name.split(' - ')[0]}', '${item.name.split(' - ')[1] || ''}', '${item.method}')" 
                             style="position:absolute; top:12px; right:12px; width:28px; height:28px; border-radius:50%; background:#fff5f5; border:1px solid #ffebeb; color:#ff3b30; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(255,59,48,0.1); transition:all 0.2s;">×</button>
@@ -3496,6 +3509,7 @@
                         <td style="padding: 10px 8px;">
                             <div style="font-weight:bold; font-size:0.95rem;">${pName}</div>
                             ${vName ? `<div style="font-size:0.8rem; color:#666; font-weight:normal;">${vName}</div>` : ''}
+                            ${timeStr ? `<div style="font-size:0.75rem; color:#999; margin-top:2px;">🕒 ${timeStr}</div>` : ''}
                         </td>
                         <td style="white-space: nowrap;">${formatCurrency(item.price)}</td>
                         <td style="text-align: center; font-weight:bold;">${item.count}</td>
@@ -3515,20 +3529,20 @@
             container.innerHTML = `
                 <div class="summary-total-card" style="background:#fff; border:2px solid #eee; border-radius:15px; padding:20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.06);">
                     <div style="font-size:1.1rem; color:#666; font-weight:bold; margin-bottom:5px;" data-i18n="todaySummary">${t('todaySummary')}</div>
-                    <div style="font-size:3rem; font-weight:900; color:var(--primary-color); line-height:1.1;">${formatCurrency(total)}</div>
+                    <div style="font-size:clamp(1.8rem, 8vw, 2.8rem); font-weight:900; color:var(--primary-color); line-height:1.1; white-space:nowrap; letter-spacing:-1px;">${formatCurrency(total)}</div>
                     
                     <div style="margin-top:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap:10px; text-align:left;">
-                        <div class="payment-total-item" style="background:#f0f7ff; padding:12px; border-radius:10px; border:1px solid #cce5ff;">
+                        <div class="payment-total-item" style="background:#f0f7ff; padding:12px; border-radius:10px; border:1px solid #cce5ff; min-width:0;">
                             <div style="font-size:0.8rem; font-weight:bold; color:#0056b3; margin-bottom:4px;">${t('cash')}</div>
-                            <div style="font-size:1.4rem; font-weight:900;">${formatCurrency(paymentTotals.cash)}</div>
+                            <div style="font-size:clamp(1rem, 4vw, 1.3rem); font-weight:900; white-space:nowrap; letter-spacing:-0.5px; overflow:hidden; text-overflow:ellipsis;" title="${formatCurrency(paymentTotals.cash)}">${formatCurrency(paymentTotals.cash)}</div>
                         </div>
-                        <div class="payment-total-item" style="background:#f8f9fa; padding:12px; border-radius:10px; border:1px solid #eee;">
+                        <div class="payment-total-item" style="background:#f8f9fa; padding:12px; border-radius:10px; border:1px solid #eee; min-width:0;">
                             <div style="font-size:0.8rem; font-weight:bold; color:#333; margin-bottom:4px;">${t('credit')}</div>
-                            <div style="font-size:1.4rem; font-weight:900;">${formatCurrency(paymentTotals.credit)}</div>
+                            <div style="font-size:clamp(1rem, 4vw, 1.3rem); font-weight:900; white-space:nowrap; letter-spacing:-0.5px; overflow:hidden; text-overflow:ellipsis;" title="${formatCurrency(paymentTotals.credit)}">${formatCurrency(paymentTotals.credit)}</div>
                         </div>
-                        <div class="payment-total-item" style="background:#fff9f0; padding:12px; border-radius:10px; border:1px solid #ffeeba;">
+                        <div class="payment-total-item" style="background:#fff9f0; padding:12px; border-radius:10px; border:1px solid #ffeeba; min-width:0;">
                             <div style="font-size:0.8rem; font-weight:bold; color:#856404; margin-bottom:4px;">${t('qrPay')}</div>
-                            <div style="font-size:1.4rem; font-weight:900;">${formatCurrency(paymentTotals.paypay)}</div>
+                            <div style="font-size:clamp(1rem, 4vw, 1.3rem); font-weight:900; white-space:nowrap; letter-spacing:-0.5px; overflow:hidden; text-overflow:ellipsis;" title="${formatCurrency(paymentTotals.paypay)}">${formatCurrency(paymentTotals.paypay)}</div>
                         </div>
                     </div>
                 </div>
@@ -3848,7 +3862,7 @@
                         <p style="margin-bottom: 10px; opacity: 0.8;" data-i18n="amazonDisclosure">
                             無料で運営する為にもAmazonアソシエイトに参加しています
                         </p>
-                        <p>BOXXレジ App v3.8.6</p>
+                        <p>BOXXレジ App v3.8.7</p>
                         <p>Developed by <a href="https://showtimeboxx.com/lab/?utm_source=boxx_regi_app&utm_medium=footer_link" target="_blank" style="color:#999; text-decoration:none;">SHOWTIMEBOXX LAB</a></p>
                     </div>
                 </div>
@@ -4095,7 +4109,7 @@
             let isUpdating = false;
 
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js?v=3.8.6')
+                navigator.serviceWorker.register('./service-worker.js?v=3.8.7')
                     .then(registration => {
                         swRegistration = registration;
                         

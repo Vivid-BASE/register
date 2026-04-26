@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v114'; // v3.8.6 Force Safari bypassing Universal Links
+const CACHE_NAME = 'boxx-reg-v115'; // v3.8.7 Summary UI tweaks
 const ASSETS = [
   './',
   './index.html',
