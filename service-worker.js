@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v112'; // v3.8.4 Fix init error & version sync
+const CACHE_NAME = 'boxx-reg-v113'; // v3.8.5 Force Safari for Amazon link
 const ASSETS = [
   './',
   './index.html',
