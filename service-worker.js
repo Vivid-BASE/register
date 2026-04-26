@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v116'; // v3.8.8 Transaction History & Font sizes
+const CACHE_NAME = 'boxx-reg-v117'; // v3.8.9 Font sizes large
 const ASSETS = [
   './',
   './index.html',
