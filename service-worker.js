@@ -1,4 +1,4 @@
-const CACHE_NAME = 'boxx-reg-v117'; // v3.8.9 Font sizes large
+const CACHE_NAME = 'boxx-reg-v118'; // v3.8.10 Bold items in summary
 const ASSETS = [
   './',
   './index.html',
